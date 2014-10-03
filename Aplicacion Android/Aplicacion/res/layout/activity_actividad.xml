@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/Blancoo"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.aplicacionbookit.MainActivity" >   
+
+	<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="250dp" 
+    android:orientation="vertical">
+
+		<ImageView
+		    android:id="@+id/imageView1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="200dp"
+		    android:layout_marginTop="40dp"
+		    android:src="@drawable/logo" />
+    
+	</LinearLayout>
+	
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="fill_parent" >
+
+	    <EditText
+	        android:id="@+id/UsuarioUc"
+	        android:layout_width="@dimen/Rect_Ancho"
+	        android:layout_height="@dimen/Rect_Alto"
+	        android:layout_above="@+id/Password"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginBottom="14dp"
+	        android:layout_marginTop="20dp"
+	        android:background="@drawable/rounded_button"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:inputType="textEmailAddress"
+	        android:text="@string/Login_Usuario" />
+
+	    <EditText
+	        android:id="@+id/Password"
+	        android:layout_width="@dimen/Rect_Ancho"
+	        android:layout_height="@dimen/Rect_Alto"
+	        android:layout_alignLeft="@+id/UsuarioUc"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginBottom="141dp"
+	        android:background="@drawable/rounded_button"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:inputType="textPassword"
+	        android:text="@string/Registro_Password" />
+
+	    <Button
+	        android:id="@+id/Registrarse"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="@dimen/Boton_Ancho"
+	        android:layout_height="@dimen/Boton_Alto"
+	        android:layout_alignBaseline="@+id/Login"
+	        android:layout_alignBottom="@+id/Login"
+	        android:layout_alignLeft="@+id/Password"
+	        android:layout_marginLeft="22dp"
+	        android:onClick="BotonRegistrarse"
+	        android:background="@drawable/rounded_button"
+	        android:text="@string/Login_Registrarse" />
+
+	    <Button
+	        android:id="@+id/Login"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="@dimen/Boton_Ancho"
+	        android:layout_height="@dimen/Boton_Alto"
+	        android:layout_alignRight="@+id/Password"
+	        android:layout_alignTop="@+id/Password"
+	        android:layout_marginRight="19dp"
+	        android:layout_marginTop="46dp"
+	        android:background="@drawable/rounded_button"
+	        android:onClick="BotonLogin"
+	         android:text="@string/Login_Entrar" />
+
+<!-- 	    <EditText -->
+<!-- 	        android:id="@+id/editText1" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_alignLeft="@+id/Registrarse" -->
+<!-- 	        android:layout_below="@+id/Registrarse" -->
+<!-- 	        android:layout_marginTop="128dp" -->
+<!-- 	        android:ems="10" -->
+<!-- 	        android:inputType="textEmailAddress" /> -->
+	</RelativeLayout>
+    
+</LinearLayout>

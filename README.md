@@ -1,4 +1,5 @@
 Book-It
 =======
 
-Aplicacion Movil
+Aplicacion Movil para IOS, Android.   
+**Web API:** http://pinit-api.herokuapp.com

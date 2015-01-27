@@ -8,20 +8,51 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.aplicacionbookit.CrearMarker" >
 
-        <TextView
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="Nombre del Ramo" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="22dp"
+        android:layout_marginRight="32dp"
         android:onClick="Aceptar"
         android:text="Aceptar" />
-    
-    
+
+    <EditText
+        android:id="@+id/crear_marker_nombreramo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="15dp"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/crear_marker_nombreramo"
+        android:layout_below="@+id/crear_marker_nombreramo"
+        android:layout_marginTop="44dp"
+        android:text="Descripcion de la Ayuda" />
+
+    <EditText
+        android:id="@+id/crear_marker_descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="26dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
 </RelativeLayout>

@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class Central extends ActionBarActivity {
-
 	
 	Fragment FragmentoActual;
 	
@@ -28,18 +27,18 @@ public class Central extends ActionBarActivity {
 	Help	Ayuda;
 	GoogleMap Mapas;
 	
-	RelativeLayout rightRL;
+	RelativeLayout leftRL;
 	DrawerLayout drawerLayout;
 	
 	 private ListView ListaOpciones;
-	 private String[] NombreOpciones = {"Nombre","Busqueda","Mis Pins","Help","Feedback","Cerrar Sesion"};
+	 private String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_central);
 		
-		rightRL = (RelativeLayout)findViewById(R.id.RightDrawer);
+		leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
 	    drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
 	    
 	    Ayuda = new Help();
@@ -50,14 +49,22 @@ public class Central extends ActionBarActivity {
 	    ListaOpciones.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-            	Toast.makeText(getApplicationContext(), "Ha pulsado el item " + position, Toast.LENGTH_SHORT).show();
-            	if(position ==3){
+            	
+            	if(position ==0){
+            		Toast.makeText(getApplicationContext(), "Para crear un Pin deje apretado en el mapa el lugar en donde quiere la clase", Toast.LENGTH_SHORT).show();
+            	}
+            	else if(position ==1){
+            		// Esto es Help
+            		Intent actoHelp = new Intent(Central.this,Help.class);
+            		startActivity(actoHelp);
+            	}
+            	else if(position ==2){
             		// Esto es Help
             		Intent actoHelp = new Intent(Central.this,Help.class);
             		startActivity(actoHelp);
             	}
             	else {
-            		Central.this.finish();
+            		 Central.this.finish();
             	}
             }
         });
@@ -65,10 +72,8 @@ public class Central extends ActionBarActivity {
 	    FragmentTransaction ft  = getSupportFragmentManager().beginTransaction();	
 		Mapa_Fragmento = new Fragment_Mapa();
 		ft.add(R.id.EspacioCambia, Mapa_Fragmento);
-		ft.commit();
-		
-	}
-	
+		ft.commit();		
+	}	
 	
 
 	@Override
@@ -82,16 +87,18 @@ public class Central extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.drawer_icon) {
-				onRight(null);
+				onLeft(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 
-    public  void onRight(View view)
+    public  void onLeft(View view)
     {
-    	if(drawerLayout!=null && rightRL !=null)
-    		drawerLayout.openDrawer(rightRL);
+    	if(drawerLayout!=null && leftRL !=null)
+    		drawerLayout.openDrawer(leftRL);
     }
+   
+
 }

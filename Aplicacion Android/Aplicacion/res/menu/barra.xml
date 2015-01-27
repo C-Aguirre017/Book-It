@@ -8,12 +8,6 @@
       yourapp:showAsAction="always"/>
 
 <item 
-	  android:id="@+id/sort_icon"
-      android:title="@string/sort_icon"   
-      android:icon="@drawable/filtrar" 
-      yourapp:showAsAction="always"/>
-
-<item 
 	  android:id="@+id/drawer_icon"
       android:title="@string/drawer_icon"   
       android:icon="@drawable/ic_drawer" 

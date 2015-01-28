@@ -42,6 +42,10 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 		  Mapas.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 		  Mapas.setOnMarkerClickListener(this);
 		  Mapas.setOnMapLongClickListener(this);
+		  
+		  LatLng latLng = new LatLng(-33.498444, -70.611722);
+		  CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+		  Mapas.animateCamera(cameraUpdate);
 		 
 		  return v;	  
 	  }

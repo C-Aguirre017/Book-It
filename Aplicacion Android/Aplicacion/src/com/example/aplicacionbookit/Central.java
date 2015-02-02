@@ -64,8 +64,8 @@ public class Central extends ActionBarActivity {
             		startActivity(actoHelp);
             	}
             	else {
-            		 Central.this.finish();
             	}
+            		 Central.this.finish();
             }
         });
 	    

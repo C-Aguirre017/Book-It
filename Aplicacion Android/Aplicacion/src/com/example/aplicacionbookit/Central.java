@@ -51,14 +51,9 @@ public class Central extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
             	
             	if(position ==0){
-            		Toast.makeText(getApplicationContext(), "Para crear un Pin deje apretado en el mapa el lugar en donde quiere la clase", Toast.LENGTH_SHORT).show();
+            		Toast.makeText(Central.this, "Para crear un Pin deje apretado en el mapa el lugar en donde quiere la clase", Toast.LENGTH_SHORT).show();
             	}
             	else if(position ==1){
-            		// Esto es Help
-            		Intent actoHelp = new Intent(Central.this,Help.class);
-            		startActivity(actoHelp);
-            	}
-            	else if(position ==2){
             		// Esto es Help
             		Intent actoHelp = new Intent(Central.this,Help.class);
             		startActivity(actoHelp);

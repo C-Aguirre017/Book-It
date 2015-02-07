@@ -39,7 +39,7 @@
 	        android:background="@drawable/rounded_button"
 	        android:gravity="center_vertical|center_horizontal"
 	        android:inputType="textEmailAddress"
-	        android:text="@string/Login_Usuario" />
+	        android:text="Aplicacion Book IT" />
 
 	    <EditText
 	        android:id="@+id/Password"

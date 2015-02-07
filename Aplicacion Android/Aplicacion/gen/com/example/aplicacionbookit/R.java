@@ -1486,16 +1486,16 @@ containing a value of this type.
         public static final int Login=0x7f0b0052;
         public static final int Password=0x7f0b0050;
         public static final int Registrarse=0x7f0b0051;
-        public static final int Registro_Aceptar=0x7f0b0066;
-        public static final int Registro_ConfirmVisit=0x7f0b0065;
-        public static final int Registro_CorreoUC=0x7f0b0061;
-        public static final int Registro_Nombre=0x7f0b005f;
-        public static final int Registro_Pass=0x7f0b0063;
-        public static final int Registro_TextoConfirmarContrasena=0x7f0b0064;
-        public static final int Registro_TextoCorreoUc=0x7f0b0060;
-        public static final int Registro_TextoIngresarContrasena=0x7f0b0062;
-        public static final int Registro_TextoNombre=0x7f0b005e;
-        public static final int Registro_TituloRegistro=0x7f0b005d;
+        public static final int Registro_Aceptar=0x7f0b0068;
+        public static final int Registro_ConfirmVisit=0x7f0b0067;
+        public static final int Registro_CorreoUC=0x7f0b0063;
+        public static final int Registro_Nombre=0x7f0b0061;
+        public static final int Registro_Pass=0x7f0b0065;
+        public static final int Registro_TextoConfirmarContrasena=0x7f0b0066;
+        public static final int Registro_TextoCorreoUc=0x7f0b0062;
+        public static final int Registro_TextoIngresarContrasena=0x7f0b0064;
+        public static final int Registro_TextoNombre=0x7f0b0060;
+        public static final int Registro_TituloRegistro=0x7f0b005f;
         public static final int UsuarioUc=0x7f0b004f;
         public static final int action_bar=0x7f0b002e;
         public static final int action_bar_activity_content=0x7f0b0001;
@@ -1525,10 +1525,11 @@ containing a value of this type.
         public static final int default_activity_button=0x7f0b003a;
         public static final int dialog=0x7f0b0027;
         public static final int disableHome=0x7f0b001c;
-        public static final int drawer_icon=0x7f0b0069;
+        public static final int drawer_icon=0x7f0b006b;
         public static final int dropdown=0x7f0b0028;
         public static final int edit_query=0x7f0b0042;
         public static final int end=0x7f0b002a;
+        public static final int etResponse=0x7f0b005e;
         public static final int expand_activities_button=0x7f0b0038;
         public static final int expanded_menu=0x7f0b003e;
         public static final int grayscale=0x7f0b0018;
@@ -1543,7 +1544,7 @@ containing a value of this type.
         public static final int imageView1=0x7f0b004e;
         public static final int listMode=0x7f0b001a;
         public static final int list_item=0x7f0b003b;
-        public static final int map=0x7f0b0067;
+        public static final int map=0x7f0b0069;
         public static final int match_parent=0x7f0b0012;
         public static final int middle=0x7f0b002b;
         public static final int monochrome=0x7f0b0019;
@@ -1563,7 +1564,7 @@ containing a value of this type.
         public static final int search_close_btn=0x7f0b004a;
         public static final int search_edit_frame=0x7f0b0046;
         public static final int search_go_btn=0x7f0b004c;
-        public static final int search_icon=0x7f0b0068;
+        public static final int search_icon=0x7f0b006a;
         public static final int search_mag_icon=0x7f0b0047;
         public static final int search_plate=0x7f0b0048;
         public static final int search_src_text=0x7f0b0049;
@@ -1582,6 +1583,7 @@ containing a value of this type.
         public static final int textView2=0x7f0b005a;
         public static final int title=0x7f0b003d;
         public static final int top_action_bar=0x7f0b0032;
+        public static final int tvIsConnected=0x7f0b005d;
         public static final int up=0x7f0b0033;
         public static final int useLogo=0x7f0b0021;
         public static final int withText=0x7f0b0026;
@@ -1642,9 +1644,10 @@ containing a value of this type.
         public static final int activity_central=0x7f030019;
         public static final int activity_crear_marker=0x7f03001a;
         public static final int activity_help=0x7f03001b;
-        public static final int activity_registro=0x7f03001c;
-        public static final int fragment_mapa=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
+        public static final int activity_main=0x7f03001c;
+        public static final int activity_registro=0x7f03001d;
+        public static final int fragment_mapa=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
     public static final class menu {
         public static final int barra=0x7f0c0000;

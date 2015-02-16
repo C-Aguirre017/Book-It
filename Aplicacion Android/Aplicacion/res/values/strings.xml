@@ -9,11 +9,11 @@
     <string name="title_activity_help">Help</string>
     <string name="title_activity_registro">Registro</string>
 
-	<!--Menu -->
+    <!-- Menu -->
     <string name="search_title">Buscar Aca</string>
-    <string name="drawer_icon">Drawer</string>    
+    <string name="drawer_icon">Drawer</string>
     <string name="sort_icon">Filtrar</string>
-    
+
     <!-- Login -->
 
     <string name="Login_Usuario">Usuario UC</string>
@@ -33,8 +33,8 @@
     <string name="Metodo_Login">Login</string>
     <string name="Metodo_LimpiarCasilla">LimpiarCasilla</string>
     <string name="Metodo_AceptarRegistro">Aceptar</string>
-    
-        <!-- Marker Options -->
+
+    <!-- Marker Options -->
 
     <string name="MarkerOptions_Ramo">Buscar Ramo</string>
     <string name="MarkerOptions_Ayuadntias">Ayudantía</string>
@@ -42,15 +42,16 @@
     <string name="MarkerOptions_Dudas">Duda de Ejercicio</string>
     <string name="MarkerOptions_Descripcion">Escriba una descripción</string>
 
-
     <!-- Mapa -->
 
     <string name="SignoMas">+</string>
-    
-        <!-- Colores -->
-<!-- #CCCCCCC era e lfondo de antes -->
+
+    <!-- Colores -->
+    <!-- #CCCCCCC era e lfondo de antes -->
     <color name="Fondo">#FFFFFF</color>
     <color name="ColorNaranjo">#FF7300</color>
     <color name="Blancoo">#FFFFFF</color>
-    
+
+    <string name="title_activity_enviar_mensaje">EnviarMensaje</string>
+
 </resources>

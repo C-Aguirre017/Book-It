@@ -12,8 +12,6 @@ public class Registro extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registro);
-		android.app.ActionBar bariita= getActionBar();
-//		bariita.hide();
 	}
 	
 	 public void Aceptar(View v){

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -20,9 +19,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.net.Uri;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -32,12 +31,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.la;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -81,6 +76,7 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 	public void onStart() {
 	      super.onStart();
 	      // Connect the client.
+	      
 	      if(Mapas.getMyLocation()!=null){
 			  LatLng latLng = new LatLng(Mapas.getMyLocation().getLatitude(), Mapas.getMyLocation().getLongitude());
 			  CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
@@ -89,11 +85,12 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 	      
 	      //Pedir todos los Pins
 	      	//Aca hay q filtar segun lo q se busca por ejemplo si se busca ramo calculo II poner algo 
-	      new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+	      new AsyncTask_Get().execute("http://pinit-api.herokuapp.com/pins.json");
+	      
 	 }  
 	  
 	@Override
-	public boolean onMarkerClick(Marker marker) {
+	public boolean onMarkerClick(final Marker marker) {
 
 		String nombre_ramo = marker.getTitle();
 		String descripcion = marker.getSnippet();
@@ -103,10 +100,28 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 			  				 " Descripcion: \n	"+ descripcion)
 			  	.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
 		             public void onClick(DialogInterface dialog, int id) {
+		                 
+		            	 String[] TO = {"c.aguirre017@gmail.com"};
+		                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		                 emailIntent.setData(Uri.parse("mailto:"));
+		                 emailIntent.setType("text/plain");
+
+
+		                 emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+		                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Primera Prueba");
+		                 emailIntent.putExtra(Intent.EXTRA_TEXT, "Probando");
+
+		                 try {
+		                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+		                    Log.i("Finished sending email...", "");
+		                 } catch (android.content.ActivityNotFoundException ex) {
+		                    Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+		                 }      
 		                   }
 		               })
 	           .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 		                   public void onClick(DialogInterface dialog, int id) {
+		                	   marker.hideInfoWindow();
 		                   }
 		               });
 		AlertDialog alert = builder.create();  
@@ -150,32 +165,19 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 	 }
  
  
- // Metodos Assync Task
-	public boolean postData_Pins(double lat, double lon , double precio, String titulo, String Descripcion, String publicacion) {
-	    // Create a new HttpClient and Post Header
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://pinit-api.herokuapp.com/pins");
+ 
+ 	// POST
+	private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
-	    try {
-	        // Add your data
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	        nameValuePairs.add(new BasicNameValuePair("latitude",""+lat));
-	        nameValuePairs.add(new BasicNameValuePair("longitude",""+lon));
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-	        // Execute HTTP Post Request
-	        HttpResponse response = httpclient.execute(httppost);
-	       
-	        
-	        return true;
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    	return false;
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    	return false;
-	    }
-	} 
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			
+			return postData_Pins(params[0]);
+		}
+		
+		
+	}
 	
 	public boolean postData_Pins(String Mensaje) {
 		
@@ -205,6 +207,75 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 	    	return false;
 	    }
 	} 
+	
+	
+	 
+	// GET Pins
+	private class AsyncTask_Get extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+        	 return GET(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        
+        @Override
+        protected void onPostExecute(String result) {            
+
+			result = "{ \"pins\":" + result +   "}" ;
+			try {
+				JSONObject json = new JSONObject(result); 
+				JSONArray articles = json.getJSONArray("pins"); 	
+				for (int i = 0; i < articles.length(); i++) {
+						double lat=-1,lon=-1, precio=-1;
+						String Titulo=null,Descripcion=null,Facultad=null,Publicacion=null;
+						
+						//Encontramos los valores
+						try{lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));}catch(Exception e){}
+						try{lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));}catch(Exception e){}
+						try{Titulo = articles.getJSONObject(i).getString("titulo");}catch(Exception e){}
+						try{Descripcion = articles.getJSONObject(i).getString("descripcion");}catch(Exception e){}
+						try{Publicacion = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
+						try{precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));}catch(Exception e){}
+						
+						//Creando Mensaje
+						String Mensaje;
+						if(Descripcion !=null)
+							Mensaje= Descripcion;
+						else
+							Mensaje= "No hay";
+						
+						if (Publicacion !=null) {
+							Mensaje += "\n Fecha Creación: \n	" + Publicacion;	
+						}
+						else {
+							Mensaje += "\n Fecha Creación: \n	No hay";
+						}
+						
+						if(	precio !=-1){
+							Mensaje += "\n Dispuesto a Pagar: \n	"  + precio; 
+						}else{
+							Mensaje+= "\n Dispuesto a Pagar: \n	No hay" ;
+						}
+							
+						//Inserta el Marker
+						if(lat != -1 && lon != -1){
+							LatLng lugar = new LatLng(lat,lon);
+							Mapas.addMarker(new MarkerOptions()
+				    			.position(lugar)
+				    			.title(Titulo)
+				    			.snippet(Mensaje)
+				    			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+				    			.draggable(false)
+								);
+						}
+						
+					}			
+			} catch (Exception e) {
+					// TODO: handle exception
+					Toast.makeText(getActivity().getBaseContext(),"Error al conectar con la Base de datos", Toast.LENGTH_LONG).show();
+			}
+       }
+	}
 	
 	public String GET(String url){
         InputStream inputStream = null;
@@ -245,85 +316,7 @@ public class Fragment_Mapa extends Fragment  implements OnMapClickListener, OnMa
 
     }
 	
-	
-	
-	//AsyncTasks
-	
- 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-	        @Override
-	        protected String doInBackground(String... urls) {
-	        	 return GET(urls[0]);
-	        }
-	        // onPostExecute displays the results of the AsyncTask.
-	        
-	        @Override
-	        protected void onPostExecute(String result) {            
-
-				result = "{ \"pins\":" + result +   "}" ;
-				try {
-					JSONObject json = new JSONObject(result); 
-					JSONArray articles = json.getJSONArray("pins"); 	
-					for (int i = 0; i < articles.length(); i++) {
-							double lat=-1,lon=-1, precio=-1;
-							String Titulo=null,Descripcion=null,Facultad=null,Publicacion=null;
-							
-							//Encontramos los valores
-							try{lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));}catch(Exception e){}
-							try{lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));}catch(Exception e){}
-							try{Titulo = articles.getJSONObject(i).getString("titulo");}catch(Exception e){}
-							try{Descripcion = articles.getJSONObject(i).getString("descripcion");}catch(Exception e){}
-							try{Publicacion = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
-							try{precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));}catch(Exception e){}
-							
-							//Creando Mensaje
-							String Mensaje;
-							if(Descripcion !=null)
-								Mensaje= Descripcion;
-							else
-								Mensaje= "No hay";
-							
-							if (Publicacion !=null) {
-								Mensaje += "\n Fecha Creación: \n	" + Publicacion;	
-							}
-							else {
-								Mensaje += "\n Fecha Creación: \n	No hay";
-							}
-							
-							if(	precio !=-1){
-								Mensaje += "\n Dispuesto a Pagar: \n	"  + precio; 
-							}else{
-								Mensaje+= "\n Dispuesto a Pagar: \n	No hay" ;
-							}
-								
-							//Inserta el Marker
-							if(lat != -1 && lon != -1){
-								LatLng lugar = new LatLng(lat,lon);
-								Mapas.addMarker(new MarkerOptions()
-					    			.position(lugar)
-					    			.title(Titulo)
-					    			.snippet(Mensaje)
-					    			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-					    			.draggable(false)
-									);
-							}
-							
-						}			
-				} catch (Exception e) {
-						// TODO: handle exception
-						Toast.makeText(getActivity().getBaseContext(),"Error al conectar con la Base de datos", Toast.LENGTH_LONG).show();
-				}
-	       }
- 	}
+ 	
  
- 	private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
-		@Override
-		protected Boolean doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			
-			return postData_Pins(params[0]);
-		}
- 		
- 		
- 	}
 }

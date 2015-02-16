@@ -365,6 +365,7 @@ int id action_context_bar 0x7f0b002f
 int id action_menu_divider 0x7f0b0002
 int id action_menu_presenter 0x7f0b0003
 int id action_mode_close_button 0x7f0b0036
+int id action_settings 0x7f0b006c
 int id activity_central2 0x7f0b0053
 int id activity_chooser_view_content 0x7f0b0037
 int id always 0x7f0b0022
@@ -480,6 +481,7 @@ int layout activity_registro 0x7f03001d
 int layout fragment_mapa 0x7f03001e
 int layout support_simple_spinner_dropdown_item 0x7f03001f
 int menu barra 0x7f0c0000
+int menu enviar_mensaje 0x7f0c0001
 int string Login_Entrar 0x7f070032
 int string Login_Registrarse 0x7f070033
 int string Login_Usuario 0x7f070031
@@ -545,6 +547,7 @@ int string search_title 0x7f07002e
 int string sort_icon 0x7f070030
 int string title_activity_central 0x7f07002a
 int string title_activity_crear_marker 0x7f07002b
+int string title_activity_enviar_mensaje 0x7f070044
 int string title_activity_help 0x7f07002c
 int string title_activity_registro 0x7f07002d
 int string wallet_buy_button_place_holder 0x7f070019

@@ -1508,6 +1508,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f0b0002;
         public static final int action_menu_presenter=0x7f0b0003;
         public static final int action_mode_close_button=0x7f0b0036;
+        public static final int action_settings=0x7f0b006c;
         public static final int activity_central2=0x7f0b0053;
         public static final int activity_chooser_view_content=0x7f0b0037;
         public static final int always=0x7f0b0022;
@@ -1651,6 +1652,7 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int barra=0x7f0c0000;
+        public static final int enviar_mensaje=0x7f0c0001;
     }
     public static final class string {
         public static final int Login_Entrar=0x7f070032;
@@ -1815,12 +1817,13 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f070018;
         public static final int drawer_icon=0x7f07002f;
         public static final int hello_world=0x7f070028;
-        /** Menu 
+        /**  Menu 
          */
         public static final int search_title=0x7f07002e;
         public static final int sort_icon=0x7f070030;
         public static final int title_activity_central=0x7f07002a;
         public static final int title_activity_crear_marker=0x7f07002b;
+        public static final int title_activity_enviar_mensaje=0x7f070044;
         public static final int title_activity_help=0x7f07002c;
         public static final int title_activity_registro=0x7f07002d;
         /**  Text on a placeholder buy button when Google Play services is not

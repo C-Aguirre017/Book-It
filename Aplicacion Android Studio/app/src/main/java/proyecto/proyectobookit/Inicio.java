@@ -1,7 +1,9 @@
 package proyecto.proyectobookit;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -26,7 +28,9 @@ public class Inicio extends FragmentActivity {
 
     private LoginButton authButton;
     private UiLifecycleHelper uiHelper;
+    private SharedPreferences sharedPref;
 
+    private String KEY_LOGIN = "ingresado";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,12 @@ public class Inicio extends FragmentActivity {
 
         uiHelper = new UiLifecycleHelper(this, statusCallback);
         uiHelper.onCreate(savedInstanceState);
+        sharedPref = getSharedPreferences("config", MODE_PRIVATE);
+
+        if (yaHaIngresado()) {
+            Log.d("Mensaje", "Login saltado");
+            seguirCentro();
+        }
 
         setContentView(R.layout.activity_inicio);
 
@@ -43,22 +53,33 @@ public class Inicio extends FragmentActivity {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-                    Intent app = new Intent(Inicio.this, Central.class);
-                    startActivity(app);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean(KEY_LOGIN, true);
+                    editor.commit();
+                    seguirCentro();
                 } else {
-                    Log.d("MainActivity", "You are not logged in.");
+                    Log.d("MainActivity", "Nop.");
                 }
             }
         });
+    }
+
+    private boolean yaHaIngresado() {
+       return sharedPref.getBoolean(KEY_LOGIN, false);
+    }
+
+    private void seguirCentro() {
+        Intent app = new Intent(Inicio.this, Central.class);
+        startActivity(app);
     }
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
             if (state.isOpened()) {
-                Log.d("MainActivity", "Facebook session opened2.");
+                Log.d("MainActivity", "Facebook session opened.");
             } else if (state.isClosed()) {
-                Log.d("MainActivity", "Facebook session closed2.");
+                Log.d("MainActivity", "Facebook session closed.");
             }
         }
     };

@@ -1,5 +1,6 @@
 package proyecto.proyectobookit;
 
+import com.facebook.Session;
 import com.google.android.gms.maps.GoogleMap;
 
 import android.net.Uri;
@@ -66,6 +67,8 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
+
+        // Log.d("Mensaje", Session.getActiveSession().getAccessToken());
 
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);

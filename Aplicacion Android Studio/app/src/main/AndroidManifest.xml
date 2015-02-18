@@ -28,16 +28,20 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDXCRWK4Vts6CiU0XN8T_OBTOSEecdAn3s" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".Inicio"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,7 +51,8 @@
         </activity>
         <activity
             android:name=".Central"
-            android:label="@string/title_activity_central" >
+            android:label="@string/title_activity_central"
+            android:theme="@style/Central">
         </activity>
         <activity
             android:name=".Help"
@@ -57,6 +62,9 @@
             android:name=".CrearMarker"
             android:label="@string/title_activity_crear_marker" >
         </activity>
+        <activity android:name="com.facebook.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

@@ -15,7 +15,6 @@
     <string name="sort_icon">Filtrar</string>
 
     <!-- Login -->
-
     <string name="Login_Usuario">Usuario UC</string>
     <string name="Login_Entrar">Entrar</string>
     <string name="Login_Registrarse">Registrarme</string>
@@ -49,15 +48,17 @@
 
 
     <!-- Mapa -->
-
     <string name="SignoMas">+</string>
 
     <!-- Colores -->
-    <!-- #CCCCCCC era e lfondo de antes -->
+    <!-- #CCCCCCC era el fondo de antes -->
     <color name="Fondo">#FFFFFF</color>
     <color name="ColorNaranjo">#FF7300</color>
     <color name="Blancoo">#FFFFFF</color>
 
     <string name="title_activity_maps">Map</string>
+
+    <!-- FB Configuracion -->
+    <string name="facebook_app_id">1396273664015950</string>
 
 </resources>

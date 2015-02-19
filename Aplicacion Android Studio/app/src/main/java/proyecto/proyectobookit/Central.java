@@ -44,9 +44,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,14 +234,18 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
             //some code
-            String ramo = data.getStringExtra("ramo");
-            String descripcion = data.getStringExtra("descripcion");
+            String ramo = "" + data.getStringExtra("ramo");
+            String descripcion =""+ data.getStringExtra("descripcion");
 
             //Obtener Fecha y Hora
             Long tsLong = System.currentTimeMillis()/1000;
             String ts = tsLong.toString();
 
-            String Mensaje = point.latitude+ "," +point.longitude+ "," +0+ "," +ramo+ "," +descripcion + "," + ts;
+
+            //Publicacion (0), Realizacion(1) , Duracion (2) , Titulo (3), Descripcion (4), Precio (5), Tipo_ayuda (6), Facultad (7), Latitud (8), Longitud (9)
+
+            String Mensaje= ts + "," + "no" + ","  + "5000" +  "," + ramo +  "," + descripcion +  "," + "0" +  "," + "clase" +  "," + "san joaquin" +  "," + point.latitude+ "," +point.longitude;
+
 
             new AsyncTask_PostMarker().execute(Mensaje);
 
@@ -245,59 +253,67 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
     }
 
 
-    // Metodos Assync Task
-    public boolean postData_Pins(double lat, double lon , double precio, String titulo, String Descripcion, String publicacion) {
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://pinit-api.herokuapp.com/pins");
+    public boolean postData_Pins( String usuario, String token, String publicacion, String realizacion,  String duracion ,  String titulo ,String descripcion,String precio, String tipo_ayuda,  String facultad, String latitud , String longitud) {
 
+        HttpURLConnection connection = null;
         try {
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("latitude",""+lat));
-            nameValuePairs.add(new BasicNameValuePair("longitude",""+lon));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
+            String urlParameters =
+                    "user_email=" + URLEncoder.encode(usuario, "UTF-8") +
+                            "&user_token=" + URLEncoder.encode(token, "UTF-8") +
+                            "&duracion=" + URLEncoder.encode(duracion, "UTF-8") +
+                            "&titulo=" + URLEncoder.encode(titulo, "UTF-8") +
+                            "&descripcion=" + URLEncoder.encode(descripcion, "UTF-8") +
+                            "&precio=" + URLEncoder.encode(precio, "UTF-8") +
+                            "&facultad=" + URLEncoder.encode(facultad, "UTF-8") +
+                            "&latitude=" + URLEncoder.encode(latitud, "UTF-8") +
+                            "&longitude=" + URLEncoder.encode(longitud, "UTF-8");
+            //"&publicacion=" + URLEncoder.encode(publicacion, "UTF-8") +
+            //"&realizacion=" + URLEncoder.encode(realizacion, "UTF-8") +
+            //"&tipo ayuda=" + URLEncoder.encode(tipo_ayuda, "UTF-8") +
 
+            //Create connection
+            URL url = new URL("http://pinit-api.herokuapp.com/pins");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+            connection.setRequestProperty("Content-Language", "en-US");
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            //Send request
+            DataOutputStream wr = new DataOutputStream(
+                    connection.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
 
             return true;
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
             return false;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            return false;
-        }
-    }
 
-    public boolean postData_Pins(String Mensaje) {
+        } finally {
 
-        String[] Aux = Mensaje.split(",");
+            if (connection != null) {
+                connection.disconnect();
+            }
 
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://pinit-api.herokuapp.com/pins");
-
-        try {
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("latitud",Aux[0]));
-            nameValuePairs.add(new BasicNameValuePair("longitud",Aux[1]));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-
-
-            return true;
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            return false;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            return false;
         }
     }
 
@@ -339,8 +355,6 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         return result;
 
     }
-
-
 
     //AsyncTasks
 
@@ -416,12 +430,42 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         protected Boolean doInBackground(String... params) {
             // TODO Auto-generated method stub
 
-            return postData_Pins(params[0]);
+            String[] Mensaje = params[0].split(",");
+
+            //Publicacion (0)
+            String publicacion = Mensaje[0];
+            // Realizacion(1)
+            String realizacion = Mensaje[1];
+            // Duracion (2)
+            String duracion = Mensaje[2];
+            // Titulo (3)
+            String titulo = Mensaje[3];
+            // Descripcion (4)
+            String descripcion = Mensaje[4];
+            // Precio (5)
+            String precio = Mensaje[5];
+            // Tipo_ayuda (6)
+            String tipo_ayuda = Mensaje[6];
+            // Facultad (7)
+            String facultad = Mensaje[7];
+            // Latitud (8)
+            String latitud = Mensaje[8];
+            // Longitud (9)
+            String longitud = Mensaje[9];
+
+
+            return postData_Pins("ejcorrea@uc.cl","LDskzPi1vfr31746VKG3",publicacion, realizacion, duracion, titulo, descripcion, precio, tipo_ayuda, facultad, latitud, longitud);
         }
 
-
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result){
+                Toast.makeText(getBaseContext(),"Pin Creado Exitosamente", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(getBaseContext(),"Ocurrio un Error", Toast.LENGTH_LONG).show();
+            }
+        }
     }
-
-
 
 }

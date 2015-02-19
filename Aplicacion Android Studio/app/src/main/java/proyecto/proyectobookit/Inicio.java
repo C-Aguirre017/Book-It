@@ -59,6 +59,7 @@ public class Inicio extends FragmentActivity {
                     seguirCentro();
                 } else {
                     Log.d("MainActivity", "Nop.");
+
                 }
             }
         });

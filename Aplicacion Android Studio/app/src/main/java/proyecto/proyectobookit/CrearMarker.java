@@ -56,28 +56,42 @@ public class CrearMarker extends Activity {
             }
         });
 
-        Spinner dropdown = (Spinner)findViewById(R.id.crearmarker_facultad);
+        //Unidad Academica
+        Spinner dropdown_ua = (Spinner)findViewById(R.id.crearmarker_unidadacademica);
         String[] items = new String[]{"Actuación", "Agronomía", "Arquitectura","Arte","Ciencias Biológicas","Cursos Deportivos","Derecho","Ciencias Económicas y Administrativas","Educación","Enfermería","Física","Geografía","Ingeniería","Matemática","Música","Odontología","Química","Ciencias de la Salud/Medicina","Teología","Otro"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
-        dropdown.setAdapter(adapter);
+        dropdown_ua.setAdapter(adapter);
 
+
+        //Facultad
+        Spinner dropdown_campus = (Spinner)findViewById(R.id.crearmarker_facultad);
+        String[] items_campus = new String[]{"Campus Externo","Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
+        ArrayAdapter<String> adapter_campus = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items_campus);
+        dropdown_campus.setAdapter(adapter_campus);
     }
 
     public void Aceptar(View v){
 
-        //EditText descripcion = (EditText) findViewById(R.id.crear_marker_descripcion);
+        String unidadacademica="",descripcion="",precio="",campus="";
+
+        Spinner get_unidad_academica = (Spinner) findViewById(R.id.crearmarker_unidadacademica);
+        EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
+        EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
+        Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
+
+        unidadacademica = get_unidad_academica.getSelectedItem().toString();
+        descripcion = get_descripcion.getText().toString();
+        precio = get_precio.getText().toString();
+        campus = get_campus.getSelectedItem().toString();
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("ramo",editsearch.getText().toString());
-        returnIntent.putExtra("descripcion", "");
+        returnIntent.putExtra("descripcion", descripcion);
+        returnIntent.putExtra("unidadacademica",unidadacademica );
+        returnIntent.putExtra("precio",precio );
+        returnIntent.putExtra("campus",campus );
+
         setResult(RESULT_OK,returnIntent);
-
-        //Matar Threads
-        List<AsyncTask> Lista = adapter.getLista_AssyncTask();
-        for (int i=0; i < Lista.size();i++){
-                Lista.get(i).cancel(true);
-        }
-
         this.onDestroy();
         this.finish();
     }

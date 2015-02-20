@@ -242,7 +242,12 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
             //some code
             String ramo = "" + data.getStringExtra("ramo");
+            ramo= ramo.replace(";","");
+            String unidadacademica =""+ data.getStringExtra("unidadacademica");
+            String precio =""+ data.getStringExtra("precio");
+            String campus =""+ data.getStringExtra("campus");
             String descripcion =""+ data.getStringExtra("descripcion");
+            descripcion=descripcion.replace(";"," ");
 
             //Obtener Fecha y Hora
             Long tsLong = System.currentTimeMillis()/1000;
@@ -251,7 +256,7 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
 
             //Publicacion (0), Realizacion(1) , Duracion (2) , Titulo (3), Descripcion (4), Precio (5), Tipo_ayuda (6), Facultad (7), Latitud (8), Longitud (9)
 
-            String Mensaje= ts + "," + "no" + ","  + "5000" +  "," + ramo +  "," + descripcion +  "," + "0" +  "," + "clase" +  "," + "san joaquin" +  "," + point.latitude+ "," +point.longitude;
+            String Mensaje= ts + ";" + "no" + ";"  + "5000" +  ";" + ramo +  ";" + descripcion +  ";" + precio +  ";" + "clase" +  ";" + campus +  ";" + point.latitude+ ";" +point.longitude;
 
 
             if (Build.VERSION.SDK_INT >= 11) {
@@ -442,7 +447,7 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         protected Boolean doInBackground(String... params) {
             // TODO Auto-generated method stub
 
-            String[] Mensaje = params[0].split(",");
+            String[] Mensaje = params[0].split(";");
 
             //Publicacion (0)
             String publicacion = Mensaje[0];

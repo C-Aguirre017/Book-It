@@ -19,6 +19,7 @@
     <EditText
         android:id="@+id/crearmarker_search"
         android:layout_width="match_parent"
+        android:paddingTop="5dp"
         android:layout_height="50dp" >
         <requestFocus />
     </EditText>
@@ -31,10 +32,54 @@
         android:layout_weight="0.14" />
 
     <TextView
+        android:id="@+id/crearmarker_labelunidadacademica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="Unidad Académica: " />
+
+    <Spinner
+        android:id="@+id/crearmarker_unidadacademica"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <TextView
+        android:id="@+id/crearmarker_labeldescripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="Descripcion de la Clase: " />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:id="@+id/crearmarker_descripcion" />
+
+    <TextView
+        android:id="@+id/crearmarker_labelprecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="Precio dispuesto a Pagar: " />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:paddingTop="5dp"
+        android:ems="10"
+        android:id="@+id/crearmarker_precio" />
+
+    <TextView
         android:id="@+id/crearmarker_labelfacultad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Unidad Académica: " />
+        android:paddingTop="5dp"
+        android:text="Campus: " />
 
     <Spinner
         android:id="@+id/crearmarker_facultad"
@@ -42,11 +87,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
         android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        android:onClick=""/>
+        android:spinnerMode="dropdown"/>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/crearmarker_aceptar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="Aceptar"

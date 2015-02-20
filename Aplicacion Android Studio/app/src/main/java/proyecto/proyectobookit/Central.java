@@ -3,6 +3,7 @@ package proyecto.proyectobookit;
 import com.facebook.Session;
 import com.google.android.gms.maps.GoogleMap;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -14,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +60,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     private ListView ListaOpciones;
     private String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
@@ -68,6 +71,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         setContentView(R.layout.activity_central);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setHomeButtonEnabled(true);
 
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
@@ -120,7 +124,38 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         } catch (NullPointerException exception){
 
         }
+        setupDrawer();
+    }
 
+    private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(mDrawerToggle);
+    }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -132,6 +167,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         int id = item.getItemId();
          if(id ==  android.R.id.home){
             onLeft(null);

@@ -46,6 +46,9 @@
     deja apretado en el mapa el lugar de la clase y coloca toda la informacion necesaria.</string>
     <string name="Help_comofunciona">¿Como Funciona?</string>
 
+    <!-- Drawner -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Mapa -->
     <string name="SignoMas">+</string>

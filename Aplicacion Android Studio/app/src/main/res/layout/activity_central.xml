@@ -14,14 +14,15 @@
 
     <RelativeLayout
         android:id="@+id/LeftDrawer"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_gravity="left" >
+        android:layout_width="230dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" >
 
         <ListView
             android:id="@+id/ListaOpcionesCentral"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
             android:background="@android:color/background_light" />
     </RelativeLayout>
 

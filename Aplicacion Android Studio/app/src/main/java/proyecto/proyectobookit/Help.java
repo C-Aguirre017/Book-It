@@ -1,5 +1,6 @@
 package proyecto.proyectobookit;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,11 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class Help extends ActionBarActivity {
+public class Help extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

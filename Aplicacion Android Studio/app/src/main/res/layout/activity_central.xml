@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- Right Drawrer -->
+    <!-- Right Drawrer  230dp-->
 
     <RelativeLayout
         android:id="@+id/LeftDrawer"
         android:layout_width="230dp"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="start" >
 
         <ListView

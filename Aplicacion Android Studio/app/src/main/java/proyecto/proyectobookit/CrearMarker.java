@@ -1,18 +1,20 @@
 package proyecto.proyectobookit;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import java.util.List;
 import java.util.Locale;
 
 
@@ -28,6 +30,8 @@ public class CrearMarker extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_marker);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         lista_ramos = (ListView) findViewById(R.id.crearmarker_list);
         editsearch = (EditText) findViewById(R.id.crearmarker_search);
@@ -68,6 +72,24 @@ public class CrearMarker extends Activity {
         String[] items_campus = new String[]{"Campus Externo","Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
         ArrayAdapter<String> adapter_campus = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items_campus);
         dropdown_campus.setAdapter(adapter_campus);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_crear_marker, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+         if(id ==  android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+         else
+            return super.onOptionsItemSelected(item);
     }
 
     public void Aceptar(View v){

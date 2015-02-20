@@ -16,7 +16,7 @@
         android:id="@+id/LeftDrawer"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        android:layout_gravity="right" >
+        android:layout_gravity="left" >
 
         <ListView
             android:id="@+id/ListaOpcionesCentral"

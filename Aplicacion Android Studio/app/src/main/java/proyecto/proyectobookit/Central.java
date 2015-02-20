@@ -5,6 +5,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 import android.net.Uri;
 import android.app.Activity;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -33,14 +34,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.MapFragment;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -52,10 +48,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Central extends ActionBarActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
+public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
 
     Help	Ayuda;
     GoogleMap Mapas;
@@ -73,7 +67,7 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
 
-        // Log.d("Mensaje", Session.getActiveSession().getAccessToken());
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
@@ -129,18 +123,17 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_central, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.drawer_icon) {
+         if(id ==  android.R.id.home){
             onLeft(null);
             return true;
         }

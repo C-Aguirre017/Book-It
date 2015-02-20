@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
@@ -169,8 +170,14 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
 
         //Pedir todos los Pins
         //Aca hay q filtar segun lo q se busca por ejemplo si se busca ramo calculo II poner algo
-        new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
 
+        if (Build.VERSION.SDK_INT >= 11) {
+            //--post GB use serial executor by default --
+            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+        } else {
+            //--GB uses ThreadPoolExecutor by default--
+            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+        }
     }
 
     @Override
@@ -247,11 +254,16 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
             String Mensaje= ts + "," + "no" + ","  + "5000" +  "," + ramo +  "," + descripcion +  "," + "0" +  "," + "clase" +  "," + "san joaquin" +  "," + point.latitude+ "," +point.longitude;
 
 
-            new AsyncTask_PostMarker().execute(Mensaje);
+            if (Build.VERSION.SDK_INT >= 11) {
+                //--post GB use serial executor by default --
+                new AsyncTask_PostMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Mensaje);
+            } else {
+                //--GB uses ThreadPoolExecutor by default--
+                new AsyncTask_PostMarker().execute(Mensaje);
+            }
 
         }
     }
-
 
     public boolean postData_Pins( String usuario, String token, String publicacion, String realizacion,  String duracion ,  String titulo ,String descripcion,String precio, String tipo_ayuda,  String facultad, String latitud , String longitud) {
 

@@ -400,7 +400,6 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
                     try{Descripcion = articles.getJSONObject(i).getString("descripcion");}catch(Exception e){}
                     try{Publicacion = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
                     try{precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));}catch(Exception e){}
-                    try{unidad_academica = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
                     try{unidad_academica = articles.getJSONObject(i).getString("unidad_academica");}catch(Exception e){}
 
                     //Creando Mensaje

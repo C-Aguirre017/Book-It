@@ -391,7 +391,7 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
                 JSONArray articles = json.getJSONArray("pins");
                 for (int i = 0; i < articles.length(); i++) {
                     double lat=-1,lon=-1, precio=-1;
-                    String Titulo=null,Descripcion=null,Facultad=null,Publicacion=null;
+                    String Titulo=null,Descripcion=null,Facultad=null,Publicacion=null,unidad_academica="";
 
                     //Encontramos los valores
                     try{lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));}catch(Exception e){}
@@ -400,6 +400,8 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
                     try{Descripcion = articles.getJSONObject(i).getString("descripcion");}catch(Exception e){}
                     try{Publicacion = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
                     try{precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));}catch(Exception e){}
+                    try{unidad_academica = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
+                    try{unidad_academica = articles.getJSONObject(i).getString("unidad_academica");}catch(Exception e){}
 
                     //Creando Mensaje
                     String Mensaje;
@@ -424,13 +426,74 @@ public class Central extends ActionBarActivity implements GoogleMap.OnMapClickLi
                     //Inserta el Marker
                     if(lat != -1 && lon != -1){
                         LatLng lugar = new LatLng(lat,lon);
-                        Mapas.addMarker(new MarkerOptions()
+                        MarkerOptions Aux = new MarkerOptions()
                                         .position(lugar)
                                         .title(Titulo)
                                         .snippet(Mensaje)
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                        .draggable(false)
-                        );
+                                        .draggable(false);
+
+                        if(unidad_academica.toLowerCase().equals("actuación")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("agronomía")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("arquitectura")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("arte")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("ciencias biológicas")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("cursos deportivos")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("derecho")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("educación")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("enfermería")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("física")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("geografía")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("ingeniería")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("matemática")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("música")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("odontología")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("química")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
+                        }
+                        else if(unidad_academica.toLowerCase().equals("teología")){
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
+                        }
+                        else{
+                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
+                        }
+
+                        Mapas.addMarker(Aux);
                     }
 
                 }

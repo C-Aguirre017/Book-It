@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,53 +6,51 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.aplicacionbookit.CrearMarker" >
+    android:orientation="vertical"
+    tools:context="com.example.aplicacionbookit.CrearMarker"
+    android:weightSum="1">
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/crearmarker_labelsearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre del Ramo" />
+        android:text="Curso: " />
+
+    <EditText
+        android:id="@+id/crearmarker_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+        <requestFocus />
+    </EditText>
+
+    <ListView
+        android:id="@+id/crearmarker_list"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingTop="5dp"
+        android:layout_weight="0.14" />
+
+    <TextView
+        android:id="@+id/crearmarker_labelfacultad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unidad Académica: " />
+
+    <Spinner
+        android:id="@+id/crearmarker_facultad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:onClick=""/>
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="22dp"
-        android:layout_marginRight="32dp"
         android:onClick="Aceptar"
-        android:text="Aceptar" />
+        android:text="Aceptar"
+        android:layout_gravity="end"/>
 
-    <EditText
-        android:id="@+id/crear_marker_nombreramo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="15dp"
-        android:ems="10" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/crear_marker_nombreramo"
-        android:layout_below="@+id/crear_marker_nombreramo"
-        android:layout_marginTop="44dp"
-        android:text="Descripcion de la Ayuda" />
-
-    <EditText
-        android:id="@+id/crear_marker_descripcion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="26dp"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
-
-</RelativeLayout>
+</LinearLayout>

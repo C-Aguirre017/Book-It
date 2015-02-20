@@ -51,8 +51,7 @@
         </activity>
         <activity
             android:name=".Central"
-            android:label="@string/title_activity_central"
-            android:theme="@style/Central">
+            android:label="@string/title_activity_central">
         </activity>
         <activity
             android:name=".Help"

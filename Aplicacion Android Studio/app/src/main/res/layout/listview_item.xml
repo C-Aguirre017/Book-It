@@ -1,0 +1,17 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/listview_ramo_label"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:text="Curso: " />
+
+    <TextView
+        android:id="@+id/listview_ramo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/listview_ramo_label" />
+
+</RelativeLayout>

@@ -32,12 +32,22 @@
                         <requestFocus />
                     </EditText>
 
-                    <ListView
-                        android:id="@+id/crearmarker_list"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:paddingTop="5dp"
-                        android:layout_weight="0.14" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="15dp" >
+
+                        <proyecto.proyectobookit.NestedListView
+                            android:id="@+id/crearmarker_list"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:layout_weight="1"
+                            android:cacheColorHint="#00000000" >
+                        </proyecto.proyectobookit.NestedListView>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/crearmarker_labelunidadacademica"

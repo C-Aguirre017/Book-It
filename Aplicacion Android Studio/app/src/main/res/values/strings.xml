@@ -64,4 +64,13 @@
     <!-- FB Configuracion -->
     <string name="facebook_app_id">1396273664015950</string>
 
+    <!--Action Bar -->
+    <string-array name="actionbar_campus">
+        <item>Casa Central</item>
+        <item>Lo Contador</item>
+        <item>Oriente</item>
+        <item>San Joaquín</item>
+        <item>Villarica</item>
+    </string-array>
+
 </resources>

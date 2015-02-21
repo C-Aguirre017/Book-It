@@ -48,27 +48,6 @@ public class CrearMarker extends Activity {
 
         adapter = new ListViewAdapter(this,editsearch);
         lista_ramos.setAdapter(adapter);
-       /* lista_ramos.setOnTouchListener(new ListView.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-                return true;
-            }
-        });*/
         editsearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -101,7 +80,7 @@ public class CrearMarker extends Activity {
 
         //Facultad
         Spinner dropdown_campus = (Spinner)findViewById(R.id.crearmarker_facultad);
-        String[] items_campus = new String[]{"Campus Externo","Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
+        String[] items_campus = new String[]{"Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
         ArrayAdapter<String> adapter_campus = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items_campus);
         dropdown_campus.setAdapter(adapter_campus);
 

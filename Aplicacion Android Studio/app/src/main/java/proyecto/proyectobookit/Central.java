@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -65,9 +66,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
 
-    //MarkerOptions
-    List<MarkerOptions> Maps_Markers = new ArrayList<MarkerOptions>();
-
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
@@ -79,13 +77,72 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //Configurar Action Bar
 
+        SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actionbar_campus,android.R.layout.simple_spinner_dropdown_item);
+
+        ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
+
+            String[] items = getResources().getStringArray(R.array.actionbar_campus); // List items from res
+
+            @Override
+            public boolean onNavigationItemSelected(int position, long id) {
+
+                // Do stuff when navigation item is selected
+
+                Toast.makeText(getBaseContext(),items[position],Toast.LENGTH_LONG);
+                if(Mapas != null) {
+                    if (items[position].toLowerCase().equals("san joaquín")) {
+
+                        LatLng latLng = new LatLng(-33.498444, -70.611722);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+                        Mapas.animateCamera(cameraUpdate);
+                    }
+                    else if (items[position].toLowerCase().equals("casa central")) {
+
+                        LatLng latLng = new LatLng(-33.440809, -70.640764);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                        Mapas.animateCamera(cameraUpdate);
+                    }
+                    else if (items[position].toLowerCase().equals("lo contador")) {
+
+                        LatLng latLng = new LatLng(-33.419428, -70.618574);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                        Mapas.animateCamera(cameraUpdate);
+                    }
+                    else if (items[position].toLowerCase().equals("oriente")) {
+
+                        LatLng latLng = new LatLng(-33.437226, -70.623899);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                        Mapas.animateCamera(cameraUpdate);
+                    }
+                    else if (items[position].toLowerCase().equals("villarica")) {
+
+                        LatLng latLng = new LatLng(-38.738457, -72.601795);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+                        Mapas.animateCamera(cameraUpdate);
+                    }
+                }
+
+                return true;
+
+            }
+
+        };
+
+
+        ActionBar actions = getActionBar();
+        try{ actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);}catch (Exception e){}
+        actions.setDisplayHomeAsUpEnabled(true);
+        actions.setDisplayShowTitleEnabled(false);
+        try{actions.setListNavigationCallbacks(adapter, callback);}catch (Exception e){}
+
+
+
+        //Configurar List View
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
-
         String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
-
         ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
         ListaOpciones.setAdapter(adaptador);
@@ -106,23 +163,17 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
         });
 
+        //Configurar Mapa
         try {
             if(null == Mapas){
                 Mapas = ((MapFragment) getFragmentManager().findFragmentById(
                         R.id.mapView)).getMap();
                 Mapas.setMyLocationEnabled(true);
                 Mapas.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                Mapas.setBuildingsEnabled(true);
                 Mapas.setOnMarkerClickListener(this);
                 Mapas.setOnMapLongClickListener(this);
 
-                LatLng latLng = new LatLng(-33.498444, -70.611722);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                Mapas.animateCamera(cameraUpdate);
-
-                /**
-                 * If the map is still null after attempted initialisation,
-                 * show an error to the user
-                 */
                 if(null == Mapas) {
                     Toast.makeText(getApplicationContext(),
                             "Error creating map",Toast.LENGTH_SHORT).show();
@@ -138,26 +189,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     public void onResume() {
         super.onResume();
 
-        // Connect the client.
-        if(Mapas != null){
-            if(Mapas.getMyLocation()!=null){
-                LatLng latLng = new LatLng(Mapas.getMyLocation().getLatitude(), Mapas.getMyLocation().getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                Mapas.animateCamera(cameraUpdate);
-            }
-        }
-
-        //Pedir todos los Pins
-        //Aca hay q filtar segun lo q se busca por ejemplo si se busca ramo calculo II poner algo
-
-        Mapas.clear();
-        if (Build.VERSION.SDK_INT >= 11) {
-            //--post GB use serial executor by default --
-            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
-        } else {
-            //--GB uses ThreadPoolExecutor by default--
-            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
-        }
+         Actualizar();
     }
 
     @Override
@@ -224,15 +256,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             public void afterTextChanged( Editable s )
             {
                 Button_Delete.setVisibility( s.length() > 0 ? View.VISIBLE : View.GONE );
-
-                Mapas.clear();
-                if (Build.VERSION.SDK_INT >= 11) {
-                    //--post GB use serial executor by default --
-                    new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
-                } else {
-                    //--GB uses ThreadPoolExecutor by default--
-                    new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
-                }
+                Actualizar();
             }
         } );
 
@@ -250,7 +274,21 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             onLeft(null);
             return true;
         }
+        else if(id== R.id.menucentral_refresh){
+            Actualizar();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void Actualizar() {
+        Mapas.clear();
+        if (Build.VERSION.SDK_INT >= 11) {
+            //--post GB use serial executor by default --
+            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+        } else {
+            //--GB uses ThreadPoolExecutor by default--
+            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+        }
     }
 
     public  void onLeft(View view)
@@ -463,7 +501,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     }
 
     //AsyncTasks
-
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -741,14 +778,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
             else{
                 Toast.makeText(getBaseContext(),"Ocurrio un Error", Toast.LENGTH_LONG).show();
-            }
-
-            if (Build.VERSION.SDK_INT >= 11) {
-                //--post GB use serial executor by default --
-                new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
-            } else {
-                //--GB uses ThreadPoolExecutor by default--
-                new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
             }
         }
     }

@@ -129,6 +129,7 @@ public class Inicio extends FragmentActivity {
             } else if (state.isClosed()) {
                 Log.d("MainActivity", "Facebook session closed.");
             }
+            seguirCentro();
         }
     };
 

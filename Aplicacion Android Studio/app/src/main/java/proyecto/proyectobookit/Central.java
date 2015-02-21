@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -159,6 +160,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
@@ -260,6 +266,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             EditText_Search.setText( "" );
         }
     }
+
 
     //De Google Map
 
@@ -734,6 +741,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
             else{
                 Toast.makeText(getBaseContext(),"Ocurrio un Error", Toast.LENGTH_LONG).show();
+            }
+
+            if (Build.VERSION.SDK_INT >= 11) {
+                //--post GB use serial executor by default --
+                new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+            } else {
+                //--GB uses ThreadPoolExecutor by default--
+                new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
             }
         }
     }

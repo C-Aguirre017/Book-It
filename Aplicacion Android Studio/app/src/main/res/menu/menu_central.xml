@@ -6,4 +6,10 @@
         android:actionLayout="@layout/search_layout"
         android:title="Buscar">
     </item>
+
+    <item
+        android:id="@+id/menucentral_filter"
+        android:icon="@drawable/ic_action"
+        android:showAsAction="ifRoom"
+        android:title="filter"></item>
 </menu>

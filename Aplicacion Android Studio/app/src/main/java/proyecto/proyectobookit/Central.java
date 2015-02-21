@@ -1,10 +1,15 @@
 package proyecto.proyectobookit;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 
 import android.app.ActionBar;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
@@ -71,14 +77,34 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private EditText EditText_Search = null;
     private Button Button_Delete = null;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Session fbSession;
+    private GraphUser gUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
 
-        //Configurar Action Bar
+        // Facebook
+        fbSession = Session.getActiveSession();
+        Request request =  Request.newMeRequest(fbSession, new Request.GraphUserCallback() {
+            public void onCompleted(GraphUser user, Response response) {
 
+                if (user != null) {
+                    gUser = user;
+                    Log.d("Mensaje", gUser.getId());
+                    setFbImage(gUser.getId());
+                    // first_nameText.setText(user.getFirstName());
+                    // last_nameText.setText(user.getLastName());
+                }
+                if (response != null) {
+                    System.out.println("Response=" + response);
+                }
+            }
+        });
+        Request.executeBatchAsync(request);
+
+        // Configurar Action Bar
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actionbar_campus,android.R.layout.simple_spinner_dropdown_item);
 
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
@@ -139,9 +165,10 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
 
 
-        //Configurar List View
+        // Configurar List View
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
+
         String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
         ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
@@ -150,14 +177,12 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
-                if(position ==0){
+                if(position == 0){
                     Toast.makeText(Central.this, "Manten apretado en el mapa el lugar en donde quieres recibir tu clase", Toast.LENGTH_SHORT).show();
-                }
-                else if(position ==1){
+                } else if(position == 1){
                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
                    startActivity(NuevaActividad_Help);
-                }
-                else {
+                } else {
                     Central.this.finish();
                 }
             }
@@ -182,6 +207,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         } catch (NullPointerException exception){
 
         }
+
         setupDrawer();
     }
 
@@ -195,6 +221,18 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    private void setFbImage(String id){
+        ImageView user_picture = (ImageView)findViewById(R.id.profile_image);
+        URL img_value = null;
+        try {
+            img_value = new URL("http://graph.facebook.com/" + id + "/picture?type=large");
+            Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+            user_picture.setImageBitmap(mIcon1);
+        } catch(Exception e) {
+
+        }
     }
 
     private void setupDrawer() {

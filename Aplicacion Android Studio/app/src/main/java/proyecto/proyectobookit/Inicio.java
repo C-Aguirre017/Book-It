@@ -59,7 +59,6 @@ public class Inicio extends FragmentActivity {
                     seguirCentro();
                 } else {
                     Log.d("MainActivity", "Nop.");
-                    seguirCentro();
                 }
             }
         });
@@ -82,6 +81,7 @@ public class Inicio extends FragmentActivity {
             } else if (state.isClosed()) {
                 Log.d("MainActivity", "Facebook session closed.");
             }
+            seguirCentro();
         }
     };
 

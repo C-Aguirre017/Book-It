@@ -3,10 +3,10 @@ package proyecto.proyectobookit;
 import com.facebook.Session;
 import com.google.android.gms.maps.GoogleMap;
 
+import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -16,6 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +25,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -50,20 +54,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
 
-    Help	Ayuda;
     GoogleMap Mapas;
-
     LatLng point;
-
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
 
-    private ListView ListaOpciones;
-    private String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
+    //MarkerOptions
+    List<MarkerOptions> Maps_Markers = new ArrayList<MarkerOptions>();
+
+    private Menu menu;
+    private MenuItem Menu_SearchItem = null;
+    private EditText EditText_Search = null;
+    private Button Button_Delete = null;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +83,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
 
-        Ayuda = new Help();
+        String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
 
-        ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
+        ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
         ListaOpciones.setAdapter(adaptador);
         ListaOpciones.setOnItemClickListener(new OnItemClickListener() {
@@ -85,10 +93,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
                 if(position ==0){
-                    Toast.makeText(Central.this, "Para crear un Pin deje apretado en el mapa el lugar en donde quiere la clase", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Central.this, "Manten apretado en el mapa el lugar en donde quieres recibir tu clase", Toast.LENGTH_SHORT).show();
                 }
                 else if(position ==1){
-                    // Esto es Help
                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
                    startActivity(NuevaActividad_Help);
                 }
@@ -126,6 +133,32 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         setupDrawer();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Connect the client.
+        if(Mapas != null){
+            if(Mapas.getMyLocation()!=null){
+                LatLng latLng = new LatLng(Mapas.getMyLocation().getLatitude(), Mapas.getMyLocation().getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                Mapas.animateCamera(cameraUpdate);
+            }
+        }
+
+        //Pedir todos los Pins
+        //Aca hay q filtar segun lo q se busca por ejemplo si se busca ramo calculo II poner algo
+
+        Mapas.clear();
+        if (Build.VERSION.SDK_INT >= 11) {
+            //--post GB use serial executor by default --
+            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+        } else {
+            //--GB uses ThreadPoolExecutor by default--
+            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+        }
+    }
+
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
@@ -161,6 +194,43 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_central, menu);
+        this.menu =menu;
+
+        Menu_SearchItem = menu.findItem( R.id.menu_search );
+        EditText_Search = (EditText) Menu_SearchItem.getActionView().findViewById( R.id.search );
+        Button_Delete = (Button) Menu_SearchItem.getActionView().findViewById( R.id.delete );
+        Button_Delete.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
+        EditText_Search.addTextChangedListener( new TextWatcher()
+        {
+            @Override
+            public void onTextChanged( CharSequence s, int start, int before, int count )
+            {
+                Button_Delete.setVisibility( s.length() > 0 ? View.VISIBLE : View.INVISIBLE );
+            }
+
+            @Override
+            public void beforeTextChanged( CharSequence s, int start, int count,
+                                           int after )
+            {
+            }
+
+            @Override
+            public void afterTextChanged( Editable s )
+            {
+                Button_Delete.setVisibility( s.length() > 0 ? View.VISIBLE : View.GONE );
+
+                Mapas.clear();
+                if (Build.VERSION.SDK_INT >= 11) {
+                    //--post GB use serial executor by default --
+                    new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+                } else {
+                    //--GB uses ThreadPoolExecutor by default--
+                    new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+                }
+            }
+        } );
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -170,13 +240,12 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             return true;
         }
         int id = item.getItemId();
-         if(id ==  android.R.id.home){
+        if(id ==  android.R.id.home){
             onLeft(null);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     public  void onLeft(View view)
     {
@@ -184,31 +253,15 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             drawerLayout.openDrawer(leftRL);
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Connect the client.
-        if(Mapas != null){
-            if(Mapas.getMyLocation()!=null){
-                LatLng latLng = new LatLng(Mapas.getMyLocation().getLatitude(), Mapas.getMyLocation().getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                Mapas.animateCamera(cameraUpdate);
-            }
-        }
-
-        //Pedir todos los Pins
-        //Aca hay q filtar segun lo q se busca por ejemplo si se busca ramo calculo II poner algo
-
-        if (Build.VERSION.SDK_INT >= 11) {
-            //--post GB use serial executor by default --
-            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
-        } else {
-            //--GB uses ThreadPoolExecutor by default--
-            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
+    public void delete( View v )
+    {
+        if (EditText_Search != null)
+        {
+            EditText_Search.setText( "" );
         }
     }
+
+    //De Google Map
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
@@ -287,7 +340,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             //Publicacion (0), Realizacion(1) , Duracion (2) , Titulo (3), Descripcion (4), Precio (5), Tipo_ayuda (6), Facultad (7), Latitud (8), Longitud (9)
 
             String Mensaje= ts + ";" + "no" + ";"  + "5000" +  ";" + ramo +  ";" + descripcion +  ";" + precio +  ";" + "clase" +  ";" + campus +  ";" + point.latitude+ ";" +point.longitude;
-
 
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
@@ -415,116 +467,225 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         @Override
         protected void onPostExecute(String result) {
 
+            String Mensaje_Buscador =EditText_Search.getText().toString().toLowerCase();
             result = "{ \"pins\":" + result +   "}" ;
             try {
                 JSONObject json = new JSONObject(result);
                 JSONArray articles = json.getJSONArray("pins");
                 for (int i = 0; i < articles.length(); i++) {
-                    double lat=-1,lon=-1, precio=-1;
-                    String Titulo=null,Descripcion=null,Facultad=null,Publicacion=null,unidad_academica="";
-
-                    //Encontramos los valores
-                    try{lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));}catch(Exception e){}
-                    try{lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));}catch(Exception e){}
+                    String Titulo=null;
                     try{Titulo = articles.getJSONObject(i).getString("titulo");}catch(Exception e){}
-                    try{Descripcion = articles.getJSONObject(i).getString("descripcion");}catch(Exception e){}
-                    try{Publicacion = articles.getJSONObject(i).getString("publicacion");}catch(Exception e){}
-                    try{precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));}catch(Exception e){}
-                    try{unidad_academica = articles.getJSONObject(i).getString("unidad_academica");}catch(Exception e){}
 
-                    //Creando Mensaje
-                    String Mensaje;
-                    if(Descripcion !=null)
-                        Mensaje= Descripcion;
-                    else
-                        Mensaje= "No hay";
+                    if(Titulo != null) {
+                        if(Mensaje_Buscador.equals("")) {
+                            double lat = -1, lon = -1, precio = -1;
+                            String Descripcion = null, Facultad = null, Publicacion = null, unidad_academica = "";
 
-                    if (Publicacion !=null) {
-                        Mensaje += "\n Fecha Creación: \n	" + Publicacion;
-                    }
-                    else {
-                        Mensaje += "\n Fecha Creación: \n	No hay";
-                    }
+                            //Encontramos los valores
+                            try {
+                                lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));
+                            } catch (Exception e) {
+                            }
+                            try {
+                                lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));
+                            } catch (Exception e) {
+                            }
 
-                    if(	precio !=-1){
-                        Mensaje += "\n Dispuesto a Pagar: \n	"  + precio;
-                    }else{
-                        Mensaje+= "\n Dispuesto a Pagar: \n	No hay" ;
-                    }
+                            try {
+                                Descripcion = articles.getJSONObject(i).getString("descripcion");
+                            } catch (Exception e) {
+                            }
+                            try {
+                                Publicacion = articles.getJSONObject(i).getString("publicacion");
+                            } catch (Exception e) {
+                            }
+                            try {
+                                precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));
+                            } catch (Exception e) {
+                            }
+                            try {
+                                unidad_academica = articles.getJSONObject(i).getString("unidad_academica");
+                            } catch (Exception e) {
+                            }
 
-                    //Inserta el Marker
-                    if(lat != -1 && lon != -1){
-                        LatLng lugar = new LatLng(lat,lon);
-                        MarkerOptions Aux = new MarkerOptions()
+                            //Creando Mensaje
+                            String Mensaje;
+                            if (Descripcion != null)
+                                Mensaje = Descripcion;
+                            else
+                                Mensaje = "No hay";
+
+                            if (Publicacion != null) {
+                                Mensaje += "\n Fecha Creación: \n	" + Publicacion;
+                            } else {
+                                Mensaje += "\n Fecha Creación: \n	No hay";
+                            }
+
+                            if (precio != -1) {
+                                Mensaje += "\n Dispuesto a Pagar: \n	" + precio;
+                            } else {
+                                Mensaje += "\n Dispuesto a Pagar: \n	No hay";
+                            }
+
+                            //Inserta el Marker
+                            if (lat != -1 && lon != -1) {
+                                LatLng lugar = new LatLng(lat, lon);
+                                MarkerOptions Aux = new MarkerOptions()
                                         .position(lugar)
                                         .title(Titulo)
                                         .snippet(Mensaje)
                                         .draggable(false);
 
-                        if(unidad_academica.toLowerCase().equals("actuación")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("agronomía")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("arquitectura")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("arte")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("ciencias biológicas")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("cursos deportivos")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("derecho")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("educación")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("enfermería")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("física")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("geografía")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("ingeniería")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("matemática")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("música")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("odontología")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("química")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
-                        }
-                        else if(unidad_academica.toLowerCase().equals("teología")){
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
-                        }
-                        else{
-                            Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
-                        }
+                                if (unidad_academica.toLowerCase().equals("actuación")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
+                                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
+                                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
+                                } else if (unidad_academica.toLowerCase().equals("arte")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
+                                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
+                                } else if (unidad_academica.toLowerCase().equals("derecho")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
+                                } else if (unidad_academica.toLowerCase().equals("educación")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
+                                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
+                                } else if (unidad_academica.toLowerCase().equals("física")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
+                                } else if (unidad_academica.toLowerCase().equals("geografía")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
+                                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
+                                } else if (unidad_academica.toLowerCase().equals("matemática")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
+                                } else if (unidad_academica.toLowerCase().equals("música")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
+                                } else if (unidad_academica.toLowerCase().equals("odontología")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
+                                } else if (unidad_academica.toLowerCase().equals("química")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
+                                } else if (unidad_academica.toLowerCase().equals("teología")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
+                                } else {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
+                                }
 
-                        Mapas.addMarker(Aux);
+                                Mapas.addMarker(Aux);
+                            }
+                        }
+                        else if(Titulo.toLowerCase().contains(Mensaje_Buscador)) {
+                            double lat = -1, lon = -1, precio = -1;
+                            String Descripcion = null, Facultad = null, Publicacion = null, unidad_academica = "";
+
+                            //Encontramos los valores
+                            try {
+                                lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));
+                            } catch (Exception e) {
+                            }
+                            try {
+                                lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));
+                            } catch (Exception e) {
+                            }
+
+                            try {
+                                Descripcion = articles.getJSONObject(i).getString("descripcion");
+                            } catch (Exception e) {
+                            }
+                            try {
+                                Publicacion = articles.getJSONObject(i).getString("publicacion");
+                            } catch (Exception e) {
+                            }
+                            try {
+                                precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));
+                            } catch (Exception e) {
+                            }
+                            try {
+                                unidad_academica = articles.getJSONObject(i).getString("unidad_academica");
+                            } catch (Exception e) {
+                            }
+
+                            //Creando Mensaje
+                            String Mensaje;
+                            if (Descripcion != null)
+                                Mensaje = Descripcion;
+                            else
+                                Mensaje = "No hay";
+
+                            if (Publicacion != null) {
+                                Mensaje += "\n Fecha Creación: \n	" + Publicacion;
+                            } else {
+                                Mensaje += "\n Fecha Creación: \n	No hay";
+                            }
+
+                            if (precio != -1) {
+                                Mensaje += "\n Dispuesto a Pagar: \n	" + precio;
+                            } else {
+                                Mensaje += "\n Dispuesto a Pagar: \n	No hay";
+                            }
+
+                            //Inserta el Marker
+                            if (lat != -1 && lon != -1) {
+                                LatLng lugar = new LatLng(lat, lon);
+                                MarkerOptions Aux = new MarkerOptions()
+                                        .position(lugar)
+                                        .title(Titulo)
+                                        .snippet(Mensaje)
+                                        .draggable(false);
+
+                                if (unidad_academica.toLowerCase().equals("actuación")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
+                                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
+                                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
+                                } else if (unidad_academica.toLowerCase().equals("arte")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
+                                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
+                                } else if (unidad_academica.toLowerCase().equals("derecho")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
+                                } else if (unidad_academica.toLowerCase().equals("educación")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
+                                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
+                                } else if (unidad_academica.toLowerCase().equals("física")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
+                                } else if (unidad_academica.toLowerCase().equals("geografía")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
+                                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
+                                } else if (unidad_academica.toLowerCase().equals("matemática")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
+                                } else if (unidad_academica.toLowerCase().equals("música")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
+                                } else if (unidad_academica.toLowerCase().equals("odontología")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
+                                } else if (unidad_academica.toLowerCase().equals("química")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
+                                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
+                                } else if (unidad_academica.toLowerCase().equals("teología")) {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
+                                } else {
+                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
+                                }
+
+                                Mapas.addMarker(Aux);
+                            }
+                        }
                     }
-
                 }
             } catch (Exception e) {
                 // TODO: handle exception

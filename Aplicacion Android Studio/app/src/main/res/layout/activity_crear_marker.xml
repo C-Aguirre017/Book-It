@@ -10,91 +10,99 @@
     tools:context="com.example.aplicacionbookit.CrearMarker"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/crearmarker_labelsearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Curso: " />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/crearmarker_search"
-        android:layout_width="match_parent"
-        android:paddingTop="5dp"
-        android:layout_height="50dp" >
-        <requestFocus />
-    </EditText>
+                    <TextView
+                        android:id="@+id/crearmarker_labelsearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Curso: " />
 
-    <ListView
-        android:id="@+id/crearmarker_list"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:paddingTop="5dp"
-        android:layout_weight="0.14" />
+                    <EditText
+                        android:id="@+id/crearmarker_search"
+                        android:layout_width="match_parent"
+                        android:paddingTop="5dp"
+                        android:layout_height="50dp" >
+                        <requestFocus />
+                    </EditText>
 
-    <TextView
-        android:id="@+id/crearmarker_labelunidadacademica"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Unidad Académica: " />
+                    <ListView
+                        android:id="@+id/crearmarker_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:paddingTop="5dp"
+                        android:layout_weight="0.14" />
 
-    <Spinner
-        android:id="@+id/crearmarker_unidadacademica"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+                    <TextView
+                        android:id="@+id/crearmarker_labelunidadacademica"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:text="Unidad Académica: " />
 
-    <TextView
-        android:id="@+id/crearmarker_labeldescripcion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Descripcion de la Clase: " />
+                    <Spinner
+                        android:id="@+id/crearmarker_unidadacademica"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:spinnerMode="dropdown"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:id="@+id/crearmarker_descripcion" />
+                    <TextView
+                        android:id="@+id/crearmarker_labeldescripcion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:text="Descripcion de la Clase: " />
 
-    <TextView
-        android:id="@+id/crearmarker_labelprecio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Precio dispuesto a Pagar: " />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:id="@+id/crearmarker_descripcion" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:paddingTop="5dp"
-        android:ems="10"
-        android:id="@+id/crearmarker_precio" />
+                    <TextView
+                        android:id="@+id/crearmarker_labelprecio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:text="Precio dispuesto a Pagar: " />
 
-    <TextView
-        android:id="@+id/crearmarker_labelfacultad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Campus: " />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:paddingTop="5dp"
+                        android:ems="10"
+                        android:id="@+id/crearmarker_precio" />
 
-    <Spinner
-        android:id="@+id/crearmarker_facultad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+                    <TextView
+                        android:id="@+id/crearmarker_labelfacultad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:text="Campus: " />
 
-    <Button
-        android:id="@+id/crearmarker_aceptar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="Aceptar"
-        android:text="Aceptar"
-        android:layout_gravity="end"/>
+                    <Spinner
+                        android:id="@+id/crearmarker_facultad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:spinnerMode="dropdown"/>
+
+                    <Button
+                        android:id="@+id/crearmarker_aceptar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="Aceptar"
+                        android:text="Aceptar"
+                        android:layout_gravity="end"/>
+            </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

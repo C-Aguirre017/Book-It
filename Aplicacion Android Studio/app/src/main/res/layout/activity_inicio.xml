@@ -44,8 +44,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="70dp"
                 android:layout_weight="0.08"
-                login_text="Login with Facebook"
-                logout_text="Logout"
+                login_text="Ingresar con Facebook"
+                logout_text="Cerrar sesión"
                 />
         </LinearLayout>
     </FrameLayout>

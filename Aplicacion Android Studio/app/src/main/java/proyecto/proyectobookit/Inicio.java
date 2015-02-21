@@ -43,7 +43,7 @@ public class Inicio extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         // TODO sacar despues
-        printKeyHash(this);
+        // printKeyHash(this);
 
         uiHelper = new UiLifecycleHelper(this, statusCallback);
         uiHelper.onCreate(savedInstanceState);
@@ -113,12 +113,14 @@ public class Inicio extends FragmentActivity {
 
     private boolean yaHaIngresado() {
        return false;
-       //return sharedPref.getBoolean(KEY_LOGIN, false);
+       // TODO
+       // return sharedPref.getBoolean(KEY_LOGIN, false);
     }
 
     private void seguirCentro() {
         Intent app = new Intent(Inicio.this, Central.class);
         startActivity(app);
+        finish();
     }
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {

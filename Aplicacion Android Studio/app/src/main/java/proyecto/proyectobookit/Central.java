@@ -80,6 +80,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private Session fbSession;
     private GraphUser gUser;
 
+    private MetodosUtiles M_Utiles = new MetodosUtiles();
+    private Pin Pin_Elegido;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,7 +217,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     public void onResume() {
         super.onResume();
-
          Actualizar();
     }
 
@@ -318,17 +320,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         return super.onOptionsItemSelected(item);
     }
 
-    private void Actualizar() {
-        Mapas.clear();
-        if (Build.VERSION.SDK_INT >= 11) {
-            //--post GB use serial executor by default --
-            new HttpAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
-        } else {
-            //--GB uses ThreadPoolExecutor by default--
-            new HttpAsyncTask().execute("http://pinit-api.herokuapp.com/pins.json");
-        }
-    }
-
     public  void onLeft(View view)
     {
         if(drawerLayout!=null && leftRL !=null)
@@ -342,7 +333,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             EditText_Search.setText( "" );
         }
     }
-
 
     //De Google Map
 
@@ -402,144 +392,68 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     }
 
+    private void Actualizar() {
+        Mapas.clear();
+        if (Build.VERSION.SDK_INT >= 11) {
+            //--post GB use serial executor by default --
+            new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+        } else {
+            //--GB uses ThreadPoolExecutor by default--
+            new AsyncTask_GetMarker().execute("http://pinit-api.herokuapp.com/pins.json");
+        }
+    }
+
+    //Obtener Resultados
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
-            //some code
-            String ramo = "" + data.getStringExtra("ramo");
-            ramo= ramo.replace(";","");
-            String unidadacademica =""+ data.getStringExtra("unidadacademica");
+
+            //Usuario y Token
+            String usuario = "ejcorrea@uc.cl";
+            String token = "LDskzPi1vfr31746VKG3";
+
+            //Columnas
+            String id_ramo = "" + data.getStringExtra("id_ramo");
             String precio =""+ data.getStringExtra("precio");
             String campus =""+ data.getStringExtra("campus");
             String descripcion =""+ data.getStringExtra("descripcion");
-            descripcion=descripcion.replace(";"," ");
+            String titulo = "" + data.getStringExtra("titulo");
+            String realizacion = "false";
+            String duracion = "5000";
+            String Tipo_ayuda ="clase";
 
             //Obtener Fecha y Hora
             Long tsLong = System.currentTimeMillis()/1000;
             String ts = tsLong.toString();
 
-
-            //Publicacion (0), Realizacion(1) , Duracion (2) , Titulo (3), Descripcion (4), Precio (5), Tipo_ayuda (6), Facultad (7), Latitud (8), Longitud (9)
-
-            String Mensaje= ts + ";" + "no" + ";"  + "5000" +  ";" + ramo +  ";" + descripcion +  ";" + precio +  ";" + "clase" +  ";" + campus +  ";" + point.latitude+ ";" +point.longitude;
+            //Crear Pin
+            Pin Aux = new Pin();
+            Aux.getRamo_Pin().setId_ramo(id_ramo);
+            Aux.setPrecio(precio);
+            Aux.setCampus(campus);
+            Aux.setDescripcion(descripcion);
+            //Aux.setTitulo(titulo);
+            Aux.setRealizacion(realizacion);
+            Aux.setDuracion(duracion);
+            Aux.setTipo_ayuda(Tipo_ayuda);
+            Aux.setLatitude(point.latitude);
+            Aux.setLongitude(point.longitude);
 
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
-                new AsyncTask_PostMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Mensaje);
+                new AsyncTask_PostMarker(usuario,token,Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
             } else {
                 //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_PostMarker().execute(Mensaje);
+                new AsyncTask_PostMarker(usuario,token,Aux).execute("");
             }
 
         }
     }
 
-    public boolean postData_Pins( String usuario, String token, String publicacion, String realizacion,  String duracion ,  String titulo ,String descripcion,String precio, String tipo_ayuda,  String facultad, String latitud , String longitud) {
+    //AsyncTasks Get
+    private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
-        HttpURLConnection connection = null;
-        try {
-
-            String urlParameters =
-                    "user_email=" + URLEncoder.encode(usuario, "UTF-8") +
-                            "&user_token=" + URLEncoder.encode(token, "UTF-8") +
-                            "&duracion=" + URLEncoder.encode(duracion, "UTF-8") +
-                            "&titulo=" + URLEncoder.encode(titulo, "UTF-8") +
-                            "&descripcion=" + URLEncoder.encode(descripcion, "UTF-8") +
-                            "&precio=" + URLEncoder.encode(precio, "UTF-8") +
-                            "&facultad=" + URLEncoder.encode(facultad, "UTF-8") +
-                            "&latitude=" + URLEncoder.encode(latitud, "UTF-8") +
-                            "&longitude=" + URLEncoder.encode(longitud, "UTF-8");
-            //"&publicacion=" + URLEncoder.encode(publicacion, "UTF-8") +
-            //"&realizacion=" + URLEncoder.encode(realizacion, "UTF-8") +
-            //"&tipo ayuda=" + URLEncoder.encode(tipo_ayuda, "UTF-8") +
-
-            //Create connection
-            URL url = new URL("http://pinit-api.herokuapp.com/pins");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-            connection.setRequestProperty("Content-Language", "en-US");
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream(
-                    connection.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
-
-            //Get Response
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-
-            return true;
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return false;
-
-        } finally {
-
-            if (connection != null) {
-                connection.disconnect();
-            }
-
-        }
-    }
-
-    public String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    //AsyncTasks
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
             return GET(urls[0]);
@@ -548,265 +462,249 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         @Override
         protected void onPostExecute(String result) {
-
-            String Mensaje_Buscador =EditText_Search.getText().toString().toLowerCase();
             result = "{ \"pins\":" + result +   "}" ;
             try {
                 JSONObject json = new JSONObject(result);
                 JSONArray articles = json.getJSONArray("pins");
                 for (int i = 0; i < articles.length(); i++) {
-                    String Titulo=null;
-                    try{Titulo = articles.getJSONObject(i).getString("titulo");}catch(Exception e){}
+                    //Crear Pin
+                    Pin Aux = new Pin();
+                    //Encontramos los valores
+                    try {Aux.setPublicacion(articles.getJSONObject(i).getString("publicacion")); } catch (Exception e) {}
+                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
+                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
+                    //Cambiar nombre a futuro de titulo
+                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("titulo"));}catch(Exception e){}
+                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("descripcion"));} catch (Exception e) {}
+                    try {Aux.setPrecio(articles.getJSONObject(i).getString("precio"));} catch (Exception e) {}
+                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("tipo_ayuda"));} catch (Exception e) {}
+                    try {Aux.setCampus(articles.getJSONObject(i).getString("facultad"));} catch (Exception e) {}
+                    try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
+                    try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
 
-                    if(Titulo != null) {
+                    Pin_Elegido=Aux;
+                    //Obtener Unidad_Academica
+                    if (Build.VERSION.SDK_INT >= 11) {
+                        //--post GB use serial executor by default --
+                        new AsyncTask_GetRamos().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+                    } else {
+                        //--GB uses ThreadPoolExecutor by default--
+                        new AsyncTask_GetRamos().execute("");
+                    }
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                Toast.makeText(getBaseContext(),"Error al crear el Pin en onPostExecute_GetMarker()", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        private String GET(String url){
+            InputStream inputStream = null;
+            String result = "";
+            try {
+
+                // create HttpClient
+                HttpClient httpclient = new DefaultHttpClient();
+
+                // make GET request to the given URL
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+                // receive response as inputStream
+                inputStream = httpResponse.getEntity().getContent();
+
+                // convert inputstream to string
+                if(inputStream != null)
+                    result = convertInputStreamToString(inputStream);
+                else
+                    result = "Did not work!";
+
+            } catch (Exception e) {
+                Log.d("InputStream", e.getLocalizedMessage());
+            }
+
+            return result;
+        }
+
+        private String convertInputStreamToString(InputStream inputStream) throws IOException{
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+            return result;
+
+        }
+
+    }
+
+    private class AsyncTask_GetRamos extends AsyncTask<String, Void, String> {
+
+        private Pin Aux;
+
+        public AsyncTask_GetRamos() {
+            this.Aux = Pin_Elegido;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String Url = "http://pinit-api.herokuapp.com/ramos/" + Aux.getRamo_Pin().getId_ramo() + ".json";
+            return GET(Url);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            String Mensaje_Buscador = EditText_Search.getText().toString().toLowerCase();
+            result = "{ \"ramos\":[" + result + "]}";
+            try {
+                JSONObject json = new JSONObject(result);
+                JSONArray articles = json.getJSONArray("ramos");
+                if(articles.length()== 1) {
+
+                    //Completar Pin
+                    try {Aux.getRamo_Pin().setNombre(articles.getJSONObject(0).getString("nombre")); } catch (Exception e) {}
+                    try {Aux.getRamo_Pin().setSigla(articles.getJSONObject(0).getString("sigla"));} catch (Exception e) {}
+                    try {Aux.getRamo_Pin().setUnidad_Academica(articles.getJSONObject(0).getString("rama"));} catch (Exception e) {}
+
+                    //Filtrar
+                    if(Aux.getRamo_Pin().getNombre() != null) {
                         if(Mensaje_Buscador.equals("")) {
-                            double lat = -1, lon = -1, precio = -1;
-                            String Descripcion = null, Facultad = null, Publicacion = null, unidad_academica = "";
-
-                            //Encontramos los valores
-                            try {
-                                lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));
-                            } catch (Exception e) {
-                            }
-                            try {
-                                lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));
-                            } catch (Exception e) {
-                            }
-
-                            try {
-                                Descripcion = articles.getJSONObject(i).getString("descripcion");
-                            } catch (Exception e) {
-                            }
-                            try {
-                                Publicacion = articles.getJSONObject(i).getString("publicacion");
-                            } catch (Exception e) {
-                            }
-                            try {
-                                precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));
-                            } catch (Exception e) {
-                            }
-                            try {
-                                unidad_academica = articles.getJSONObject(i).getString("unidad_academica");
-                            } catch (Exception e) {
-                            }
-
-                            //Creando Mensaje
-                            String Mensaje;
-                            if (Descripcion != null)
-                                Mensaje = Descripcion;
-                            else
-                                Mensaje = "No hay";
-
-                            if (Publicacion != null) {
-                                Mensaje += "\n Fecha Creación: \n	" + Publicacion;
-                            } else {
-                                Mensaje += "\n Fecha Creación: \n	No hay";
-                            }
-
-                            if (precio != -1) {
-                                Mensaje += "\n Dispuesto a Pagar: \n	" + precio;
-                            } else {
-                                Mensaje += "\n Dispuesto a Pagar: \n	No hay";
-                            }
-
-                            //Inserta el Marker
-                            if (lat != -1 && lon != -1) {
-                                LatLng lugar = new LatLng(lat, lon);
-                                MarkerOptions Aux = new MarkerOptions()
-                                        .position(lugar)
-                                        .title(Titulo)
-                                        .snippet(Mensaje)
-                                        .draggable(false);
-
-                                if (unidad_academica.toLowerCase().equals("actuación")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
-                                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
-                                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
-                                } else if (unidad_academica.toLowerCase().equals("arte")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
-                                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
-                                } else if (unidad_academica.toLowerCase().equals("derecho")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
-                                } else if (unidad_academica.toLowerCase().equals("educación")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
-                                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
-                                } else if (unidad_academica.toLowerCase().equals("física")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
-                                } else if (unidad_academica.toLowerCase().equals("geografía")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
-                                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
-                                } else if (unidad_academica.toLowerCase().equals("matemática")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
-                                } else if (unidad_academica.toLowerCase().equals("música")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
-                                } else if (unidad_academica.toLowerCase().equals("odontología")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
-                                } else if (unidad_academica.toLowerCase().equals("química")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
-                                } else if (unidad_academica.toLowerCase().equals("teología")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
-                                } else {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
-                                }
-
-                                Mapas.addMarker(Aux);
-                            }
+                                Colocar_Marker();
                         }
-                        else if(Titulo.toLowerCase().contains(Mensaje_Buscador)) {
-                            double lat = -1, lon = -1, precio = -1;
-                            String Descripcion = null, Facultad = null, Publicacion = null, unidad_academica = "";
-
-                            //Encontramos los valores
-                            try {
-                                lat = Double.parseDouble(articles.getJSONObject(i).getString("latitude"));
-                            } catch (Exception e) {
-                            }
-                            try {
-                                lon = Double.parseDouble(articles.getJSONObject(i).getString("longitude"));
-                            } catch (Exception e) {
-                            }
-
-                            try {
-                                Descripcion = articles.getJSONObject(i).getString("descripcion");
-                            } catch (Exception e) {
-                            }
-                            try {
-                                Publicacion = articles.getJSONObject(i).getString("publicacion");
-                            } catch (Exception e) {
-                            }
-                            try {
-                                precio = Double.parseDouble(articles.getJSONObject(i).getString("precio"));
-                            } catch (Exception e) {
-                            }
-                            try {
-                                unidad_academica = articles.getJSONObject(i).getString("unidad_academica");
-                            } catch (Exception e) {
-                            }
-
-                            //Creando Mensaje
-                            String Mensaje;
-                            if (Descripcion != null)
-                                Mensaje = Descripcion;
-                            else
-                                Mensaje = "No hay";
-
-                            if (Publicacion != null) {
-                                Mensaje += "\n Fecha Creación: \n	" + Publicacion;
-                            } else {
-                                Mensaje += "\n Fecha Creación: \n	No hay";
-                            }
-
-                            if (precio != -1) {
-                                Mensaje += "\n Dispuesto a Pagar: \n	" + precio;
-                            } else {
-                                Mensaje += "\n Dispuesto a Pagar: \n	No hay";
-                            }
-
-                            //Inserta el Marker
-                            if (lat != -1 && lon != -1) {
-                                LatLng lugar = new LatLng(lat, lon);
-                                MarkerOptions Aux = new MarkerOptions()
-                                        .position(lugar)
-                                        .title(Titulo)
-                                        .snippet(Mensaje)
-                                        .draggable(false);
-
-                                if (unidad_academica.toLowerCase().equals("actuación")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
-                                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
-                                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
-                                } else if (unidad_academica.toLowerCase().equals("arte")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
-                                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
-                                } else if (unidad_academica.toLowerCase().equals("derecho")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
-                                } else if (unidad_academica.toLowerCase().equals("educación")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
-                                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
-                                } else if (unidad_academica.toLowerCase().equals("física")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
-                                } else if (unidad_academica.toLowerCase().equals("geografía")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
-                                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
-                                } else if (unidad_academica.toLowerCase().equals("matemática")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
-                                } else if (unidad_academica.toLowerCase().equals("música")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
-                                } else if (unidad_academica.toLowerCase().equals("odontología")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
-                                } else if (unidad_academica.toLowerCase().equals("química")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
-                                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
-                                } else if (unidad_academica.toLowerCase().equals("teología")) {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
-                                } else {
-                                    Aux.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
-                                }
-
-                                Mapas.addMarker(Aux);
-                            }
+                        else if(Aux.getRamo_Pin().getNombre().toLowerCase().contains(Mensaje_Buscador)) {
+                                Colocar_Marker();
                         }
                     }
                 }
             } catch (Exception e) {
                 // TODO: handle exception
-                Toast.makeText(getBaseContext(),"Error al conectar con la Base de datos", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Error al crear el Pin en onPostExecute_GetRamos()", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+        private void Colocar_Marker(){
+            //Inserta el Marker
+            if (Aux.getLatitudeNumber() != -1 && Aux.getLongitudeNumber() != -1) {
+                LatLng lugar = new LatLng(Aux.getLatitudeNumber(), Aux.getLongitudeNumber());
+                MarkerOptions Aux_Marker = new MarkerOptions()
+                        .position(lugar)
+                        .snippet(M_Utiles.CrearMensaje(Aux))
+                        .draggable(false);
+                ColocarIcono(Aux_Marker);
             }
         }
+
+        private String GET(String url){
+            InputStream inputStream = null;
+            String result = "";
+            try {
+
+                // create HttpClient
+                HttpClient httpclient = new DefaultHttpClient();
+
+                // make GET request to the given URL
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+                // receive response as inputStream
+                inputStream = httpResponse.getEntity().getContent();
+
+                // convert inputstream to string
+                if(inputStream != null)
+                    result = convertInputStreamToString(inputStream);
+                else
+                    result = "Did not work!";
+
+            } catch (Exception e) {
+                Log.d("InputStream", e.getLocalizedMessage());
+            }
+
+            return result;
+        }
+
+        private String convertInputStreamToString(InputStream inputStream) throws IOException{
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+            return result;
+
+        }
+
+        private void ColocarIcono(MarkerOptions Aux_Marker) {
+            String NombreRamo =  Aux.getRamo_Pin().getNombre();
+            String Sigla = Aux.getRamo_Pin().getSigla();
+            String unidad_academica=  Aux.getRamo_Pin().getUnidad_Academica();
+
+            if(Aux_Marker!= null && !Sigla.equals("") && !NombreRamo.equals("")){
+                if (unidad_academica.toLowerCase().equals("actuación")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
+                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
+                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
+                } else if (unidad_academica.toLowerCase().equals("arte")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
+                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
+                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
+                } else if (unidad_academica.toLowerCase().equals("derecho")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
+                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
+                } else if (unidad_academica.toLowerCase().equals("educación")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
+                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
+                } else if (unidad_academica.toLowerCase().equals("física")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
+                } else if (unidad_academica.toLowerCase().equals("geografía")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
+                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
+                } else if (unidad_academica.toLowerCase().equals("matemática")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
+                } else if (unidad_academica.toLowerCase().equals("música")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
+                } else if (unidad_academica.toLowerCase().equals("odontología")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
+                } else if (unidad_academica.toLowerCase().equals("química")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
+                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
+                } else if (unidad_academica.toLowerCase().equals("teología")) {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
+                } else {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
+                }
+                Aux_Marker.title(Sigla + " " + NombreRamo);
+                Mapas.addMarker(Aux_Marker);
+            }
+        }
+
     }
 
+    //AsyncTasks Post
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
+
+        private String NombreUsuario,Token;
+        Pin Pin_Elegido=null;
+        public AsyncTask_PostMarker(String usuario,String token,Pin Aux) {
+            this.Pin_Elegido = Aux;
+            this.NombreUsuario=usuario;
+            this.Token=token;
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
             // TODO Auto-generated method stub
 
-            String[] Mensaje = params[0].split(";");
-
-            //Publicacion (0)
-            String publicacion = Mensaje[0];
-            // Realizacion(1)
-            String realizacion = Mensaje[1];
-            // Duracion (2)
-            String duracion = Mensaje[2];
-            // Titulo (3)
-            String titulo = Mensaje[3];
-            // Descripcion (4)
-            String descripcion = Mensaje[4];
-            // Precio (5)
-            String precio = Mensaje[5];
-            // Tipo_ayuda (6)
-            String tipo_ayuda = Mensaje[6];
-            // Facultad (7)
-            String facultad = Mensaje[7];
-            // Latitud (8)
-            String latitud = Mensaje[8];
-            // Longitud (9)
-            String longitud = Mensaje[9];
-
-
-            return postData_Pins("ejcorrea@uc.cl","LDskzPi1vfr31746VKG3",publicacion, realizacion, duracion, titulo, descripcion, precio, tipo_ayuda, facultad, latitud, longitud);
+            return postData_Pins(NombreUsuario,Token,Pin_Elegido);
         }
 
         @Override
@@ -818,6 +716,79 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 Toast.makeText(getBaseContext(),"Ocurrio un Error", Toast.LENGTH_LONG).show();
             }
         }
+
+        private boolean postData_Pins(String usuario, String token,Pin Aux_Pin) {
+
+            HttpURLConnection connection = null;
+            try {
+
+                String urlParameters =
+                        "user_email=" + URLEncoder.encode(usuario, "UTF-8") +
+                                "&user_token=" + URLEncoder.encode(token, "UTF-8") +
+                                "&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8") +
+                                "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8") +
+                                "&descripcion=" + URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +
+                                "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
+                                "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +
+                                "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
+                                "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8");
+                //"&ramo=" + URLEncoder.encode(Aux_Pin.getId_ramo, "UTF-8");
+                //"&publicacion=" + URLEncoder.encode(publicacion, "UTF-8") +
+                //"&realizacion=" + URLEncoder.encode(realizacion, "UTF-8") +
+                //"&tipo ayuda=" + URLEncoder.encode(tipo_ayuda, "UTF-8") +
+
+                String UrlEntera = "http://pinit-api.herokuapp.com/pins" + "?user_email=" + URLEncoder.encode(usuario, "UTF-8") +
+                        "&user_token=" + URLEncoder.encode(token, "UTF-8") +"&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8")
+                        +"&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8") +"&descripcion=" +
+                        URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +"&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
+                        "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") + "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
+                        "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8");
+
+                //Create connection
+                URL url = new URL("http://pinit-api.herokuapp.com/pins");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+                connection.setRequestProperty("Content-Language", "en-US");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                //Send request
+                DataOutputStream wr = new DataOutputStream(
+                        connection.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+
+                //Get Response
+                InputStream is = connection.getInputStream();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+                String line;
+                StringBuffer response = new StringBuffer();
+                while ((line = rd.readLine()) != null) {
+                    response.append(line);
+                    response.append('\r');
+                }
+                rd.close();
+
+                return true;
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+                return false;
+
+            } finally {
+
+                if (connection != null) {
+                    connection.disconnect();
+                }
+
+            }
+        }
+
     }
 
 }

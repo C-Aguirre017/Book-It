@@ -1,26 +1,20 @@
 package proyecto.proyectobookit;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +27,8 @@ public class CrearMarker extends Activity {
     ListView lista_ramos;
     ListViewAdapter adapter;
     EditText editsearch;
+
+    MetodosUtiles M_Utiles = new MetodosUtiles();
 
     private List<String> PalabrasProhibdas = new ArrayList<String>();
 
@@ -83,8 +79,6 @@ public class CrearMarker extends Activity {
         String[] items_campus = new String[]{"Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
         ArrayAdapter<String> adapter_campus = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items_campus);
         dropdown_campus.setAdapter(adapter_campus);
-
-        AgregarPalabras();
     }
 
     @Override
@@ -97,40 +91,67 @@ public class CrearMarker extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-         if(id ==  android.R.id.home){
+        if(id ==  android.R.id.home){
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }
-         else
+        else
             return super.onOptionsItemSelected(item);
     }
 
     public void Aceptar(View v){
 
         if(VerificarEscrito()) {
-            String unidadacademica = "", descripcion = "", precio = "", campus = "";
-
-            Spinner get_unidad_academica = (Spinner) findViewById(R.id.crearmarker_unidadacademica);
+            String  descripcion = "", precio = "", campus = "",titulo="",id_ramo="";
             EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
             EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
             Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
 
-            unidadacademica = get_unidad_academica.getSelectedItem().toString();
-            descripcion = get_descripcion.getText().toString();
-            precio = get_precio.getText().toString();
-            campus = get_campus.getSelectedItem().toString();
+            if(adapter.getElegido()!=null) {
+                id_ramo = adapter.getElegido().getId_ramo();
+                titulo = adapter.getElegido().getSigla() + " " + adapter.getElegido().getNombre();
+                descripcion = get_descripcion.getText().toString();
+                precio = get_precio.getText().toString();
+                campus = get_campus.getSelectedItem().toString();
 
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("ramo", editsearch.getText().toString());
-            returnIntent.putExtra("descripcion", descripcion);
-            returnIntent.putExtra("unidadacademica", unidadacademica);
-            returnIntent.putExtra("precio", precio);
-            returnIntent.putExtra("campus", campus);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            setResult(RESULT_OK, returnIntent);
-            this.onDestroy();
-            this.finish();
+                final String finalDescripcion = descripcion;
+                final String finalPrecio = precio;
+                final String finalCampus = campus;
+                final String finalid_ramo = id_ramo;
+                final String finalTitulo = titulo;
+
+                builder.setTitle(titulo)
+                        .setMessage(M_Utiles.CrearMensaje(descripcion, "", precio))
+                        .setPositiveButton("Crear Marker", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
+    }
+
+    private void Salir(String id_ramo, String descripcion, String precio, String campus, String titulo){
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("id_ramo",id_ramo);
+        returnIntent.putExtra("titulo",titulo);
+        returnIntent.putExtra("descripcion", descripcion);
+        returnIntent.putExtra("precio", precio);
+        returnIntent.putExtra("campus", campus);
+
+        setResult(RESULT_OK, returnIntent);
+        this.onDestroy();
+        this.finish();
     }
 
     private boolean VerificarEscrito(){
@@ -160,10 +181,6 @@ public class CrearMarker extends Activity {
         return true;
     }
 
-    private void AgregarPalabras(){
-
-    }
-
     private void CrearAlertDialog(String Mensaje, String Titulo){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -175,36 +192,7 @@ public class CrearMarker extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
-
-    /*
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Salir")
-                    .setMessage("Estás seguro?")
-                    .setNegativeButton(android.R.string.cancel, null)//sin listener
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {//un listener que al pulsar, cierre la aplicacion
-                        @Override
-                        public void onClick(DialogInterface dialog, int which){
-                            //Salir
-
-                        }
-                    })
-                    .show();
-            this.finish();
-
-            // Si el listener devuelve true, significa que el evento esta procesado, y nadie debe hacer nada mas
-            return true;
-        }
-        //para las demas cosas, se reenvia el evento al listener habitual
-        return super.onKeyDown(keyCode, event);
-    }*/
 
 }
 

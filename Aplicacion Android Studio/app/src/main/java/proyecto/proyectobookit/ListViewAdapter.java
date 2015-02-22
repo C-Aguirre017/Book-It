@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,19 +33,19 @@ public class ListViewAdapter extends BaseAdapter {
     // Declare Variables
     Context mContext;
     LayoutInflater inflater;
-    private List<String> ListaPalabras = null;
+    private List<Ramo> ListaPalabras = null;
 
     private List<AsyncTask> Lista_AssyncTask = new ArrayList<AsyncTask>();
 
     EditText Search;
     AsyncTask Getter;
+    public Ramo Elegido = null;
 
     public ListViewAdapter(Context context, EditText Search) {
         mContext = context;
         this.Search =Search;
-        this.ListaPalabras = new ArrayList<String>();
+        this.ListaPalabras = new ArrayList<Ramo>();
         inflater = LayoutInflater.from(mContext);
-      //  this.BD_Clases.addAll(ListaPalabras);
         Getter =  new GetRamos();
     }
 
@@ -52,7 +54,8 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        TextView ramo;
+        TextView  Cambiar;
+        Ramo curso = null;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public Ramo getItem(int position) {
         return ListaPalabras.get(position);
     }
 
@@ -75,23 +78,17 @@ public class ListViewAdapter extends BaseAdapter {
         if (view == null) {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.listview_item, null);
-            // Locate the TextViews in listview_item.xml
-            holder.ramo = (TextView) view.findViewById(R.id.listview_ramo);
+            holder.Cambiar = (TextView) view.findViewById(R.id.listview_ramo);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
         //Colocar el valor
-        String Aux=null;
-        final String NombreRamo;
-        try {
-            Aux =ListaPalabras.get(position);
-        }catch (Exception e){ }
-        NombreRamo =Aux;
+        holder.curso =ListaPalabras.get(position);
 
-        if(NombreRamo !=null) {
-            holder.ramo.setText(NombreRamo);
+        if(holder.curso !=null) {
+            holder.Cambiar.setText(holder.curso.getSigla() + " " + holder.curso.getNombre());
 
 
             // Listen for ListView Item Click
@@ -100,9 +97,8 @@ public class ListViewAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View arg0) {
                     // Send single item click data to SingleItemView Class
-                    if(NombreRamo !=null) {
-                        Search.setText(NombreRamo);
-                    }
+                    Elegido = holder.curso;
+                    Search.setText(holder.curso.getSigla() + " " + holder.curso.getNombre());
                 }
             });
         }
@@ -113,26 +109,26 @@ public class ListViewAdapter extends BaseAdapter {
     // Filter Class
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
+        //Resetear Valores
         ListaPalabras.clear();
+
         if (charText.length() == 0) {
-           //ListaPalabras.addAll(BD_Clases);
-            ListaPalabras.add("Escriba Una Palabra");
+            Search.setText("Escriba un Ramo");
         }
         else
         {
             String Url = "http://pinit-api.herokuapp.com/ramos/buscar/";
             charText= charText.substring(0,1).toUpperCase() + charText.substring(1);
-            Url += charText + ".json";
-
-
-            if (Build.VERSION.SDK_INT >= 11) {
-                //--post GB use serial executor by default --
-                new GetRamos().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
-            } else {
-                //--GB uses ThreadPoolExecutor by default--
-                new GetRamos().execute(Url);
+            try {
+                Url += URLEncoder.encode(charText, "UTF-8") + ".json";
+                if (Build.VERSION.SDK_INT >= 11) {
+                    new GetRamos().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Url);
+                } else {
+                    new GetRamos().execute(Url);
+                }
+            }catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            //Lista_AssyncTask.add(Aux);
         }
 
     }
@@ -191,16 +187,13 @@ public class ListViewAdapter extends BaseAdapter {
                     JSONObject json = new JSONObject(result);
                     JSONArray articles = json.getJSONArray("ramos");
                     for (int i = 0; i < articles.length(); i++) {
-                        String NombreRamo = "", Sigla = "";
-                        try {
-                            NombreRamo = articles.getJSONObject(i).getString("nombre");
-                        } catch (Exception e) {
-                        }
-                        try {
-                            Sigla = articles.getJSONObject(i).getString("sigla");
-                        } catch (Exception e) {
-                        }
-                        ListaPalabras.add(Sigla + " " + NombreRamo);
+                        String NombreRamo = "", Sigla = "",unidad_academica="",id_ramo="";
+                        try { NombreRamo = articles.getJSONObject(i).getString("nombre");} catch (Exception e) {       }
+                        try {Sigla = articles.getJSONObject(i).getString("sigla");} catch (Exception e) {  }
+                        try {unidad_academica = articles.getJSONObject(i).getString("rama");} catch (Exception e) {  }
+                        try {id_ramo = articles.getJSONObject(i).getString("id");} catch (Exception e) {  }
+                        if(!id_ramo.equals("")&& !NombreRamo.equals("") && !Sigla.equals(""))
+                            ListaPalabras.add(new Ramo(NombreRamo,Sigla,unidad_academica,id_ramo));
                     }
                     notifyDataSetChanged();
                 } catch (Exception e) {
@@ -211,5 +204,8 @@ public class ListViewAdapter extends BaseAdapter {
         }
     }
 
+    public Ramo getElegido() {
+        return Elegido;
+    }
 }
 

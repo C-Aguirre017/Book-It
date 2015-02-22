@@ -112,9 +112,9 @@ public class Inicio extends FragmentActivity {
     }
 
     private boolean yaHaIngresado() {
-       return false;
-       // TODO
-       // return sharedPref.getBoolean(KEY_LOGIN, false);
+        return false;
+        // TODO
+        // return sharedPref.getBoolean(KEY_LOGIN, false);
     }
 
     private void seguirCentro() {

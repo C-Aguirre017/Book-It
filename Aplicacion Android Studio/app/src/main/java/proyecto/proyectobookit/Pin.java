@@ -4,10 +4,12 @@ package proyecto.proyectobookit;
  * Created by Carlos on 22-02-2015.
  */
 public class Pin {
+    private String id_pin;
     private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus,titulo, realizacion;
     private double latitude, longitude;
 
     private Ramo Ramo_Pin = new Ramo("","","","");
+    private Usuario Usuario_Pin = new Usuario();
 
     public Pin(){
         latitude =-1;
@@ -107,5 +109,17 @@ public class Pin {
 
     public double getLongitudeNumber() {
         return this.longitude;
+    }
+
+    public Usuario getUsuario_Pin() {
+        return Usuario_Pin;
+    }
+
+    public String getId_pin() {
+        return id_pin;
+    }
+
+    public void setId_pin(String id_pin) {
+        this.id_pin = id_pin;
     }
 }

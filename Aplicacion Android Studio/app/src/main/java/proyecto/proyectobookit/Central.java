@@ -63,6 +63,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
@@ -71,6 +72,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     LatLng point;
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
+
+    private Usuario Mi_Usuario = new Usuario();
 
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
@@ -81,7 +84,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private GraphUser gUser;
 
     private MetodosUtiles M_Utiles = new MetodosUtiles();
-    private Pin Pin_Elegido;
+    private Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +215,12 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
 
         setupDrawer();
+
+        // Datos Usuario
+        Mi_Usuario.setNombre("Enrique");
+        Mi_Usuario.setCarrera("Ing Civil");
+        Mi_Usuario.setEmail("ejcorrea@uc.cl");
+        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
     }
 
     @Override
@@ -408,17 +417,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
-
-            //Usuario y Token
-            String usuario = "ejcorrea@uc.cl";
-            String token = "LDskzPi1vfr31746VKG3";
-
             //Columnas
             String id_ramo = "" + data.getStringExtra("id_ramo");
             String precio =""+ data.getStringExtra("precio");
             String campus =""+ data.getStringExtra("campus");
             String descripcion =""+ data.getStringExtra("descripcion");
-            String titulo = "" + data.getStringExtra("titulo");
             String realizacion = "false";
             String duracion = "5000";
             String Tipo_ayuda ="clase";
@@ -433,7 +436,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Aux.setPrecio(precio);
             Aux.setCampus(campus);
             Aux.setDescripcion(descripcion);
-            //Aux.setTitulo(titulo);
             Aux.setRealizacion(realizacion);
             Aux.setDuracion(duracion);
             Aux.setTipo_ayuda(Tipo_ayuda);
@@ -442,10 +444,10 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
-                new AsyncTask_PostMarker(usuario,token,Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+                new AsyncTask_PostMarker(Mi_Usuario.getEmail(),Mi_Usuario.getToken(),Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
             } else {
                 //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_PostMarker(usuario,token,Aux).execute("");
+                new AsyncTask_PostMarker(Mi_Usuario.getEmail(),Mi_Usuario.getToken(),Aux).execute("");
             }
 
         }
@@ -466,10 +468,15 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             try {
                 JSONObject json = new JSONObject(result);
                 JSONArray articles = json.getJSONArray("pins");
+
+                Tabla_Pines.clear();
+
                 for (int i = 0; i < articles.length(); i++) {
                     //Crear Pin
                     Pin Aux = new Pin();
                     //Encontramos los valores
+                    try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
+                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
                     try {Aux.setPublicacion(articles.getJSONObject(i).getString("publicacion")); } catch (Exception e) {}
                     try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
                     try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
@@ -482,14 +489,34 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
                     try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
 
-                    Pin_Elegido=Aux;
-                    //Obtener Unidad_Academica
-                    if (Build.VERSION.SDK_INT >= 11) {
-                        //--post GB use serial executor by default --
-                        new AsyncTask_GetRamos().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
-                    } else {
-                        //--GB uses ThreadPoolExecutor by default--
-                        new AsyncTask_GetRamos().execute("");
+                    //Obtener Ramos
+                    try {
+                        String ramos = articles.getJSONObject(i).getString("ramo");
+                        String Mensaje_Buscador = EditText_Search.getText().toString().toLowerCase();
+                        ramos = "{ \"ramos\":[" + ramos + "]}";
+                        try {
+                            JSONObject json_ramos = new JSONObject(ramos);
+                            JSONArray articles_ramos = json_ramos.getJSONArray("ramos");
+                            //Completar Pin
+                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("nombre"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("sigla"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("rama"));                                } catch (Exception e) {                               }
+
+                            //Filtrar
+                            if (Aux.getRamo_Pin().getNombre() != null) {
+                                if (Mensaje_Buscador.equals("")) {
+                                    Colocar_Marker(Aux);
+                                } else if (Aux.getRamo_Pin().getNombre().toLowerCase().contains(Mensaje_Buscador)) {
+                                    Colocar_Marker(Aux);
+                                }
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Toast.makeText(getBaseContext(), "Error al crear el Pin en onPostExecute_GetRamos()", Toast.LENGTH_LONG).show();
+
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(getBaseContext(), "Error al crear el Pin en onPostExecute_GetRamos()", Toast.LENGTH_LONG).show();
                     }
                 }
             } catch (Exception e) {
@@ -537,109 +564,22 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         }
 
-    }
-
-    private class AsyncTask_GetRamos extends AsyncTask<String, Void, String> {
-
-        private Pin Aux;
-
-        public AsyncTask_GetRamos() {
-            this.Aux = Pin_Elegido;
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            String Url = "http://pinit-api.herokuapp.com/ramos/" + Aux.getRamo_Pin().getId_ramo() + ".json";
-            return GET(Url);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            String Mensaje_Buscador = EditText_Search.getText().toString().toLowerCase();
-            result = "{ \"ramos\":[" + result + "]}";
-            try {
-                JSONObject json = new JSONObject(result);
-                JSONArray articles = json.getJSONArray("ramos");
-                if(articles.length()== 1) {
-
-                    //Completar Pin
-                    try {Aux.getRamo_Pin().setNombre(articles.getJSONObject(0).getString("nombre")); } catch (Exception e) {}
-                    try {Aux.getRamo_Pin().setSigla(articles.getJSONObject(0).getString("sigla"));} catch (Exception e) {}
-                    try {Aux.getRamo_Pin().setUnidad_Academica(articles.getJSONObject(0).getString("rama"));} catch (Exception e) {}
-
-                    //Filtrar
-                    if(Aux.getRamo_Pin().getNombre() != null) {
-                        if(Mensaje_Buscador.equals("")) {
-                                Colocar_Marker();
-                        }
-                        else if(Aux.getRamo_Pin().getNombre().toLowerCase().contains(Mensaje_Buscador)) {
-                                Colocar_Marker();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-                Toast.makeText(getBaseContext(), "Error al crear el Pin en onPostExecute_GetRamos()", Toast.LENGTH_LONG).show();
-            }
-
-        }
-
-        private void Colocar_Marker(){
+        private void Colocar_Marker(Pin Aux){
             //Inserta el Marker
             if (Aux.getLatitudeNumber() != -1 && Aux.getLongitudeNumber() != -1) {
                 LatLng lugar = new LatLng(Aux.getLatitudeNumber(), Aux.getLongitudeNumber());
                 MarkerOptions Aux_Marker = new MarkerOptions()
                         .position(lugar)
-                        .snippet(M_Utiles.CrearMensaje(Aux))
+                        .snippet(Aux.getId_pin())
                         .draggable(false);
-                ColocarIcono(Aux_Marker);
+                ColocarIcono(Aux_Marker,Aux);
             }
         }
 
-        private String GET(String url){
-            InputStream inputStream = null;
-            String result = "";
-            try {
-
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
-
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
-            }
-
-            return result;
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException{
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
-        }
-
-        private void ColocarIcono(MarkerOptions Aux_Marker) {
+        private void ColocarIcono(MarkerOptions Aux_Marker,Pin Aux) {
             String NombreRamo =  Aux.getRamo_Pin().getNombre();
             String Sigla = Aux.getRamo_Pin().getSigla();
             String unidad_academica=  Aux.getRamo_Pin().getUnidad_Academica();
-
             if(Aux_Marker!= null && !Sigla.equals("") && !NombreRamo.equals("")){
                 if (unidad_academica.toLowerCase().equals("actuación")) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
@@ -683,8 +623,66 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
                 }
                 Aux_Marker.title(Sigla + " " + NombreRamo);
+                //Añadimos al hashTable el Pin
+
+                Tabla_Pines.put(Aux.getId_pin(),Aux);
+
                 Mapas.addMarker(Aux_Marker);
             }
+        }
+
+    }
+
+    private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String Url = "http://pinit-api.herokuapp.com/ramos/" +"" + ".json";
+            return GET(Url);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
+
+        private String GET(String url){
+            InputStream inputStream = null;
+            String result = "";
+            try {
+
+                // create HttpClient
+                HttpClient httpclient = new DefaultHttpClient();
+
+                // make GET request to the given URL
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+                // receive response as inputStream
+                inputStream = httpResponse.getEntity().getContent();
+
+                // convert inputstream to string
+                if(inputStream != null)
+                    result = convertInputStreamToString(inputStream);
+                else
+                    result = "Did not work!";
+
+            } catch (Exception e) {
+                Log.d("InputStream", e.getLocalizedMessage());
+            }
+
+            return result;
+        }
+
+        private String convertInputStreamToString(InputStream inputStream) throws IOException{
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+            return result;
+
         }
 
     }
@@ -726,7 +724,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                         "user_email=" + URLEncoder.encode(usuario, "UTF-8") +
                                 "&user_token=" + URLEncoder.encode(token, "UTF-8") +
                                 "&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8") +
-                                "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8") +
                                 "&descripcion=" + URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +
                                 "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
                                 "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +

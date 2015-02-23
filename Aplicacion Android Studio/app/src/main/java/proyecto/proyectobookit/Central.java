@@ -7,6 +7,7 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -81,7 +82,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
-    private Button Button_Delete = null;
+    private Button Button_Buscar = null;
     private ActionBarDrawerToggle mDrawerToggle;
     private Session fbSession;
     private GraphUser gUser;
@@ -113,6 +114,12 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
         });
         Request.executeBatchAsync(request);
+
+        // Datos Usuario
+        Mi_Usuario.setNombre("Enrique");
+        Mi_Usuario.setCarrera("Ing Civil");
+        Mi_Usuario.setEmail("ejcorrea@uc.cl");
+        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
 
         // Configurar Action Bar
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actionbar_campus,android.R.layout.simple_spinner_dropdown_item);
@@ -195,6 +202,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 }
                 else if(position == 2){
                     Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
+                    NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
+                    NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
                     startActivity(NuevaActividad_Help);
                 }
                 else if(position == 3){
@@ -227,33 +236,17 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
 
         setupDrawer();
-
-        // Datos Usuario
-        Mi_Usuario.setNombre("Enrique");
-        Mi_Usuario.setCarrera("Ing Civil");
-        Mi_Usuario.setEmail("ejcorrea@uc.cl");
-        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-         Actualizar();
+        Actualizar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    private void ActualizarAutomatico(){
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // Your database code here
-            }
-        }, 2*60*1000);
     }
 
     private void setFbImage(String id){
@@ -287,6 +280,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(mDrawerToggle);
     }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -307,14 +301,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         Menu_SearchItem = menu.findItem( R.id.menu_search );
         EditText_Search = (EditText) Menu_SearchItem.getActionView().findViewById( R.id.search );
-        Button_Delete = (Button) Menu_SearchItem.getActionView().findViewById( R.id.delete );
-        Button_Delete.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
+        Button_Buscar = (Button) Menu_SearchItem.getActionView().findViewById(R.id.buscar);
+        Button_Buscar.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
         EditText_Search.addTextChangedListener( new TextWatcher()
         {
             @Override
             public void onTextChanged( CharSequence s, int start, int before, int count )
             {
-                Button_Delete.setVisibility( s.length() > 0 ? View.VISIBLE : View.INVISIBLE );
+                Button_Buscar.setVisibility( s.length() > 0 ? View.VISIBLE : View.INVISIBLE );
             }
 
             @Override
@@ -326,8 +320,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             @Override
             public void afterTextChanged( Editable s )
             {
-                Button_Delete.setVisibility( s.length() > 0 ? View.VISIBLE : View.GONE );
-                Actualizar();
+                Button_Buscar.setVisibility( s.length() > 0 ? View.VISIBLE : View.GONE );
+
+                String Aux = EditText_Search.getText().toString();
+                if(Aux.contains("\n")){
+                    Aux = Aux.replace("\n","");
+                    EditText_Search.setText(Aux);
+                    Actualizar();
+                }
             }
         } );
 
@@ -347,6 +347,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
         else if(id== R.id.menucentral_refresh){
             Actualizar();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -362,6 +363,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             EditText_Search.setText( "" );
         }
     }
+
+    public void actualizar_buscar( View v ){
+        Actualizar();
+    }
+
 
     //De Google Map
     @Override
@@ -395,7 +401,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     @Override
     public void onMapClick(LatLng latLng) {
-        /*
+
         long Aux = (new Date()).getTime();
         if(( Aux - Tiempo_Start) > 3/2*60*1000) {
             //perform db poll/check
@@ -403,7 +409,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Tiempo_Start = System.currentTimeMillis();
             Toast.makeText(getBaseContext(),"Actualizando...",Toast.LENGTH_SHORT);
         }
-        */
+
     }
 
     private void Actualizar() {
@@ -526,6 +532,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(Central.this, "Actualizando...", "Espere porfavor", true, false);
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             return GET(urls[0]);
@@ -593,6 +607,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 // TODO: handle exception
                 Toast.makeText(getBaseContext(),"Error al crear el Pin en onPostExecute_GetMarker()", Toast.LENGTH_LONG).show();
             }
+            progressDialog.dismiss();
         }
 
         private String GET(String url){
@@ -815,27 +830,29 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         private String NombreUsuario,Token;
         Pin Pin_Elegido=null;
+        private ProgressDialog progressDialog;
+
+
         public AsyncTask_PostMarker(String usuario,String token,Pin Aux) {
             this.Pin_Elegido = Aux;
             this.NombreUsuario=usuario;
             this.Token=token;
         }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(Central.this, "Creando ...", "Espere porfavor", true, false);
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
             // TODO Auto-generated method stub
-
             return postData_Pins(NombreUsuario,Token,Pin_Elegido);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if(result){
-                Toast.makeText(getBaseContext(),"Pin Creado Exitosamente", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(getBaseContext(),"Ocurrio un Error", Toast.LENGTH_LONG).show();
-            }
+            progressDialog.dismiss();
         }
 
         private boolean postData_Pins(String usuario, String token,Pin Aux_Pin) {

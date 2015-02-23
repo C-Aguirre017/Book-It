@@ -20,15 +20,18 @@
                 android:id="@+id/feedback_labelgracias"
                 android:text="@string/feedback_gracias"
                 android:layout_marginTop="10dp"
-                android:textSize="20dp"/>
+                android:textSize="20dp">
+                <requestFocus/>
+            </TextView>
 
             <EditText
                 android:id="@+id/feedback_texto"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/rounded_button" >
-                <requestFocus />
+                android:background="@drawable/rounded_button"
+                android:textAlignment="textStart">
+
             </EditText>
 
             <Button
@@ -38,6 +41,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:background="@drawable/rounded_button"
+                android:onClick="Enviar"
                 android:text="@string/feedback_boton"/>
         </LinearLayout>
     </ScrollView>

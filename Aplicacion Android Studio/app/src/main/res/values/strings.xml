@@ -80,5 +80,10 @@
 
     <string name="feedback_gracias"> \t Si tienes alguna sugerencia, comentario o duda acerca de la aplicación porfavor no dudes en escribirnos</string>
     <string name="feedback_boton">Enviar</string>
+    <string name="feedbackmenu_enviar">Enviar</string>
+
+    <!--Datos Gmail Aplicacion -->
+    <string name="mailaplicacion">\"bookit.servidor@gmail.com\"</string>
+    <string name="clave_mail_aplicacion">\"mamamia123\"</string>
 
 </resources>

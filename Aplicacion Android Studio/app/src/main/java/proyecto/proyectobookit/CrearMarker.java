@@ -30,8 +30,6 @@ public class CrearMarker extends Activity {
 
     MetodosUtiles M_Utiles = new MetodosUtiles();
 
-    private List<String> PalabrasProhibdas = new ArrayList<String>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

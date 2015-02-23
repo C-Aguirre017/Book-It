@@ -67,22 +67,21 @@
                         android:id="@+id/crearmarker_labeldescripcion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="5dp"
                         android:text="Descripcion de la Clase: " />
 
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="5dp"
                         android:id="@+id/crearmarker_descripcion"  >
-                        <requestFocus />
                     </EditText>
 
                     <TextView
                         android:id="@+id/crearmarker_labelhora"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="5dp"
                         android:text="Hora de la Clase:" />
 
                     <EditText
@@ -90,25 +89,25 @@
                         android:layout_height="wrap_content"
                         android:inputType="time"
                         android:ems="10"
+                        android:layout_marginTop="5dp"
                         android:id="@+id/crearmarker_hora"  >
-                        <requestFocus />
                     </EditText>
 
                     <TextView
                         android:id="@+id/crearmarker_labelprecio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="5dp"
                         android:text="Precio dispuesto a Pagar: " />
 
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:inputType="number"
                         android:paddingTop="5dp"
                         android:ems="10"
                         android:id="@+id/crearmarker_precio"  >
-                        <requestFocus />
                     </EditText>
 
                     <!--TextView
@@ -127,11 +126,13 @@
 
                     <Button
                         android:id="@+id/crearmarker_aceptar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="5dp"
                         android:onClick="Aceptar"
+                        android:background="@drawable/rounded_button"
                         android:text="Aceptar"
-                        android:layout_gravity="end"/>
+                        android:layout_gravity="right"/>
             </LinearLayout>
     </ScrollView>
 

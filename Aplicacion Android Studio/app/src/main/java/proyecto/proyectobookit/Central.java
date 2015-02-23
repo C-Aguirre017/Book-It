@@ -77,8 +77,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
 
-    private Usuario Mi_Usuario = new Usuario();
+    private Boolean MostrarProgressDialog;
 
+    private Usuario Mi_Usuario = new Usuario();
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
@@ -241,12 +242,13 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     public void onResume() {
         super.onResume();
-        Actualizar();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Actualizar();
     }
 
     private void setFbImage(String id){

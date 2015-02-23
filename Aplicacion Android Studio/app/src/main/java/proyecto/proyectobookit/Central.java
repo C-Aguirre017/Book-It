@@ -59,14 +59,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+import java.util.Date;
+import java.util.Timer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.TimerTask;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
 
@@ -87,7 +88,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     private MetodosUtiles M_Utiles = new MetodosUtiles();
     private Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
-    private static Boolean Paso;
+    private long Tiempo_Start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,13 +201,13 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         //Configurar Mapa
         try {
             if(null == Mapas){
-                Mapas = ((MapFragment) getFragmentManager().findFragmentById(
-                        R.id.mapView)).getMap();
+                Mapas = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapView)).getMap();
                 Mapas.setMyLocationEnabled(true);
                 Mapas.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 Mapas.setBuildingsEnabled(true);
                 Mapas.setOnMarkerClickListener(this);
                 Mapas.setOnMapLongClickListener(this);
+                Mapas.setOnMapClickListener(this);
 
                 if(null == Mapas) {
                     Toast.makeText(getApplicationContext(),
@@ -235,6 +236,16 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    private void ActualizarAutomatico(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // Your database code here
+            }
+        }, 2*60*1000);
     }
 
     private void setFbImage(String id){
@@ -332,14 +343,12 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         return super.onOptionsItemSelected(item);
     }
 
-    public  void onLeft(View view)
-    {
+    public  void onLeft(View view)    {
         if(drawerLayout!=null && leftRL !=null)
             drawerLayout.openDrawer(leftRL);
     }
 
-    public void delete( View v )
-    {
+    public void delete( View v ){
         if (EditText_Search != null)
         {
             EditText_Search.setText( "" );
@@ -347,9 +356,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     }
 
     //De Google Map
-
     @Override
-    public boolean onMarkerClick(final Marker marker) {
+    public boolean onMarkerClick(Marker marker) {
         marker.hideInfoWindow();
 
         String id_ramo = marker.getSnippet();
@@ -368,7 +376,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         return false;
     }
 
-
     @Override
     public void onMapLongClick(LatLng point) {
         // TODO Auto-generated method stub
@@ -379,9 +386,16 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     }
 
     @Override
-    public void onMapClick(LatLng point) {
-        // TODO Auto-generated method stub
-
+    public void onMapClick(LatLng latLng) {
+        /*
+        long Aux = (new Date()).getTime();
+        if(( Aux - Tiempo_Start) > 3/2*60*1000) {
+            //perform db poll/check
+            Actualizar();
+            Tiempo_Start = System.currentTimeMillis();
+            Toast.makeText(getBaseContext(),"Actualizando...",Toast.LENGTH_SHORT);
+        }
+        */
     }
 
     private void Actualizar() {
@@ -393,6 +407,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             //--GB uses ThreadPoolExecutor by default--
             new AsyncTask_GetMarker().execute("http://pinit-api.herokuapp.com/pins.json");
         }
+        Tiempo_Start = System.currentTimeMillis();
     }
 
     //Obtener Resultados
@@ -498,6 +513,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
+
 
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {

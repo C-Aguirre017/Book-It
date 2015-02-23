@@ -179,7 +179,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
         drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
 
-        String[] NombreOpciones = {"Crear Pin","Como Funciona ?","Cerrar Sesion"};
+        String[] NombreOpciones = {"Mis Pins","¿Como Funciona?","Escribenos","Acerca De","Cerrar Sesion"};
         ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
         ListaOpciones.setAdapter(adaptador);
@@ -188,11 +188,19 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
                 if(position == 0){
-                    Toast.makeText(Central.this, "Manten apretado en el mapa el lugar en donde quieres recibir tu clase", Toast.LENGTH_SHORT).show();
+
                 } else if(position == 1){
                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
                    startActivity(NuevaActividad_Help);
-                } else {
+                }
+                else if(position == 2){
+                    Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
+                    startActivity(NuevaActividad_Help);
+                }
+                else if(position == 3){
+                    Intent NuevaActividad_Help = new Intent(getApplication(),Acerca_De.class);
+                    startActivity(NuevaActividad_Help);
+                }else {
                     Central.this.finish();
                 }
             }
@@ -743,7 +751,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                                         "Para Contactarme te envío mi " +
                                         "Tel: " + "\n Saludos");
                                 try {
-                                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                                    startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
                                     Log.i("Finished sending email...", "");
                                 } catch (android.content.ActivityNotFoundException ex) {
                                     Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();

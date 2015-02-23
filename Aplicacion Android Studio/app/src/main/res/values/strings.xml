@@ -8,6 +8,8 @@
     <string name="title_activity_central">Mapa</string>
     <string name="title_activity_crear_marker">CrearMarker</string>
     <string name="title_activity_help">Ayuda</string>
+    <string name="title_activity_feedback">Feedback</string>
+    <string name="title_activity_acerca__de">Acerca_De</string>
 
     <!-- Menu -->
     <string name="search_title">Buscar Aca</string>
@@ -57,6 +59,7 @@
     <!-- #CCCCCCC era el fondo de antes -->
     <color name="Fondo">#FFFFFF</color>
     <color name="ColorNaranjo">#FF7300</color>
+    <color name="ColorGris">#123a24d4</color>
     <color name="Blancoo">#FFFFFF</color>
 
     <string name="title_activity_maps">Map</string>
@@ -64,7 +67,7 @@
     <!-- FB Configuracion -->
     <string name="facebook_app_id">1396273664015950</string>
 
-    <!--Action Bar -->
+    <!-- Action Bar -->
     <string-array name="actionbar_campus">
         <item>Casa Central</item>
         <item>Lo Contador</item>
@@ -72,5 +75,10 @@
         <item>San Joaquín</item>
         <item>Villarica</item>
     </string-array>
+
+    <!-- Feedback -->
+
+    <string name="feedback_gracias"> \t Si tienes alguna sugerencia, comentario o duda acerca de la aplicación porfavor no dudes en escribirnos</string>
+    <string name="feedback_boton">Enviar</string>
 
 </resources>

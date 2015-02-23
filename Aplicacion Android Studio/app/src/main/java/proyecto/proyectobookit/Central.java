@@ -59,10 +59,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
@@ -348,7 +351,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.hideInfoWindow();
-        String nombre_ramo = marker.getTitle();
+
         String id_ramo = marker.getSnippet();
 
         //Obtener Pin
@@ -361,7 +364,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             //--GB uses ThreadPoolExecutor by default--
             new AsyncTask_GetEmail(Pin_Elegido).execute("");
         }
-
+        marker.hideInfoWindow();
         return false;
     }
 
@@ -400,7 +403,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             //Columnas
             String id_ramo = "" + data.getStringExtra("id_ramo");
             String precio =""+ data.getStringExtra("precio");
-            String campus =""+ data.getStringExtra("campus");
             String descripcion =""+ data.getStringExtra("descripcion");
             String realizacion = "false";
             String duracion = "5000";
@@ -414,13 +416,16 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Pin Aux = new Pin();
             Aux.getRamo_Pin().setId_ramo(id_ramo);
             Aux.setPrecio(precio);
-            Aux.setCampus(campus);
             Aux.setDescripcion(descripcion);
             Aux.setRealizacion(realizacion);
             Aux.setDuracion(duracion);
             Aux.setTipo_ayuda(Tipo_ayuda);
             Aux.setLatitude(point.latitude);
             Aux.setLongitude(point.longitude);
+
+           //ObtenerCampus
+            Aux.setCampus(ObtenerCampus());
+
 
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
@@ -431,6 +436,65 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
 
         }
+    }
+
+    private String ObtenerCampus(){
+        LatLng latLng_sj = new LatLng(-33.498444, -70.611722);
+        LatLng latLng_casacentral = new LatLng(-33.440809, -70.640764);
+        LatLng latLng_locontador = new LatLng(-33.419428, -70.618574);
+        LatLng latLng_oriente = new LatLng(-33.437226, -70.623899);
+        LatLng latLng_villarica = new LatLng(-38.738457, -72.601795);
+
+        List<LatLng> Lista = new ArrayList<LatLng>();
+        Lista.add(latLng_sj);Lista.add(latLng_casacentral);Lista.add(latLng_locontador);
+        Lista.add(latLng_oriente);Lista.add(latLng_villarica);
+
+        Double distmin=SacarDistancia(latLng_sj,point);
+        LatLng min_latlng = latLng_sj;
+
+        for (int i=0;i<Lista.size();i++){
+            if(SacarDistancia(Lista.get(i),point)<distmin){
+                distmin = SacarDistancia(Lista.get(i),point);
+                min_latlng=Lista.get(i);
+            }
+        }
+
+        if(min_latlng.equals(latLng_sj))
+            return "San Joaquín";
+        else if(min_latlng.equals(latLng_casacentral)){
+            return "Casa Central";
+        }
+        else if(min_latlng.equals(latLng_locontador)){
+            return "Lo Contador";
+        }
+        else if(min_latlng.equals(latLng_oriente)){
+            return "Oriente";
+        }
+        else if(min_latlng.equals(latLng_villarica)){
+            return "Villarica";
+        }
+        else{
+            return "";
+        }
+    }
+
+    private double SacarDistancia(LatLng primero,LatLng segundo) {
+
+        final int R = 6371; // Radius of the earth
+
+        Double latDistance = deg2rad(segundo.latitude - primero.latitude);
+        Double lonDistance = deg2rad(segundo.longitude - primero.longitude);
+        Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(deg2rad(primero.latitude)) * Math.cos(deg2rad(segundo.latitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+        distance = Math.pow(distance, 2);
+        return Math.sqrt(distance);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
     }
 
     //AsyncTasks Get
@@ -602,11 +666,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 } else {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
                 }
-                Aux_Marker.title(Sigla + " " + NombreRamo);
-                //Añadimos al hashTable el Pin
 
                 Tabla_Pines.put(Aux.getId_pin(),Aux);
-
                 Mapas.addMarker(Aux_Marker);
             }
         }

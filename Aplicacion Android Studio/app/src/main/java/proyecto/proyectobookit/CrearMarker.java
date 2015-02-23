@@ -67,6 +67,7 @@ public class CrearMarker extends Activity {
             }
         });
 
+         /*
         //Unidad Academica
         Spinner dropdown_ua = (Spinner)findViewById(R.id.crearmarker_unidadacademica);
         String[] items = new String[]{"Actuación", "Agronomía", "Arquitectura","Arte","Ciencias Biológicas","Cursos Deportivos","Derecho","Ciencias Económicas y Administrativas","Educación","Enfermería","Física","Geografía","Ingeniería","Matemática","Música","Odontología","Química","Ciencias de la Salud/Medicina","Teología","Otro"};
@@ -78,7 +79,7 @@ public class CrearMarker extends Activity {
         Spinner dropdown_campus = (Spinner)findViewById(R.id.crearmarker_facultad);
         String[] items_campus = new String[]{"Casa Central","Lo Contador","Oriente","San Joaquin","Villarica"};
         ArrayAdapter<String> adapter_campus = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items_campus);
-        dropdown_campus.setAdapter(adapter_campus);
+        dropdown_campus.setAdapter(adapter_campus);*/
     }
 
     @Override
@@ -105,14 +106,14 @@ public class CrearMarker extends Activity {
             String  descripcion = "", precio = "", campus = "",titulo="",id_ramo="";
             EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
             EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
-            Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
+           // Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
 
             if(adapter.getElegido()!=null) {
                 id_ramo = adapter.getElegido().getId_ramo();
                 titulo = adapter.getElegido().getSigla() + " " + adapter.getElegido().getNombre();
                 descripcion = get_descripcion.getText().toString();
                 precio = get_precio.getText().toString();
-                campus = get_campus.getSelectedItem().toString();
+                //campus = get_campus.getSelectedItem().toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -136,6 +137,8 @@ public class CrearMarker extends Activity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
+            }else{
+                CrearAlertDialog("Porfavor seleccione un curso de la lista","Error de Curso");
             }
         }
     }
@@ -144,17 +147,16 @@ public class CrearMarker extends Activity {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("id_ramo",id_ramo);
-        returnIntent.putExtra("titulo",titulo);
         returnIntent.putExtra("descripcion", descripcion);
         returnIntent.putExtra("precio", precio);
-        returnIntent.putExtra("campus", campus);
 
         setResult(RESULT_OK, returnIntent);
         this.onDestroy();
         this.finish();
     }
 
-    private boolean VerificarEscrito(){
+    private boolean VerificarEscrito()
+    {
 
         //Ramo
         EditText Aux_Ramo = (EditText) findViewById(R.id.crearmarker_search);

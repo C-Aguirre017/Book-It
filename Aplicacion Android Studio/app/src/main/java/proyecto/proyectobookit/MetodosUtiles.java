@@ -40,9 +40,9 @@ public class MetodosUtiles {
     }
 
     public String CrearMensaje(Pin aux) {
-        String Mensaje="Descripcion: /n";
+        String Mensaje="Descripcion: \n";
         if (aux.getDescripcion() != null)
-            Mensaje += aux.getDescripcion();
+            Mensaje += "\t " +aux.getDescripcion();
         else
             Mensaje += "\t No hay";
 

@@ -49,7 +49,7 @@
                         </proyecto.proyectobookit.NestedListView>
                     </LinearLayout>
 
-                    <TextView
+                    <!--TextView
                         android:id="@+id/crearmarker_labelunidadacademica"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
-                        android:spinnerMode="dropdown"/>
+                        android:spinnerMode="dropdown"/-->
 
                     <TextView
                         android:id="@+id/crearmarker_labeldescripcion"
@@ -91,7 +91,7 @@
                         android:ems="10"
                         android:id="@+id/crearmarker_precio" />
 
-                    <TextView
+                    <!--TextView
                         android:id="@+id/crearmarker_labelfacultad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
-                        android:spinnerMode="dropdown"/>
+                        android:spinnerMode="dropdown"/-->
 
                     <Button
                         android:id="@+id/crearmarker_aceptar"

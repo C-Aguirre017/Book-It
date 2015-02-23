@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +51,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -62,9 +62,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
 
@@ -85,6 +84,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     private MetodosUtiles M_Utiles = new MetodosUtiles();
     private Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
+    private static Boolean Paso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,44 +347,24 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-
+        marker.hideInfoWindow();
         String nombre_ramo = marker.getTitle();
-        String descripcion = marker.getSnippet();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(nombre_ramo)
-                .setMessage(
-                        " Descripcion: \n	" + descripcion)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+        String id_ramo = marker.getSnippet();
 
-                        String[] TO = {"c.aguirre017@gmail.com"};
-                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                        emailIntent.setData(Uri.parse("mailto:"));
-                        emailIntent.setType("text/plain");
+        //Obtener Pin
+        Pin Pin_Elegido = Tabla_Pines.get(id_ramo);
 
-
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Primera Prueba");
-                        emailIntent.putExtra(Intent.EXTRA_TEXT, "Probando");
-
-                        try {
-                            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-                            Log.i("Finished sending email...", "");
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        marker.hideInfoWindow();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+        if (Build.VERSION.SDK_INT >= 11) {
+            //--post GB use serial executor by default --
+            new AsyncTask_GetEmail(Pin_Elegido).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+        } else {
+            //--GB uses ThreadPoolExecutor by default--
+            new AsyncTask_GetEmail(Pin_Elegido).execute("");
+        }
 
         return false;
     }
+
 
     @Override
     public void onMapLongClick(LatLng point) {
@@ -635,16 +615,73 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
 
+        private Pin Pin_Elegido;
+
+        public AsyncTask_GetEmail(Pin aux) {
+            this.Pin_Elegido = aux;
+        }
+
         @Override
         protected String doInBackground(String... urls) {
-            String Url = "http://pinit-api.herokuapp.com/ramos/" +"" + ".json";
+            String Url= "http://pinit-api.herokuapp.com/usuarios/" ;
+            Url +=  Pin_Elegido.getUsuario_Pin().getId_usuario() + ".json";
             return GET(Url);
         }
 
         @Override
         protected void onPostExecute(String result) {
-
+            try {
+                result = "{ \"usuarios\":[" + result + "]}";
+                JSONObject json = new JSONObject(result);
+                JSONArray articles = json.getJSONArray("usuarios");
+                if(Pin_Elegido!=null) {
+                    try {Pin_Elegido.getUsuario_Pin().setEmail(articles.getJSONObject(0).getString("email")); } catch (Exception e) {     }
+                    try {Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));} catch (Exception e) {    }
+                    try {Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));            } catch (Exception e) {    }
+                    try {Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));       } catch (Exception e) {     }
+                    CrearAlertDialog(Pin_Elegido);
+                }
+            }  catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+        private void CrearAlertDialog(final Pin Pin_Elegido) {
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Central.this);
+                builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
+                        .setMessage(M_Utiles.CrearMensaje(Pin_Elegido))
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String[] TO = {Pin_Elegido.getUsuario_Pin().getEmail()};
+                                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                                emailIntent.setData(Uri.parse("mailto:"));
+                                emailIntent.setType("text/plain");
+
+                                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book IT: Aceptar " + Pin_Elegido.getRamo_Pin().getNombre());
+                                emailIntent.putExtra(Intent.EXTRA_TEXT, "Me gustaría realizar la clase que publicaste en Book IT \n " +
+                                        "Para Contactarme te envío mi " +
+                                        "Tel: " + "\n Saludos");
+                                try {
+                                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                                    Log.i("Finished sending email...", "");
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }catch (Exception e){
+                Toast.makeText(getBaseContext(),"Error",Toast.LENGTH_LONG);
+            }
+        }
+
 
         private String GET(String url){
             InputStream inputStream = null;
@@ -684,7 +721,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             return result;
 
         }
-
     }
 
     //AsyncTasks Post

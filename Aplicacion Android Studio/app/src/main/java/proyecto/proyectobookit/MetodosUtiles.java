@@ -40,22 +40,22 @@ public class MetodosUtiles {
     }
 
     public String CrearMensaje(Pin aux) {
-        String Mensaje="";
+        String Mensaje="Descripcion: /n";
         if (aux.getDescripcion() != null)
             Mensaje += aux.getDescripcion();
         else
-            Mensaje += "No hay";
+            Mensaje += "\t No hay";
 
         if (aux.getPublicacion() != null) {
-            Mensaje += "\n Fecha Creación: \n	" + aux.getPublicacion();
+            Mensaje += "\n Fecha Creación: \n \t " + aux.getPublicacion();
         } else {
-            Mensaje += "\n Fecha Creación: \n	Sin Información";
+            Mensaje += "\n Fecha Creación: \n \t Sin Información";
         }
 
         if (aux.getPrecio() != null) {
-            Mensaje += "\n Dispuesto a Pagar: \n	" + aux.getPrecio();
+            Mensaje += "\n Dispuesto a Pagar: \n \t " + aux.getPrecio();
         } else {
-            Mensaje += "\n Dispuesto a Pagar: \n	Sin Información";
+            Mensaje += "\n Dispuesto a Pagar: \n \t Sin Información";
         }
         return Mensaje;
     }

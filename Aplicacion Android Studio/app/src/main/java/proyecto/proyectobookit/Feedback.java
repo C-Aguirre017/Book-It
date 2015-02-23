@@ -118,10 +118,10 @@ public class Feedback extends Activity {
 
     private Message createMessage(String email, String subject, String messageBody, Session session) throws MessagingException, UnsupportedEncodingException {
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(Mi_Usuario.getEmail(), Mi_Usuario.getNombre() + " " + Mi_Usuario.getEmail()));
+        message.setFrom(new InternetAddress(Mi_Usuario.getEmail(), Mi_Usuario.getNombre()));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(email, email));
         message.setSubject(subject);
-        message.setText(messageBody);
+        message.setText("Nombre: " + Mi_Usuario.getNombre() + " \n Correo: " + Mi_Usuario.getEmail() + messageBody);
         return message;
     }
 

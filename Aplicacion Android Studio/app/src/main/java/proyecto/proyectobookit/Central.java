@@ -77,8 +77,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     RelativeLayout leftRL;
     DrawerLayout drawerLayout;
 
-    private Boolean MostrarProgressDialog;
-
     private Usuario Mi_Usuario = new Usuario();
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
@@ -202,10 +200,25 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                    startActivity(NuevaActividad_Help);
                 }
                 else if(position == 2){
+                    /*
                     Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
                     NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
                     NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
-                    startActivity(NuevaActividad_Help);
+                    startActivity(NuevaActividad_Help);*/
+                    String[] TO = {getResources().getString(R.string.mailaplicacion)};
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
+                        Log.i("Finished sending email...", "");
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if(position == 3){
                     Intent NuevaActividad_Help = new Intent(getApplication(),Acerca_De.class);
@@ -237,6 +250,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
 
         setupDrawer();
+        Actualizar();
     }
 
     @Override
@@ -248,7 +262,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     @Override
     protected void onStart() {
         super.onStart();
-        Actualizar();
     }
 
     private void setFbImage(String id){
@@ -374,8 +387,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     //De Google Map
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.hideInfoWindow();
-
         String id_ramo = marker.getSnippet();
 
         //Obtener Pin
@@ -403,14 +414,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     @Override
     public void onMapClick(LatLng latLng) {
-
+    /*
         long Aux = (new Date()).getTime();
         if(( Aux - Tiempo_Start) > 3/2*60*1000) {
             //perform db poll/check
             Actualizar();
             Tiempo_Start = System.currentTimeMillis();
             Toast.makeText(getBaseContext(),"Actualizando...",Toast.LENGTH_SHORT);
-        }
+        }*/
 
     }
 

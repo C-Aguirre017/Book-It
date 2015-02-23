@@ -77,6 +77,20 @@
                         android:id="@+id/crearmarker_descripcion" />
 
                     <TextView
+                        android:id="@+id/crearmarker_labelhora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:text="Hora de la Clase:" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="time"
+                        android:ems="10"
+                        android:id="@+id/crearmarker_hora" />
+
+                    <TextView
                         android:id="@+id/crearmarker_labelprecio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -103,16 +103,18 @@ public class CrearMarker extends Activity {
     public void Aceptar(View v){
 
         if(VerificarEscrito()) {
-            String  descripcion = "", precio = "", campus = "",titulo="",id_ramo="";
+            String  descripcion = "", precio = "", campus = "",titulo="",id_ramo="",hora="";
             EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
             EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
-           // Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
+            EditText get_hora = (EditText) findViewById(R.id.crearmarker_hora);
+            // Spinner get_campus = (Spinner) findViewById(R.id.crearmarker_facultad);
 
             if(adapter.getElegido()!=null) {
                 id_ramo = adapter.getElegido().getId_ramo();
                 titulo = adapter.getElegido().getSigla() + " " + adapter.getElegido().getNombre();
                 descripcion = get_descripcion.getText().toString();
                 precio = get_precio.getText().toString();
+                hora = get_hora.getText().toString();
                 //campus = get_campus.getSelectedItem().toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -122,12 +124,12 @@ public class CrearMarker extends Activity {
                 final String finalCampus = campus;
                 final String finalid_ramo = id_ramo;
                 final String finalTitulo = titulo;
-
+                final String finalHora = hora;
                 builder.setTitle(titulo)
                         .setMessage(M_Utiles.CrearMensaje(descripcion, "", precio))
                         .setPositiveButton("Crear Marker", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo);
+                                Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo, finalHora);
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -143,12 +145,13 @@ public class CrearMarker extends Activity {
         }
     }
 
-    private void Salir(String id_ramo, String descripcion, String precio, String campus, String titulo){
+    private void Salir(String id_ramo, String descripcion, String precio, String campus, String titulo, String finalHora){
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("id_ramo",id_ramo);
         returnIntent.putExtra("descripcion", descripcion);
         returnIntent.putExtra("precio", precio);
+        returnIntent.putExtra("hora", finalHora);
 
         setResult(RESULT_OK, returnIntent);
         this.onDestroy();

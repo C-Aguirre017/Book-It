@@ -5,7 +5,7 @@ package proyecto.proyectobookit;
  */
 public class Pin {
     private String id_pin;
-    private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus,titulo, realizacion;
+    private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus,titulo, realizacion,hora;
     private double latitude, longitude;
 
     private Ramo Ramo_Pin = new Ramo("","","","");
@@ -121,5 +121,13 @@ public class Pin {
 
     public void setId_pin(String id_pin) {
         this.id_pin = id_pin;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 }

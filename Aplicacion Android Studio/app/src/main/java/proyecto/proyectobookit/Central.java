@@ -404,6 +404,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             String id_ramo = "" + data.getStringExtra("id_ramo");
             String precio =""+ data.getStringExtra("precio");
             String descripcion =""+ data.getStringExtra("descripcion");
+            String hora ="" + data.getStringExtra("hora");
             String realizacion = "false";
             String duracion = "5000";
             String Tipo_ayuda ="clase";
@@ -422,6 +423,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Aux.setTipo_ayuda(Tipo_ayuda);
             Aux.setLatitude(point.latitude);
             Aux.setLongitude(point.longitude);
+            Aux.setHora(hora);
 
            //ObtenerCampus
             Aux.setCampus(ObtenerCampus());
@@ -632,7 +634,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
                 } else if (unidad_academica.toLowerCase().equals("arte")) {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_art));
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arte));
                 } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
                 } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
@@ -652,7 +654,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
                 } else if (unidad_academica.toLowerCase().equals("matemática")) {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematicas));
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematica));
                 } else if (unidad_academica.toLowerCase().equals("música")) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
                 } else if (unidad_academica.toLowerCase().equals("odontología")) {

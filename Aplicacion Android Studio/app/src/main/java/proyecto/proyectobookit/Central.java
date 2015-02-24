@@ -730,10 +730,17 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
     private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog progressDialog;
         private Pin Pin_Elegido;
 
         public AsyncTask_GetEmail(Pin aux) {
             this.Pin_Elegido = aux;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(Central.this, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -745,6 +752,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         @Override
         protected void onPostExecute(String result) {
+            Boolean Paso=false;
             try {
                 result = "{ \"usuarios\":[" + result + "]}";
                 JSONObject json = new JSONObject(result);
@@ -758,7 +766,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 }
             }  catch (JSONException e) {
                 e.printStackTrace();
+                Paso=true;
             }
+
+            if(Paso)
+                progressDialog.dismiss();
         }
 
         private void CrearAlertDialog(final Pin Pin_Elegido) {
@@ -795,6 +807,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }catch (Exception e){
                 Toast.makeText(getBaseContext(),"Error",Toast.LENGTH_LONG);
             }
+            progressDialog.dismiss();
         }
 
 

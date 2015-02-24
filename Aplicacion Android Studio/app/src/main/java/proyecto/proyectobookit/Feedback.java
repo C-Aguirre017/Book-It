@@ -40,6 +40,8 @@ public class Feedback extends Activity {
             Mi_Usuario.setEmail(extras.getString("email"));
             Mi_Usuario.setNombre(extras.getString("nombre"));
         }
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

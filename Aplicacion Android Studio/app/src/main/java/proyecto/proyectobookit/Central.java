@@ -154,7 +154,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     }
                     else if (items[position].toLowerCase().equals("oriente")) {
 
-                        LatLng latLng = new LatLng(-33.437226, -70.623899);
+                        LatLng latLng = new LatLng(-33.446400, -70.593644);
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                         Mapas.animateCamera(cameraUpdate);
                     }
@@ -234,11 +234,10 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             if(null == Mapas){
                 Mapas = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapView)).getMap();
                 Mapas.setMyLocationEnabled(true);
-                Mapas.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                Mapas.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 Mapas.setBuildingsEnabled(true);
                 Mapas.setOnMarkerClickListener(this);
                 Mapas.setOnMapLongClickListener(this);
-                Mapas.setOnMapClickListener(this);
 
                 if(null == Mapas) {
                     Toast.makeText(getApplicationContext(),
@@ -486,7 +485,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         LatLng latLng_sj = new LatLng(-33.498444, -70.611722);
         LatLng latLng_casacentral = new LatLng(-33.440809, -70.640764);
         LatLng latLng_locontador = new LatLng(-33.419428, -70.618574);
-        LatLng latLng_oriente = new LatLng(-33.437226, -70.623899);
+        LatLng latLng_oriente = new LatLng(-33.446400, -70.593644);
         LatLng latLng_villarica = new LatLng(-38.738457, -72.601795);
 
         List<LatLng> Lista = new ArrayList<LatLng>();

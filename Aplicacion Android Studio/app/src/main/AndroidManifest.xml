@@ -89,6 +89,9 @@
         <activity
             android:name=".Acerca_De"
             android:label="@string/title_activity_acerca__de" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="proyecto.proyectobookit.Central" />
         </activity>
     </application>
 

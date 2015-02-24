@@ -12,6 +12,7 @@ public class Acerca_De extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acerca__de);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

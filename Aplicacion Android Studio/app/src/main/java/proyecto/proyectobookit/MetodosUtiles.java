@@ -10,24 +10,34 @@ public class MetodosUtiles {
 
     private List<Ramo> Lista_Ramos = new ArrayList<Ramo>();
 
-    public String CrearMensaje(String Descripcion, String Publicacion, String precio){
-        String Mensaje = " Descripcion: \n	";
-        if (Descripcion != null)
-            Mensaje += Descripcion;
+    public String CrearMensaje(String Descripcion, String Publicacion, String precio,String Tipo_ayuda){
+        String Mensaje="Descripcion: \n";
+        if (Descripcion != null && !Descripcion.equals(""))
+            Mensaje += "\t " + Descripcion;
         else
-            Mensaje += "No hay";
+            Mensaje += "\t Sin Información";
 
-        if (Publicacion != null) {
-            Mensaje += "\n Fecha Creación: \n	" + Publicacion;
+        Mensaje+= "\n Publicado el: \n";
+        if (Publicacion != null && !Publicacion.equals("") ) {
+            Mensaje += "\t " + Publicacion;
         } else {
-            Mensaje += "\n Fecha Creación: \n	Sin Información";
+            Mensaje += "\t Sin Información";
         }
 
-        if (precio != null) {
-            Mensaje += "\n Dispuesto a Pagar: \n	" + precio;
+        Mensaje+= "\n Dispuesto a Pagar: \n";
+        if (precio != null && !precio.equals("") ) {
+            Mensaje += "\t " + precio;
         } else {
-            Mensaje += "\n Dispuesto a Pagar: \n	Sin Información";
+            Mensaje += "\t Sin Información";
         }
+
+        Mensaje+= "\n Tipo de Ayuda: \n";
+        if (Tipo_ayuda != null && !Tipo_ayuda.equals("") ) {
+            Mensaje += "\t " + Tipo_ayuda;
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
         return Mensaje;
     }
 
@@ -41,22 +51,39 @@ public class MetodosUtiles {
 
     public String CrearMensaje(Pin aux) {
         String Mensaje="Descripcion: \n";
-        if (aux.getDescripcion() != null)
+        if (aux.getDescripcion() != null && !aux.getDescripcion().equals(""))
             Mensaje += "\t " +aux.getDescripcion();
         else
-            Mensaje += "\t No hay";
+            Mensaje += "\t Sin Información";
 
-        if (aux.getPublicacion() != null) {
-            Mensaje += "\n Fecha Creación: \n \t " + aux.getPublicacion();
+        Mensaje+= "\n Publicado el: \n";
+        if (aux.getPublicacion() != null && !aux.getPublicacion().equals("") ) {
+            Mensaje += "\t " + aux.getPublicacion();
         } else {
-            Mensaje += "\n Fecha Creación: \n \t Sin Información";
+            Mensaje += "\t Sin Información";
         }
 
-        if (aux.getPrecio() != null) {
-            Mensaje += "\n Dispuesto a Pagar: \n \t " + aux.getPrecio();
+        Mensaje+= "\n Dispuesto a Pagar: \n";
+        if (aux.getPrecio() != null && !aux.getPrecio().equals("") ) {
+            Mensaje += "\t " + aux.getPrecio();
         } else {
-            Mensaje += "\n Dispuesto a Pagar: \n \t Sin Información";
+            Mensaje += "\t Sin Información";
         }
+
+        Mensaje+= "\n Tipo de Ayuda: \n";
+        if (aux.getTipo_ayuda() != null && !aux.getTipo_ayuda().equals("") ) {
+            Mensaje += "\t " + aux.getTipo_ayuda();
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
+        Mensaje+= "\n Facultad: \n";
+        if (aux.getCampus() != null && !aux.getCampus().equals("") ) {
+            Mensaje += "\t " + aux.getCampus();
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
         return Mensaje;
     }
 }

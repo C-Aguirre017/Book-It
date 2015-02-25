@@ -60,6 +60,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Timer;
 import java.net.HttpURLConnection;
@@ -451,8 +452,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             String Tipo_ayuda ="clase";
 
             //Obtener Fecha y Hora
-            Long tsLong = System.currentTimeMillis()/1000;
-            String ts = tsLong.toString();
+            java.util.Date date= new java.util.Date();
+            Timestamp time = new Timestamp(date.getTime());
+            /* int dia,mes,año,hour,minutos;
+            dia = time.getDay();
+            mes = time.getMonth();
+            año = time.getYear();
+            hour = time.getHours();
+            minutos = time.getMinutes();*/
 
             //Crear Pin
             Pin Aux = new Pin();
@@ -465,6 +472,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Aux.setLatitude(point.latitude);
             Aux.setLongitude(point.longitude);
             Aux.setHora(hora);
+            //Aux.setPublicacion(dia+"/"+mes+"/"+año + " " + hour+":"+minutos);
+            Aux.setPublicacion(time.toString());
 
            //ObtenerCampus
             Aux.setCampus(ObtenerCampus());
@@ -877,7 +886,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         @Override
         protected void onPostExecute(Boolean result) {
-            progressDialog.dismiss();
+
         }
 
         private boolean postData_Pins(String usuario, String token,Pin Aux_Pin) {
@@ -893,18 +902,27 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                                 "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
                                 "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +
                                 "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
-                                "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8");
-                //"&ramo=" + URLEncoder.encode(Aux_Pin.getId_ramo, "UTF-8");
-                //"&publicacion=" + URLEncoder.encode(publicacion, "UTF-8") +
-                //"&realizacion=" + URLEncoder.encode(realizacion, "UTF-8") +
-                //"&tipo ayuda=" + URLEncoder.encode(tipo_ayuda, "UTF-8") +
+                                "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8") +
+                                "&ramo_id=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8")+
+                                "&publicacion=" + URLEncoder.encode(Aux_Pin.getPublicacion(), "UTF-8") +
+                                "&realizacion=" + URLEncoder.encode(Aux_Pin.getRealizacion(), "UTF-8") +
+                                "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
+                                "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");
 
-                String UrlEntera = "http://pinit-api.herokuapp.com/pins" + "?user_email=" + URLEncoder.encode(usuario, "UTF-8") +
-                        "&user_token=" + URLEncoder.encode(token, "UTF-8") +"&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8")
-                        +"&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8") +"&descripcion=" +
-                        URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +"&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
-                        "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") + "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
-                        "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8");
+                String UrlEntera = "http://pinit-api.herokuapp.com/pins" +
+                        "?user_email=" + URLEncoder.encode(usuario, "UTF-8") +
+                        "&user_token=" + URLEncoder.encode(token, "UTF-8") +
+                        "&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8") +
+                        "&descripcion=" + URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +
+                        "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
+                        "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +
+                        "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
+                        "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8") +
+                        "&ramo_id=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8")+
+                        "&publicacion=" + URLEncoder.encode(Aux_Pin.getPublicacion(), "UTF-8") +
+                        "&realizacion=" + URLEncoder.encode(Aux_Pin.getRealizacion(), "UTF-8") +
+                        "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
+                        "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");
 
                 //Create connection
                 URL url = new URL("http://pinit-api.herokuapp.com/pins");
@@ -924,6 +942,8 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 wr.flush();
                 wr.close();
 
+                progressDialog.dismiss();
+
                 //Get Response
                 InputStream is = connection.getInputStream();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -940,6 +960,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             } catch (Exception e) {
 
                 e.printStackTrace();
+                progressDialog.dismiss();
                 return false;
 
             } finally {
@@ -949,6 +970,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 }
 
             }
+
         }
 
     }

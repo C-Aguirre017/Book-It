@@ -124,7 +124,7 @@ public class CrearMarker extends Activity {
                 final String finalTitulo = titulo;
                 final String finalHora = hora;
                 builder.setTitle(titulo)
-                        .setMessage(M_Utiles.CrearMensaje(descripcion, "", precio))
+                        .setMessage(M_Utiles.CrearMensaje(descripcion, "", precio,"clases"))
                         .setPositiveButton("Crear Marker", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo, finalHora);

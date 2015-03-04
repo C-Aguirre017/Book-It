@@ -33,8 +33,7 @@
                 android:layout_height="200dp"
                 android:src="@drawable/logo"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="20dp"
-                android:contentDescription="logo" />
+                android:layout_marginBottom="20dp" />
 
             <com.facebook.widget.LoginButton
                 android:id="@+id/authButton"

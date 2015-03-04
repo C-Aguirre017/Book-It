@@ -683,50 +683,49 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
 
         private void ColocarIcono(MarkerOptions Aux_Marker,Pin Aux) {
-            String NombreRamo =  Aux.getRamo_Pin().getNombre();
-            String Sigla = Aux.getRamo_Pin().getSigla();
-            String unidad_academica=  Aux.getRamo_Pin().getUnidad_Academica();
-            if(Aux_Marker!= null && !Sigla.equals("") && !NombreRamo.equals("")){
-                if (unidad_academica.toLowerCase().equals("actuación")) {
+            String nombreRamo =  Aux.getRamo_Pin().getNombre();
+            String sigla = Aux.getRamo_Pin().getSigla();
+            if(Aux_Marker!= null && !sigla.equals("") && !nombreRamo.equals("")){
+                if (esInicioSigla(sigla, new String[]{"ACT"})) {
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_actuacion));
-                } else if (unidad_academica.toLowerCase().equals("agronomía")) {
+                } else if (esInicioSigla(sigla, new String[]{"AGL"})) { // Agronomia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_agronomia));
-                } else if (unidad_academica.toLowerCase().equals("arquitectura")) {
+                } else if (esInicioSigla(sigla, new String[]{"AQH"})) { // Arquitectura
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arquitectura));
-                } else if (unidad_academica.toLowerCase().equals("arte")) {
+                } else if (esInicioSigla(sigla, new String[]{"ARQ", "ARO"})) { // Arte
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_arte));
-                } else if (unidad_academica.toLowerCase().equals("ciencias biológicas")) {
+                } else if (esInicioSigla(sigla, new String[]{"BIO"})) { // Biologia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_biologia));
-                } else if (unidad_academica.toLowerCase().equals("cursos deportivos")) {
+                } else if (esInicioSigla(sigla, new String[]{"DPT"})) { // Deportes
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_deporte));
-                } else if (unidad_academica.toLowerCase().equals("derecho")) {
+                } else if (esInicioSigla(sigla, new String[]{"DEC"})) { // Derecho
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_derecho));
-                } else if (unidad_academica.toLowerCase().equals("ciencias económicas y administrativas")) {
+                } else if (esInicioSigla(sigla, new String[]{"DEE"})) { // Economia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_economia));
-                } else if (unidad_academica.toLowerCase().equals("educación")) {
+                } else if (esInicioSigla(sigla, new String[]{"EDU"})) { // Educacion
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_educacion));
-                } else if (unidad_academica.toLowerCase().equals("enfermería")) {
+                } else if (esInicioSigla(sigla, new String[]{"ENA"})) { // Enfermeria
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_enfermeria));
-                } else if (unidad_academica.toLowerCase().equals("física")) {
+                } else if (esInicioSigla(sigla, new String[]{"FIS"})) { // Fisica
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fisica));
-                } else if (unidad_academica.toLowerCase().equals("geografía")) {
+                } else if (esInicioSigla(sigla, new String[]{"GEO"})) { // Geografia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_geografia));
-                } else if (unidad_academica.toLowerCase().equals("ingeniería")) {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
-                } else if (unidad_academica.toLowerCase().equals("matemática")) {
+                }else if (esInicioSigla(sigla, new String[]{"MAT"})) { // Matematicas
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_matematica));
-                } else if (unidad_academica.toLowerCase().equals("música")) {
+                } else if (esInicioSigla(sigla, new String[]{"MUC"})) { // Musica
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_musica));
-                } else if (unidad_academica.toLowerCase().equals("odontología")) {
+                } else if (esInicioSigla(sigla, new String[]{"ODO"})) { // Odontologia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_odontologia));
-                } else if (unidad_academica.toLowerCase().equals("química")) {
+                } else if (esInicioSigla(sigla, new String[]{"QI"})) { // Quimica
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_quimica));
-                } else if (unidad_academica.toLowerCase().equals("ciencias de la salud/medicina")) {
+                } else if (esInicioSigla(sigla, new String[]{"CCP"})) { // Medicina
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_salud));
-                } else if (unidad_academica.toLowerCase().equals("teología")) {
+                } else if (esInicioSigla(sigla, new String[]{"FIL"})) { // Teologia
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_teologia));
-                } else {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo));
+                } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
+                }  else {
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.logoNegro));
                 }
 
                 Tabla_Pines.put(Aux.getId_pin(),Aux);
@@ -734,6 +733,15 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
         }
 
+    }
+
+    private boolean esInicioSigla(String sigla, String[] isiglas) {
+        for (String is: isiglas) {
+            if(sigla.startsWith(is)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {

@@ -6,10 +6,11 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_registro">Registro</string>
     <string name="title_activity_central">Mapa</string>
-    <string name="title_activity_crear_marker">CrearMarker</string>
+    <string name="title_activity_crear_marker">Crear Publicación</string>
     <string name="title_activity_help">Ayuda</string>
     <string name="title_activity_feedback">Feedback</string>
-    <string name="title_activity_acerca__de">Acerca_De</string>
+    <string name="title_activity_acerca__de">Acerca De</string>
+    <string name="title_activity_mis__pins">Mis Publicaciones</string>
 
     <!-- Menu -->
     <string name="search_title">Buscar Aca</string>
@@ -48,12 +49,10 @@
     <string name="Help_comofuncionarespuesta"> \t Pin It funciona de la siguiente manera. Cuando quieras tener una clase particular de algún curso de la universidad
     deja apretado en el mapa el lugar en donde quieres que se te realize la clase. Automaticamente se abrirá una nueva ventana donde se pedirá toda la información necesaria
     para poder publicar tu clase (curso,hora,dispuesto a pagar, etc). Desde ahí en adelante las personas podrán ver tu clase en el mapa y podrán aceptar.</string>
-
     <string name="Help_comofunciona_contacto">¿Como me contactan?</string>
     <string name="Help_comofunciona_contactorespuesta"> \t Una vez que tu clase se encuentra publicada estará visible para todas las personas que usan la aplicación.
         Las demas personas al apretar el marker podrán ver toda la información de esa clase. Al aceptar
     podrán enviarte un mail para ponerse en contacto (tel)</string>
-
     <string name="Help_comofunciona_eliminar">¿Como elimino una clase?</string>
     <string name="Help_comofunciona_eliminarrespuesta"> \t Todas tus clases se encontrarán en la pestaña Mis Pins el cuál te permitira poder eliminar las clases que hayas creado o las que ya hayan sido realizadas </string>
 
@@ -91,8 +90,10 @@
     <string name="feedback_boton">Enviar</string>
     <string name="feedbackmenu_enviar">Enviar</string>
 
-    <!--Datos Gmail Aplicacion -->
+    <!-- Datos Gmail Aplicacion -->
     <string name="mailaplicacion">\"bookit.servidor@gmail.com\"</string>
     <string name="clave_mail_aplicacion">\"mamamia123\"</string>
+    <string name="title_activity_modo_lista">Lista Publicaciones</string>
+
 
 </resources>

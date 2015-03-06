@@ -1,0 +1,17 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="15dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <proyecto.proyectobookit.NestedListView
+        android:id="@+id/mis_pins_lista"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:cacheColorHint="#00000000" >
+    </proyecto.proyectobookit.NestedListView>
+</LinearLayout>

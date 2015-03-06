@@ -8,6 +8,12 @@
     </item>
 
     <item
+        android:id="@+id/menucentral_viewasList"
+        android:icon="@drawable/ic_action_view_as_list"
+        android:showAsAction="ifRoom"
+        android:title="Lista"></item>
+
+    <item
         android:id="@+id/menucentral_refresh"
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="always"

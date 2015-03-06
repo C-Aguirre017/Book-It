@@ -50,10 +50,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Registro"
-            android:label="@string/title_activity_registro" >
-        </activity>
-        <activity
             android:name=".Central"
             android:label="@string/title_activity_central" >
             <meta-data
@@ -62,8 +58,9 @@
         </activity>
         <activity
             android:name=".Help"
-            android:label="@string/title_activity_help" >
-            <meta-data
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".Central" >
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="proyecto.proyectobookit.Central" />
         </activity>
@@ -82,13 +79,29 @@
             android:name=".Feedback"
             android:label="@string/title_activity_feedback"
             android:parentActivityName=".Central" >
-            <meta-data
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="proyecto.proyectobookit.Central" />
         </activity>
         <activity
             android:name=".Acerca_De"
             android:label="@string/title_activity_acerca__de" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="proyecto.proyectobookit.Central" />
+        </activity>
+        <activity
+            android:name=".ModoLista"
+            android:label="@string/title_activity_modo_lista"
+            android:parentActivityName=".Central" >
+        <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="proyecto.proyectobookit.Central" />
+        </activity>
+        <activity
+            android:name=".Mis_Pins"
+            android:label="@string/title_activity_mis__pins"
+            android:parentActivityName=".Central" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="proyecto.proyectobookit.Central" />

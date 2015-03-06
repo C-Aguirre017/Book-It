@@ -116,6 +116,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         Request.executeBatchAsync(request);
 
         // Datos Usuario
+        Mi_Usuario.setId_usuario("1");
         Mi_Usuario.setNombre("Enrique");
         Mi_Usuario.setCarrera("Ing Civil");
         Mi_Usuario.setEmail("ejcorrea@uc.cl");
@@ -195,7 +196,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
                 if(position == 0){
-
+                    Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
+                    NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
+                    NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
+                    NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
+                    startActivity(NuevaActividad_Mis_Pins);
                 } else if(position == 1){
                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
                    startActivity(NuevaActividad_Help);
@@ -206,6 +211,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
                     NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
                     startActivity(NuevaActividad_Help);*/
+
                     String[] TO = {getResources().getString(R.string.mailaplicacion)};
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setData(Uri.parse("mailto:"));
@@ -243,6 +249,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 if(null == Mapas) {
                     Toast.makeText(getApplicationContext(),
                             "Error creating map",Toast.LENGTH_SHORT).show();
+                    onDestroy();
                 }
             }
         } catch (NullPointerException exception){
@@ -364,6 +371,11 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Actualizar();
             return true;
         }
+        else if(id== R.id.menucentral_viewasList){
+            Intent NuevaActividad_ModoLista = new Intent(getApplication(),ModoLista.class);
+            NuevaActividad_ModoLista.putExtra("id_usuario", Mi_Usuario.getId_usuario());
+            startActivity(NuevaActividad_ModoLista);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -451,16 +463,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             String duracion = "5000";
             String Tipo_ayuda ="clase";
 
-            //Obtener Fecha y Hora
-            java.util.Date date= new java.util.Date();
-            Timestamp time = new Timestamp(date.getTime());
-            /* int dia,mes,año,hour,minutos;
-            dia = time.getDay();
-            mes = time.getMonth();
-            año = time.getYear();
-            hour = time.getHours();
-            minutos = time.getMinutes();*/
-
             //Crear Pin
             Pin Aux = new Pin();
             Aux.getRamo_Pin().setId_ramo(id_ramo);
@@ -472,8 +474,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             Aux.setLatitude(point.latitude);
             Aux.setLongitude(point.longitude);
             Aux.setHora(hora);
-            //Aux.setPublicacion(dia+"/"+mes+"/"+año + " " + hour+":"+minutos);
-            Aux.setPublicacion(time.toString());
+            Aux.setPublicacion(hora);
 
            //ObtenerCampus
             Aux.setCampus(ObtenerCampus());
@@ -582,7 +583,9 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     //Encontramos los valores
                     try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
                     try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
-                    try {Aux.setPublicacion(articles.getJSONObject(i).getString("publicacion")); } catch (Exception e) {}
+                    String Date_Aux="";
+                    try {Date_Aux= articles.getJSONObject(i).getString("publicacion"); } catch (Exception e) {}
+                    Aux.setPublicacion(Date_Aux.replace("T"," "));
                     try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
                     try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
                     //Cambiar nombre a futuro de titulo
@@ -725,7 +728,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
                 }  else {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.logoNegro));
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.logonegro));
                 }
 
                 Tabla_Pines.put(Aux.getId_pin(),Aux);
@@ -733,16 +736,17 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             }
         }
 
+        private boolean esInicioSigla(String sigla, String[] isiglas) {
+            for (String is: isiglas) {
+                if(sigla.startsWith(is)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
-    private boolean esInicioSigla(String sigla, String[] isiglas) {
-        for (String is: isiglas) {
-            if(sigla.startsWith(is)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
 
@@ -804,7 +808,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                                 emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
                                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book IT: Aceptar " + Pin_Elegido.getRamo_Pin().getNombre());
                                 emailIntent.putExtra(Intent.EXTRA_TEXT, "Me gustaría realizar la clase que publicaste en Book IT \n " +
-                                        "Para Contactarme te envío mi " +
+                                        "Para Contactarme te envío mi telefono. \n" +
                                         "Tel: " + "\n Saludos");
                                 try {
                                     startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
@@ -912,7 +916,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                                 "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
                                 "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8") +
                                 "&ramo_id=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8")+
-                                "&publicacion=" + URLEncoder.encode(Aux_Pin.getPublicacion(), "UTF-8") +
+                                "&publicacion=" + URLEncoder.encode(Aux_Pin.getHora(), "UTF-8") +
                                 "&realizacion=" + URLEncoder.encode(Aux_Pin.getRealizacion(), "UTF-8") +
                                 "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
                                 "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");

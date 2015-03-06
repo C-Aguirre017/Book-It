@@ -113,7 +113,7 @@ public class ListViewAdapter extends BaseAdapter {
         ListaPalabras.clear();
 
         if (charText.length() == 0) {
-
+            notifyDataSetChanged();
         }
         else
         {

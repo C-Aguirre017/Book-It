@@ -14,126 +14,122 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
+
             android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/crearmarker_labelsearch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Curso: " />
+            <TextView
+                android:id="@+id/crearmarker_labelsearch"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Curso: " />
 
-                    <EditText
-                        android:id="@+id/crearmarker_search"
-                        android:layout_width="match_parent"
-                        android:paddingTop="5dp"
-                        android:layout_height="50dp" >
-                        <requestFocus />
-                    </EditText>
+            <EditText
+                android:id="@+id/crearmarker_search"
+                android:layout_width="match_parent"
+                android:paddingTop="5dp"
+                android:layout_height="50dp" >
+                <requestFocus />
+            </EditText>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="15dp" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp" >
 
-                        <proyecto.proyectobookit.NestedListView
-                            android:id="@+id/crearmarker_list"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:layout_weight="1"
-                            android:cacheColorHint="#00000000" >
-                        </proyecto.proyectobookit.NestedListView>
-                    </LinearLayout>
-
-                    <!--TextView
-                        android:id="@+id/crearmarker_labelunidadacademica"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
-                        android:text="Unidad Académica: " />
-
-                    <Spinner
-                        android:id="@+id/crearmarker_unidadacademica"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
-                        android:spinnerMode="dropdown"/-->
-
-                    <TextView
-                        android:id="@+id/crearmarker_labeldescripcion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Descripcion de la Clase: " />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:id="@+id/crearmarker_descripcion"  >
-                    </EditText>
-
-                    <TextView
-                        android:id="@+id/crearmarker_labelhora"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Hora de la Clase:" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="time"
-                        android:ems="10"
-                        android:layout_marginTop="5dp"
-                        android:id="@+id/crearmarker_hora"  >
-                    </EditText>
-
-                    <TextView
-                        android:id="@+id/crearmarker_labelprecio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Precio dispuesto a Pagar: " />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:inputType="number"
-                        android:paddingTop="5dp"
-                        android:ems="10"
-                        android:id="@+id/crearmarker_precio"  >
-                    </EditText>
-
-                    <!--TextView
-                        android:id="@+id/crearmarker_labelfacultad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
-                        android:text="Campus: " />
-
-                    <Spinner
-                        android:id="@+id/crearmarker_facultad"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
-                        android:spinnerMode="dropdown"/-->
-
-                    <Button
-                        android:id="@+id/crearmarker_aceptar"
-                        android:layout_width="100dp"
-                        android:layout_height="fill_parent"
-                        android:layout_marginTop="5dp"
-                        android:onClick="Aceptar"
-                        android:background="@drawable/rounded_button"
-                        android:text="Aceptar"
-                        android:layout_gravity="right"/>
+                <proyecto.proyectobookit.NestedListView
+                    android:id="@+id/crearmarker_list"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="1"
+                    android:cacheColorHint="#00000000" >
+                </proyecto.proyectobookit.NestedListView>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/crearmarker_labeldescripcion"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Descripcion de la Clase: " />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/crearmarker_descripcion"  >
+            </EditText>
+
+            <TextView
+                android:id="@+id/crearmarker_labeldiaelegido"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Fecha y Hora:" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/crearmarker_diaelegido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="20dp"
+                    android:text="prueba" />
+
+                <TextView
+                    android:id="@+id/crearmarker_hora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="17dp"
+                    android:textSize="20dp"
+                    android:text="prueba" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/crearmarker_labelprecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Precio dispuesto a Pagar: " />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:inputType="number"
+                android:paddingTop="10dp"
+                android:ems="10"
+                android:id="@+id/crearmarker_precio"  >
+            </EditText>
+
+
+            <Button
+                android:id="@+id/crearmarker_aceptar"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="5dp"
+                android:onClick="Aceptar"
+                android:background="@drawable/rounded_button"
+                android:text="Aceptar"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

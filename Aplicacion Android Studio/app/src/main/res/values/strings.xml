@@ -56,19 +56,10 @@
     <string name="Help_comofunciona_eliminar">¿Como elimino una clase?</string>
     <string name="Help_comofunciona_eliminarrespuesta"> \t Todas tus clases se encontrarán en la pestaña Mis Pins el cuál te permitira poder eliminar las clases que hayas creado o las que ya hayan sido realizadas </string>
 
-    <!-- Drawner -->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Mapa -->
     <string name="SignoMas">+</string>
 
-    <!-- Colores -->
-    <!-- #CCCCCCC era el fondo de antes -->
-    <color name="Fondo">#FFFFFF</color>
-    <color name="ColorNaranjo">#FF7300</color>
-    <color name="ColorGris">#123a24d4</color>
-    <color name="Blancoo">#FFFFFF</color>
 
     <string name="title_activity_maps">Map</string>
 
@@ -94,6 +85,32 @@
     <string name="mailaplicacion">\"bookit.servidor@gmail.com\"</string>
     <string name="clave_mail_aplicacion">\"mamamia123\"</string>
     <string name="title_activity_modo_lista">Lista Publicaciones</string>
+
+    <!-- Navigation Drawer-->
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item >Mis Pins</item>
+        <item >¿Como Funciona?</item>
+        <item >Escribenos</item>
+        <item >Acerca De</item>
+        <item >Cerrar Sesion</item>
+    </string-array>
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_action_pin</item>
+        <item>@drawable/ic_action_help</item>
+        <item>@drawable/ic_action_writeus</item>
+        <item>@drawable/ic_action_about</item>
+        <item>@drawable/ic_action_logout</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
 
 
 </resources>

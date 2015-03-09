@@ -7,10 +7,13 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -75,22 +78,37 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.TimerTask;
 
+import proyecto.proyectobookit.adapters.NavDrawerListAdapter;
+import proyecto.proyectobookit.model_adapters.NavDrawerItem;
+
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
 
     GoogleMap Mapas;
     LatLng point;
-    RelativeLayout leftRL;
-    DrawerLayout drawerLayout;
 
+    //Menu
     private Usuario Mi_Usuario = new Usuario();
     private Menu menu;
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
     private Button Button_Buscar = null;
-    private ActionBarDrawerToggle mDrawerToggle;
+
+    //Facebook
     private Session fbSession;
     private GraphUser gUser;
 
+    //Navigation Drawner
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
+    private ArrayList<NavDrawerItem> navDrawerItems;
+    private NavDrawerListAdapter adapter;
+
+    //Hacer Getters
     private MetodosUtiles M_Utiles = new MetodosUtiles();
     private Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
     private long Tiempo_Start;
@@ -127,7 +145,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
 
         // Configurar Action Bar
-        SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actionbar_campus,android.R.layout.simple_spinner_dropdown_item);
+        SpinnerAdapter adapter_spinner = ArrayAdapter.createFromResource(this, R.array.actionbar_campus,android.R.layout.simple_spinner_dropdown_item);
 
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
 
@@ -135,8 +153,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
             @Override
             public boolean onNavigationItemSelected(int position, long id) {
-
-                // Do stuff when navigation item is selected
 
                 Toast.makeText(getBaseContext(),items[position],Toast.LENGTH_LONG);
                 if(Mapas != null) {
@@ -179,68 +195,48 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         };
 
 
+        // Navigation Drawner
         ActionBar actions = getActionBar();
         try{ actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);}catch (Exception e){}
         actions.setDisplayHomeAsUpEnabled(true);
         actions.setDisplayShowTitleEnabled(false);
-        try{actions.setListNavigationCallbacks(adapter, callback);}catch (Exception e){}
+        try{actions.setListNavigationCallbacks(adapter_spinner, callback);}catch (Exception e){}
 
+        mTitle = mDrawerTitle = getTitle();
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.central_drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.central_navigation_drawner);
+        navDrawerItems = new ArrayList<NavDrawerItem>();
 
+        //Cargar Menu
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        navMenuIcons.recycle();
 
-        // Configurar List View
-        leftRL = (RelativeLayout)findViewById(R.id.LeftDrawer);
-        drawerLayout = (DrawerLayout)findViewById(R.id.activity_central2);
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-        String[] NombreOpciones = {"Mis Pins","¿Como Funciona?","Escribenos","Acerca De","Cerrar Sesion"};
-        ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
-        View Aux_FotoFB = getLayoutInflater().inflate(R.layout.fb_image, ListaOpciones, false);
-        ListaOpciones.addHeaderView(Aux_FotoFB, null, false);
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
-        ListaOpciones.setAdapter(adaptador);
-        ListaOpciones.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        mDrawerList.setAdapter(adapter);
 
-                if(position == 1){
-                    Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
-                    NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
-                    NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
-                    NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
-                    startActivity(NuevaActividad_Mis_Pins);
-                } else if(position == 2){
-                   Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
-                   startActivity(NuevaActividad_Help);
-                }
-                else if(position == 3){
-                    /*
-                    Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
-                    NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
-                    NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
-                    startActivity(NuevaActividad_Help);*/
-
-                    String[] TO = {getResources().getString(R.string.mailaplicacion)};
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                    emailIntent.setData(Uri.parse("mailto:"));
-                    emailIntent.setType("text/plain");
-
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-                    try {
-                        startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
-                        Log.i("Finished sending email...", "");
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else if(position == 4){
-                    Intent NuevaActividad_Help = new Intent(getApplication(),Acerca_De.class);
-                    startActivity(NuevaActividad_Help);
-                }else {
-                    Central.this.finish();
-                }
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
             }
-        });
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         //Configurar Mapa
         try {
@@ -262,8 +258,97 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         }
 
-        setupDrawer();
         Actualizar();
+    }
+
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            // display view for selected nav drawer item
+            displayView(position);
+        }
+    }
+
+    private void displayView(int position) {
+        // update the main content by replacing fragments
+        switch (position) {
+            case 0:
+                Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
+                NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
+                NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
+                NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
+                startActivity(NuevaActividad_Mis_Pins);
+                break;
+            case 1:
+                Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
+                startActivity(NuevaActividad_Help);
+                break;
+            case 2:
+                   /* Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
+                    NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
+                    NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
+                    startActivity(NuevaActividad_Help);*/
+
+                    String[] TO = {getResources().getString(R.string.mailaplicacion)};
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
+                        Log.i("Finished sending email...", "");
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
+                break;
+            case 3:
+                Intent NuevaActividad_Acerca = new Intent(getApplication(),Acerca_De.class);
+                startActivity(NuevaActividad_Acerca);
+                break;
+            default:
+                Central.this.finish();
+                break;
+        }
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+
+        Fragment fragment = null;
+        if (fragment != null) {
+            /*FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).commit();*/
+
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+        } else {
+            // error in creating fragment
+            Log.e("MainActivity", "Error in creating fragment");
+        }
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -278,7 +363,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     }
 
     private void setFbImage(String id){
-        ImageView user_picture = (ImageView)findViewById(R.id.profile_image);
+      /*  ImageView user_picture = (ImageView)findViewById(R.id.profile_image);
         URL img_value = null;
         try {
             img_value = new URL("http://graph.facebook.com/" + id + "/picture?type=large");
@@ -286,39 +371,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             user_picture.setImageBitmap(mIcon1);
         } catch(Exception e) {
 
-        }
-    }
-
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        }*/
     }
 
     @Override
@@ -370,7 +423,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
         int id = item.getItemId();
         if(id ==  android.R.id.home){
-            onLeft(null);
             return true;
         }
         else if(id== R.id.menucentral_refresh){
@@ -383,11 +435,6 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             startActivity(NuevaActividad_ModoLista);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public  void onLeft(View view)    {
-        if(drawerLayout!=null && leftRL !=null)
-            drawerLayout.openDrawer(leftRL);
     }
 
     public void delete( View v ){

@@ -3,12 +3,15 @@ package proyecto.proyectobookit;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -180,7 +183,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
             } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
                 Imagen.setImageResource(R.drawable.ic_ingenieria);
             }  else {
-                Imagen.setImageResource(R.drawable.logonegro);
+                Imagen.setImageResource(R.drawable.ic_logo_chico);
             }
         }
     }
@@ -366,6 +369,9 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
 
         private void CrearAlertDialog(final Pin Pin_Elegido) {
             try {
+                final String numero= "+56994405326",nombre="Book-IT / " + Pin_Elegido.getUsuario_Pin().getNombre();
+                final Boolean ContactoCreado = CreateContact(nombre,numero);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
                         .setMessage(M_Utiles.CrearMensaje(Pin_Elegido))
@@ -389,6 +395,26 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                                 }
                             }
                         })
+                        .setNeutralButton("Whatsapp", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+                                if (isWhatsappInstalled) {
+                                    if (ContactoCreado) {
+                                        Uri uri = Uri.parse("smsto:" + numero);
+                                        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                                        i.setPackage("com.whatsapp");
+                                        mContext.startActivity(Intent.createChooser(i, ""));
+                                        //deleteContact(numero,nombre);
+                                    }
+
+                                } else {
+                                    Toast.makeText(mContext, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                                    Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                    mContext.startActivity(goToMarket);
+                                }
+                            }
+                        })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
@@ -399,6 +425,74 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                 Toast.makeText(mContext,"Error",Toast.LENGTH_LONG);
             }
             progressDialog.dismiss();
+        }
+
+        private Boolean CreateContact(String nombre, String numero) {
+            String displayName = nombre;
+            String mobileNumber = numero;
+            String email = null;
+
+            ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
+
+            // Names
+            if (displayName != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                displayName).build());
+            }
+
+            // Mobile Number
+            if (mobileNumber != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, mobileNumber)
+                        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build());
+            }
+
+            // Email
+            if (email != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                        .withValue(ContactsContract.CommonDataKinds.Email.TYPE,
+                                ContactsContract.CommonDataKinds.Email.TYPE_WORK).build());
+            }
+
+            // Asking the Contact provider to create a new contact
+            try {
+                mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        private boolean whatsappInstalledOrNot(String uri) {
+            PackageManager pm = mContext.getPackageManager();
+            boolean app_installed = false;
+            try {
+                pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+                app_installed = true;
+            } catch (PackageManager.NameNotFoundException e) {
+                app_installed = false;
+            }
+            return app_installed;
         }
 
 

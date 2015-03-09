@@ -13,6 +13,13 @@ public class Acerca_De extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acerca__de);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        /*                         Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+                                    sendIntent.setType("text/plain");
+                                    sendIntent.setPackage("com.whatsapp");
+                                    startActivity(sendIntent);*/
     }
 
 

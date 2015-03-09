@@ -5,7 +5,7 @@ package proyecto.proyectobookit;
  */
 public class Usuario {
 
-    private String nombre,email,carrera,role,token;
+    private String nombre,email,carrera,role,token,telefono;
     private String id_usuario;
 
 
@@ -55,5 +55,13 @@ public class Usuario {
 
     public void setId_usuario(String id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }

@@ -8,7 +8,10 @@ import com.google.android.gms.maps.GoogleMap;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.ContentProviderOperation;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.content.Intent;
@@ -189,23 +193,25 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         String[] NombreOpciones = {"Mis Pins","¿Como Funciona?","Escribenos","Acerca De","Cerrar Sesion"};
         ListView ListaOpciones = (ListView)findViewById(R.id.ListaOpcionesCentral);
+        View Aux_FotoFB = getLayoutInflater().inflate(R.layout.fb_image, ListaOpciones, false);
+        ListaOpciones.addHeaderView(Aux_FotoFB, null, false);
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NombreOpciones);
         ListaOpciones.setAdapter(adaptador);
         ListaOpciones.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
-                if(position == 0){
+                if(position == 1){
                     Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
                     NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
                     NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
                     NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
                     startActivity(NuevaActividad_Mis_Pins);
-                } else if(position == 1){
+                } else if(position == 2){
                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
                    startActivity(NuevaActividad_Help);
                 }
-                else if(position == 2){
+                else if(position == 3){
                     /*
                     Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
                     NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
@@ -227,7 +233,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                         Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
                     }
                 }
-                else if(position == 3){
+                else if(position == 4){
                     Intent NuevaActividad_Help = new Intent(getApplication(),Acerca_De.class);
                     startActivity(NuevaActividad_Help);
                 }else {
@@ -728,7 +734,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                 } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
                     Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ingenieria));
                 }  else {
-                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.logonegro));
+                    Aux_Marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_logo_chico));
                 }
 
                 Tabla_Pines.put(Aux.getId_pin(),Aux);
@@ -782,6 +788,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     try {Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));} catch (Exception e) {    }
                     try {Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));            } catch (Exception e) {    }
                     try {Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));       } catch (Exception e) {     }
+                    Pin_Elegido.getUsuario_Pin().setTelefono(Mi_Usuario.getTelefono());
                     CrearAlertDialog(Pin_Elegido);
                 }
             }  catch (JSONException e) {
@@ -795,10 +802,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         private void CrearAlertDialog(final Pin Pin_Elegido) {
             try {
+
+                final String numero= "+56994405326",nombre="Book-IT / " + Pin_Elegido.getUsuario_Pin().getNombre();
+                final Boolean ContactoCreado = CreateContact(nombre,numero);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(Central.this);
                 builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
                         .setMessage(M_Utiles.CrearMensaje(Pin_Elegido))
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Mail", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 String[] TO = {Pin_Elegido.getUsuario_Pin().getEmail()};
                                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -818,6 +829,26 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                                 }
                             }
                         })
+                        .setNeutralButton("Whatsapp", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+                                if (isWhatsappInstalled) {
+                                    if (ContactoCreado) {
+                                        Uri uri = Uri.parse("smsto:" + numero);
+                                        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                                        i.setPackage("com.whatsapp");
+                                        startActivity(Intent.createChooser(i, ""));
+                                        //deleteContact(numero,nombre);
+                                    }
+
+                                } else {
+                                    Toast.makeText(getBaseContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                                    Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(goToMarket);
+                                }
+                            }
+                        })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
@@ -830,6 +861,82 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             progressDialog.dismiss();
         }
 
+        private Boolean CreateContact(String nombre, String numero) {
+                String displayName = nombre;
+                String mobileNumber = numero;
+                String email = null;
+
+                ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+                ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
+
+                // Names
+                if (displayName != null) {
+                    ops.add(ContentProviderOperation
+                            .newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                    displayName).build());
+                }
+
+                // Mobile Number
+                if (mobileNumber != null) {
+                    ops.add(ContentProviderOperation
+                            .newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, mobileNumber)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build());
+                }
+
+                // Email
+                if (email != null) {
+                    ops.add(ContentProviderOperation
+                            .newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                            .withValue(ContactsContract.CommonDataKinds.Email.TYPE,
+                                    ContactsContract.CommonDataKinds.Email.TYPE_WORK).build());
+                }
+
+                // Asking the Contact provider to create a new contact
+                try {
+                   getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            return false;
+        }
+
+        public boolean deleteContact(String phone, String name) {
+            Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phone));
+            Cursor cur = getContentResolver().query(contactUri, null, null, null, null);
+            try {
+                if (cur.moveToFirst()) {
+                    do {
+                        if (cur.getString(cur.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)).equalsIgnoreCase(name)) {
+                            String lookupKey = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+                            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+                            getContentResolver().delete(uri, null, null);
+                            return true;
+                        }
+                    } while (cur.moveToNext());
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+            return false;
+        }
 
         private String GET(String url){
             InputStream inputStream = null;
@@ -869,6 +976,20 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
             return result;
 
         }
+
+
+        private boolean whatsappInstalledOrNot(String uri) {
+            PackageManager pm = getPackageManager();
+            boolean app_installed = false;
+            try {
+                pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+                app_installed = true;
+            } catch (PackageManager.NameNotFoundException e) {
+                app_installed = false;
+            }
+            return app_installed;
+        }
+
     }
 
     //AsyncTasks Post

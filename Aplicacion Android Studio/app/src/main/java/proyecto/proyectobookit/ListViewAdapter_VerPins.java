@@ -202,7 +202,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
             } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
                 Imagen.setImageResource(R.drawable.ic_ingenieria);
             }  else {
-                Imagen.setImageResource(R.drawable.logonegro);
+                Imagen.setImageResource(R.drawable.ic_logo_chico);
             }
         }
     }

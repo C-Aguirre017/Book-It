@@ -88,7 +88,7 @@ public class ModoLista extends Activity {
                     String Url = "http://pinit-api.herokuapp.com/pins";
                     try {
                         Url += URLEncoder.encode(text, "UTF-8") + ".json";
-                        adapter.ColocarPines();
+                        adapter.ColocarPines(Url);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }

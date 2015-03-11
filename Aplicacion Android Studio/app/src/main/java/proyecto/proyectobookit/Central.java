@@ -1,34 +1,24 @@
 package proyecto.proyectobookit;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.model.GraphUser;
-import com.google.android.gms.maps.GoogleMap;
-
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.content.Intent;
 import android.os.Bundle;
-
+import android.provider.ContactsContract;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,23 +26,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.MapFragment;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -67,18 +59,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Timer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.TimerTask;
 
-import proyecto.proyectobookit.adapters.NavDrawerListAdapter;
+import proyecto.proyectobookit.adapters.NavDrawer_ListAdapter;
+import proyecto.proyectobookit.base_datos.Pin;
+import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.menu_items.Acerca_De;
+import proyecto.proyectobookit.menu_items.Help;
+import proyecto.proyectobookit.menu_items.Mis_Pins;
 import proyecto.proyectobookit.model_adapters.NavDrawerItem;
 
 public class Central extends Activity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
@@ -106,7 +99,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
-    private NavDrawerListAdapter adapter;
+    private NavDrawer_ListAdapter adapter;
 
     //Hacer Getters
     private MetodosUtiles M_Utiles = new MetodosUtiles();
@@ -219,7 +212,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        adapter = new NavDrawer_ListAdapter(getApplicationContext(), navDrawerItems);
         mDrawerList.setAdapter(adapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -258,6 +251,14 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
 
         }
 
+        if (savedInstanceState == null) {
+            displayView(1);
+        }
+
+
+        View header = getLayoutInflater().inflate(R.layout.navigationdrawer_header, mDrawerList, false);
+        mDrawerList.addHeaderView(header, null, false);
+
         Actualizar();
     }
 
@@ -265,31 +266,28 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-            // display view for selected nav drawer item
             displayView(position);
         }
     }
 
     private void displayView(int position) {
-        // update the main content by replacing fragments
         switch (position) {
             case 0:
-                Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
-                NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
-                NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
-                NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
-                startActivity(NuevaActividad_Mis_Pins);
-                break;
+                    break;
             case 1:
-                Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
-                startActivity(NuevaActividad_Help);
-                break;
+                    break;
             case 2:
-                   /* Intent NuevaActividad_Help = new Intent(getApplication(),Feedback.class);
-                    NuevaActividad_Help.putExtra("email",Mi_Usuario.getEmail());
-                    NuevaActividad_Help.putExtra("nombre", Mi_Usuario.getNombre());
-                    startActivity(NuevaActividad_Help);*/
-
+                    Intent NuevaActividad_Mis_Pins = new Intent(getApplication(),Mis_Pins.class);
+                    NuevaActividad_Mis_Pins.putExtra("id_usuario", Mi_Usuario.getId_usuario());
+                    NuevaActividad_Mis_Pins.putExtra("email",Mi_Usuario.getEmail());
+                    NuevaActividad_Mis_Pins.putExtra("token",Mi_Usuario.getToken());
+                    startActivity(NuevaActividad_Mis_Pins);
+                    break;
+            case 3:
+                    Intent NuevaActividad_Help = new Intent(getApplication(),Help.class);
+                    startActivity(NuevaActividad_Help);
+                    break;
+            case 4:
                     String[] TO = {getResources().getString(R.string.mailaplicacion)};
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setData(Uri.parse("mailto:"));
@@ -305,7 +303,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                         Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
                     }
                 break;
-            case 3:
+            case 5:
                 Intent NuevaActividad_Acerca = new Intent(getApplication(),Acerca_De.class);
                 startActivity(NuevaActividad_Acerca);
                 break;
@@ -333,21 +331,15 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         }
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 

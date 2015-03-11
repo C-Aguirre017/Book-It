@@ -1,4 +1,4 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -28,7 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ListViewAdapter extends BaseAdapter {
+import proyecto.proyectobookit.R;
+import proyecto.proyectobookit.base_datos.Ramo;
+
+public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
 
     // Declare Variables
     Context mContext;
@@ -41,7 +44,7 @@ public class ListViewAdapter extends BaseAdapter {
     AsyncTask Getter;
     public Ramo Elegido = null;
 
-    public ListViewAdapter(Context context, EditText Search) {
+    public CrearMarker_ListViewAdapter_VerRamos(Context context, EditText Search) {
         mContext = context;
         this.Search =Search;
         this.ListaPalabras = new ArrayList<Ramo>();

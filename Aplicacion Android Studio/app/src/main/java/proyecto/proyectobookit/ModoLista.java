@@ -15,6 +15,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
+import proyecto.proyectobookit.adapters.NestedListView;
+import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.model_adapters.ListViewAdapter_ModoLista;
+
 public class ModoLista extends Activity {
 
     // Declare Variables

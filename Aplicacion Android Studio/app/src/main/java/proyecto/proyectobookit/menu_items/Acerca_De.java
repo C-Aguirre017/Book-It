@@ -1,9 +1,11 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.menu_items;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import proyecto.proyectobookit.R;
 
 
 public class Acerca_De extends Activity {

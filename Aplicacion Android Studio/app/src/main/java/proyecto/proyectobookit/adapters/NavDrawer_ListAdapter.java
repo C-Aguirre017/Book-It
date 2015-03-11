@@ -15,12 +15,12 @@ import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.model_adapters.NavDrawerItem;
 
 
-public class NavDrawerListAdapter extends BaseAdapter {
+public class NavDrawer_ListAdapter extends BaseAdapter {
 	
 	private Context context;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	
-	public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems){
+	public NavDrawer_ListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems){
 		this.context = context;
 		this.navDrawerItems = navDrawerItems;
 	}
@@ -45,7 +45,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 		if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater)
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+            convertView = mInflater.inflate(R.layout.navigationdrawer_list_item, null);
         }
          
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.drawelistitem_icon);

@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="proyecto.proyectobookit.Mis_Pins">
+    tools:context="proyecto.proyectobookit.menu_items.Mis_Pins">
     <item
         android:id="@+id/mis_pins_search"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="ifRoom|collapseActionView"
-        android:actionLayout="@layout/search_layout"
+        android:actionLayout="@layout/actionbar_search_layout"
         android:title="Buscar Cursos">
     </item>
 </menu>

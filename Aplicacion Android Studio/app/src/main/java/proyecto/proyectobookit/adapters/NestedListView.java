@@ -1,4 +1,4 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.adapters;
 
 import android.content.Context;
 import android.util.AttributeSet;

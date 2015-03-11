@@ -70,7 +70,7 @@
                     android:text="Volver"
                     android:onClick="Prueba"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/rounded_button"
+                    android:background="@drawable/property_rounded_button"
                     android:layout_gravity="right" />
         </LinearLayout>
     </ScrollView>

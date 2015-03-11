@@ -1,4 +1,4 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.base_datos;
 
 /**
  * Created by Carlos on 22-02-2015.

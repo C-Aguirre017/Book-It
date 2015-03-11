@@ -3,6 +3,9 @@ package proyecto.proyectobookit;
 import java.util.ArrayList;
 import java.util.List;
 
+import proyecto.proyectobookit.base_datos.Pin;
+import proyecto.proyectobookit.base_datos.Ramo;
+
 /**
  * Created by Carlos on 21-02-2015.
  */

@@ -57,10 +57,10 @@
             android:label="@string/title_activity_central" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="proyecto.proyectobookit.Inicio" />
+                android:value=".Inicio" />
         </activity>
         <activity
-            android:name=".Help"
+            android:name=".menu_items.Help"
             android:label="@string/title_activity_help"
             android:parentActivityName=".Central" >
         <meta-data
@@ -79,15 +79,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".Feedback"
-            android:label="@string/title_activity_feedback"
-            android:parentActivityName=".Central" >
-        <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="proyecto.proyectobookit.Central" />
-        </activity>
-        <activity
-            android:name=".Acerca_De"
+            android:name=".menu_items.Acerca_De"
             android:label="@string/title_activity_acerca__de" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -102,7 +94,7 @@
                 android:value="proyecto.proyectobookit.Central" />
         </activity>
         <activity
-            android:name=".Mis_Pins"
+            android:name=".menu_items.Mis_Pins"
             android:label="@string/title_activity_mis__pins"
             android:parentActivityName=".Central" >
             <meta-data

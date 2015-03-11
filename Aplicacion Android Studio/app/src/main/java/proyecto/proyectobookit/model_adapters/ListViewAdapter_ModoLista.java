@@ -1,12 +1,17 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.model_adapters;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-
+import android.content.ActivityNotFoundException;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,28 +21,29 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ListViewAdapter_VerPins extends BaseAdapter {
+import proyecto.proyectobookit.MetodosUtiles;
+import proyecto.proyectobookit.R;
+import proyecto.proyectobookit.base_datos.Pin;
+
+public class ListViewAdapter_ModoLista extends BaseAdapter {
 
     // Declare Variables
     Context mContext;
@@ -47,15 +53,12 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     private List<AsyncTask> Lista_AssyncTask = new ArrayList<AsyncTask>();
     private MetodosUtiles M_Utiles = new MetodosUtiles();
 
-    private Usuario Mi_Usuario = new Usuario();
-
     EditText Search;
 
-    public ListViewAdapter_VerPins(Context context, EditText Search,Usuario usuario) {
+    public ListViewAdapter_ModoLista(Context context, EditText Search) {
         mContext = context;
         this.Search =Search;
         this.ListaPines = new ArrayList<Pin>();
-        this.Mi_Usuario =usuario;
         inflater = LayoutInflater.from(mContext);
     }
 
@@ -127,31 +130,13 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                 @Override
                 public void onClick(View arg0) {
                     // Send single item click data to SingleItemView Class
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle(holder.Aux_Pin.getRamo_Pin().getSigla() + " " + holder.Aux_Pin.getRamo_Pin().getNombre())
-                            .setMessage(M_Utiles.CrearMensaje(holder.Aux_Pin))
-                            .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    String Url = "http://pinit-api.herokuapp.com/pins/" + holder.Aux_Pin.getId_pin();
-
-                                    if (Build.VERSION.SDK_INT >= 11) {
-                                        //--post GB use serial executor by default --
-                                        new AsyncTask_Eliminar(Mi_Usuario.getEmail(),Mi_Usuario.getToken()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
-                                    } else {
-                                        //--GB uses ThreadPoolExecutor by default--
-                                        new AsyncTask_Eliminar(Mi_Usuario.getEmail(),Mi_Usuario.getToken()).execute(Url);
-                                    }
-                                    ListaPines.remove(holder.Aux_Pin);
-                                    notifyDataSetChanged();
-                                }
-                            })
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    if (Build.VERSION.SDK_INT >= 11) {
+                        //--post GB use serial executor by default --
+                        new AsyncTask_GetEmail(holder.Aux_Pin).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+                    } else {
+                        //--GB uses ThreadPoolExecutor by default--
+                        new AsyncTask_GetEmail(holder.Aux_Pin).execute("");
+                    }
 
                 }
             });
@@ -221,7 +206,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     public void filter(String charText,String Url) {
         charText = charText.toLowerCase(Locale.getDefault());
         //Resetear Valores
-        ListaPines.clear();
+        //ListaPines.clear();
 
         if (charText.length() == 0) {
 
@@ -339,66 +324,218 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
         }
 
-
-
     }
 
+    private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
 
-    private class AsyncTask_Eliminar extends AsyncTask<String,Void,Boolean>{
-
-        private String Email,Token;
         private ProgressDialog progressDialog;
+        private Pin Pin_Elegido;
 
-        public AsyncTask_Eliminar(String usuario,String token) {
-            this.Email=usuario;
-            this.Token=token;
+        public AsyncTask_GetEmail(Pin aux) {
+            this.Pin_Elegido = aux;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Eliminando ...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
-            return deleteData_Pins(params[0]);
+        protected String doInBackground(String... urls) {
+            String Url= "http://pinit-api.herokuapp.com/usuarios/" ;
+            Url +=  Pin_Elegido.getUsuario_Pin().getId_usuario() + ".json";
+            return GET(Url);
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-        }
-
-        private boolean deleteData_Pins(String url_entrante ) {
-
-            HttpURLConnection connection = null;
-            String Sabe = url_entrante;
+        protected void onPostExecute(String result) {
+            Boolean Paso=false;
             try {
-                URL url = new URL(url_entrante+  "?user_email=" + URLEncoder.encode(Email, "UTF-8") +"&user_token=" + URLEncoder.encode(Token, "UTF-8"));
-                HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-                httpCon.setRequestProperty(
-                        "Content-Type", "application/x-www-form-urlencoded" );
-                httpCon.setRequestMethod("DELETE");
-                httpCon.connect();
-                httpCon.getInputStream();
+                result = "{ \"usuarios\":[" + result + "]}";
+                JSONObject json = new JSONObject(result);
+                JSONArray articles = json.getJSONArray("usuarios");
+                if(Pin_Elegido!=null) {
+                    try {Pin_Elegido.getUsuario_Pin().setEmail(articles.getJSONObject(0).getString("email")); } catch (Exception e) {     }
+                    try {Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));} catch (Exception e) {    }
+                    try {Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));            } catch (Exception e) {    }
+                    try {Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));       } catch (Exception e) {     }
+                    CrearAlertDialog(Pin_Elegido);
+                }
+            }  catch (JSONException e) {
+                e.printStackTrace();
+                Paso=true;
+            }
+
+            if(Paso)
                 progressDialog.dismiss();
+        }
+
+        private void CrearAlertDialog(final Pin Pin_Elegido) {
+            try {
+                final String numero= "+56994405326",nombre="Book-IT / " + Pin_Elegido.getUsuario_Pin().getNombre();
+                final Boolean ContactoCreado = CreateContact(nombre,numero);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
+                        .setMessage(M_Utiles.CrearMensaje(Pin_Elegido))
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String[] TO = {Pin_Elegido.getUsuario_Pin().getEmail()};
+                                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                                emailIntent.setData(Uri.parse("mailto:"));
+                                emailIntent.setType("text/plain");
+
+                                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book IT: Aceptar " + Pin_Elegido.getRamo_Pin().getNombre());
+                                emailIntent.putExtra(Intent.EXTRA_TEXT, "Me gustaría realizar la clase que publicaste en Book IT \n " +
+                                        "Para Contactarme te envío mi telefono. \n" +
+                                        "Tel: " + "\n Saludos");
+                                try {
+                                    mContext.startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
+                                    Log.i("Finished sending email...", "");
+                                } catch (ActivityNotFoundException ex) {
+                                    Toast.makeText(mContext, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNeutralButton("Whatsapp", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+                                if (isWhatsappInstalled) {
+                                    if (ContactoCreado) {
+                                        Uri uri = Uri.parse("smsto:" + numero);
+                                        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                                        i.setPackage("com.whatsapp");
+                                        mContext.startActivity(Intent.createChooser(i, ""));
+                                        //deleteContact(numero,nombre);
+                                    }
+
+                                } else {
+                                    Toast.makeText(mContext, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                                    Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                    mContext.startActivity(goToMarket);
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }catch (Exception e){
+                Toast.makeText(mContext,"Error",Toast.LENGTH_LONG);
+            }
+            progressDialog.dismiss();
+        }
+
+        private Boolean CreateContact(String nombre, String numero) {
+            String displayName = nombre;
+            String mobileNumber = numero;
+            String email = null;
+
+            ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
+
+            // Names
+            if (displayName != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                displayName).build());
+            }
+
+            // Mobile Number
+            if (mobileNumber != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, mobileNumber)
+                        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build());
+            }
+
+            // Email
+            if (email != null) {
+                ops.add(ContentProviderOperation
+                        .newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                        .withValue(ContactsContract.CommonDataKinds.Email.TYPE,
+                                ContactsContract.CommonDataKinds.Email.TYPE_WORK).build());
+            }
+
+            // Asking the Contact provider to create a new contact
+            try {
+                mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
                 return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        private boolean whatsappInstalledOrNot(String uri) {
+            PackageManager pm = mContext.getPackageManager();
+            boolean app_installed = false;
+            try {
+                pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+                app_installed = true;
+            } catch (PackageManager.NameNotFoundException e) {
+                app_installed = false;
+            }
+            return app_installed;
+        }
+
+
+        private String GET(String url){
+            InputStream inputStream = null;
+            String result = "";
+            try {
+
+                // create HttpClient
+                HttpClient httpclient = new DefaultHttpClient();
+
+                // make GET request to the given URL
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+                // receive response as inputStream
+                inputStream = httpResponse.getEntity().getContent();
+
+                // convert inputstream to string
+                if(inputStream != null)
+                    result = convertInputStreamToString(inputStream);
+                else
+                    result = "Did not work!";
 
             } catch (Exception e) {
-
-                e.printStackTrace();
-                progressDialog.dismiss();
-                return false;
-
-            } finally {
-
-                if (connection != null) {
-                    connection.disconnect();
-                }
-
+                Log.d("InputStream", e.getLocalizedMessage());
             }
+
+            return result;
+        }
+
+        private String convertInputStreamToString(InputStream inputStream) throws IOException {
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+            return result;
 
         }
     }

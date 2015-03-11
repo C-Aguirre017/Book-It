@@ -3,7 +3,7 @@
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="ifRoom|collapseActionView"
-        android:actionLayout="@layout/search_layout"
+        android:actionLayout="@layout/actionbar_search_layout"
         android:title="Buscar Cursos">
     </item>
 

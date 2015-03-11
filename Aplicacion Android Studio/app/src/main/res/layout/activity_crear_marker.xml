@@ -41,14 +41,14 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp" >
 
-                <proyecto.proyectobookit.NestedListView
+                <proyecto.proyectobookit.adapters.NestedListView
                     android:id="@+id/crearmarker_list"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
                     android:layout_weight="1"
                     android:cacheColorHint="#00000000" >
-                </proyecto.proyectobookit.NestedListView>
+                </proyecto.proyectobookit.adapters.NestedListView>
             </LinearLayout>
 
             <TextView
@@ -125,7 +125,7 @@
                 android:layout_height="fill_parent"
                 android:layout_marginTop="5dp"
                 android:onClick="Aceptar"
-                android:background="@drawable/rounded_button"
+                android:background="@drawable/property_rounded_button"
                 android:text="Aceptar"
                 android:layout_gravity="right"/>
 

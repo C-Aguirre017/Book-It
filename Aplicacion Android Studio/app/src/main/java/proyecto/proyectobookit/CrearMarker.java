@@ -16,28 +16,27 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
+
+import proyecto.proyectobookit.adapters.CrearMarker_ListViewAdapter_VerRamos;
+import proyecto.proyectobookit.adapters.NestedListView;
 
 
 public class CrearMarker extends Activity {
 
     // Declare Variables
     ListView lista_ramos;
-    ListViewAdapter adapter;
+    CrearMarker_ListViewAdapter_VerRamos adapter;
     EditText editsearch;
     public static TextView hora_label;
     public static TextView dia_label;
@@ -54,7 +53,7 @@ public class CrearMarker extends Activity {
         lista_ramos = (NestedListView) findViewById(R.id.crearmarker_list);
         editsearch = (EditText) findViewById(R.id.crearmarker_search);
 
-        adapter = new ListViewAdapter(this,editsearch);
+        adapter = new CrearMarker_ListViewAdapter_VerRamos(this,editsearch);
         lista_ramos.setAdapter(adapter);
         editsearch.addTextChangedListener(new TextWatcher() {
 

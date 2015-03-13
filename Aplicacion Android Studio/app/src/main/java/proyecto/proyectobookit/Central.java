@@ -152,7 +152,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
                     if (items[position].toLowerCase().equals("san joaquín")) {
 
                         LatLng latLng = new LatLng(-33.498444, -70.611722);
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                         Mapas.animateCamera(cameraUpdate);
                     }
                     else if (items[position].toLowerCase().equals("casa central")) {
@@ -208,6 +208,7 @@ public class Central extends Activity implements GoogleMap.OnMapClickListener, G
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
         navMenuIcons.recycle();
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());

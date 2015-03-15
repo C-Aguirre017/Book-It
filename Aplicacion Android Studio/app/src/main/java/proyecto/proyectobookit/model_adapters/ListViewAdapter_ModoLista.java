@@ -224,7 +224,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Actualizando...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
 

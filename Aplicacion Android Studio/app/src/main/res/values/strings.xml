@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Book-It</string>
+    <string name="app_name">Bukit</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_registro">Registro</string>
     <string name="title_activity_central">Mapa</string>
@@ -44,16 +44,22 @@
     <string name="MarkerOptions_Descripcion">Escriba una descripción</string>
 
     <!-- Help -->
-    <string name="Help_comofunciona">¿Como Funciona?</string>
-    <string name="Help_comofuncionarespuesta"> \t Pin It funciona de la siguiente manera. Cuando quieras tener una clase particular de algún curso de la universidad
-    deja apretado en el mapa el lugar en donde quieres que se te realize la clase. Automaticamente se abrirá una nueva ventana donde se pedirá toda la información necesaria
-    para poder publicar tu clase (curso,hora,dispuesto a pagar, etc). Desde ahí en adelante las personas podrán ver tu clase en el mapa y podrán aceptar.</string>
-    <string name="Help_comofunciona_contacto">¿Como me contactan?</string>
-    <string name="Help_comofunciona_contactorespuesta"> \t Una vez que tu clase se encuentra publicada estará visible para todas las personas que usan la aplicación.
-        Las demas personas al apretar el marker podrán ver toda la información de esa clase. Al aceptar
-    podrán enviarte un mail para ponerse en contacto (tel)</string>
-    <string name="Help_comofunciona_eliminar">¿Como elimino una clase?</string>
-    <string name="Help_comofunciona_eliminarrespuesta"> \t Todas tus clases se encontrarán en la pestaña Mis Pins el cuál te permitira poder eliminar las clases que hayas creado o las que ya hayan sido realizadas </string>
+    <string name="Help_comofunciona">¿Cómo Funciona?</string>
+    <string name="Help_comofuncionarespuesta">
+        \t  Cuando quieras tener una clase particular de algún curso de la universidad
+    deja apretado en el mapa el lugar en donde quieres que se te realice la clase. Automaticamente se abrirá una nueva ventana donde se pedirá toda la información necesaria
+    (curso,fecha, hora, dispuesto a pagar, etc). Desde ahí en adelante las personas que usen la aplicación podrán acceder a ver tu clase.</string>
+    <string name="Help_comofunciona_contacto">¿Cómo me contactan?</string>
+    <string name="Help_comofunciona_contactorespuesta">
+        \t Una vez que tu clase se encuentre publicada estará visible para todas las personas que usen la aplicación.
+        Las demás personas podrán acceder automaticamente a la información contenida en ella al hacer click en tú publicación. Ahí tedrán la opción de
+        enviarte un mail o un whatsapp directamente (Si tienes activado la opción de whatsapp).
+    </string>
+    <string name="Help_comofunciona_eliminar">¿Cómo elimino una clase?</string>
+    <string name="Help_comofunciona_eliminarrespuesta">
+        \t Todas tus clases se encontrarán en la pestaña Mis Pins, la cuál te permitirá
+        poder eliminar las clases que hayas creado o las que ya hayan sido realizadas. \n
+    </string>
 
     <!-- Mapa -->
     <string name="SignoMas">+</string>

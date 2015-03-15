@@ -414,7 +414,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Actualizando...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
         @Override

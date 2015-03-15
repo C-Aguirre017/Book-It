@@ -2,7 +2,6 @@ package proyecto.proyectobookit.model_adapters;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import proyecto.proyectobookit.MetodosUtiles;
+import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Pin;
 
@@ -137,7 +136,6 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                         //--GB uses ThreadPoolExecutor by default--
                         new AsyncTask_GetEmail(holder.Aux_Pin).execute("");
                     }
-
                 }
             });
         }
@@ -221,10 +219,14 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog = ProgressDialog.show(mContext, "Actualizando...", "Espere porfavor", true, false);
         }
+
 
         @Override
         protected String doInBackground(String... urls) {
@@ -282,6 +284,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
             } catch (Exception e) {
                 // TODO: handle exception
             }
+            progressDialog.dismiss();
             notifyDataSetChanged();
         }
 
@@ -379,7 +382,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
                         .setMessage(M_Utiles.CrearMensaje(Pin_Elegido))
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Mail", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 String[] TO = {Pin_Elegido.getUsuario_Pin().getEmail()};
                                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -394,7 +397,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                                 try {
                                     mContext.startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
                                     Log.i("Finished sending email...", "");
-                                } catch (ActivityNotFoundException ex) {
+                                } catch (android.content.ActivityNotFoundException ex) {
                                     Toast.makeText(mContext, "There is no email client installed.", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -498,7 +501,6 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
             }
             return app_installed;
         }
-
 
         private String GET(String url){
             InputStream inputStream = null;

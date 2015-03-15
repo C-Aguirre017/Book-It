@@ -2,7 +2,6 @@ package proyecto.proyectobookit.model_adapters;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +20,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -36,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import proyecto.proyectobookit.MetodosUtiles;
+import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
@@ -47,17 +44,11 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     Context mContext;
     LayoutInflater inflater;
     private List<Pin> ListaPines = null;
-
-    private List<AsyncTask> Lista_AssyncTask = new ArrayList<AsyncTask>();
     private MetodosUtiles M_Utiles = new MetodosUtiles();
-
     private Usuario Mi_Usuario = new Usuario();
 
-    EditText Search;
-
-    public ListViewAdapter_VerPins(Context context, EditText Search,Usuario usuario) {
+    public ListViewAdapter_VerPins(Context context,Usuario usuario) {
         mContext = context;
-        this.Search =Search;
         this.ListaPines = new ArrayList<Pin>();
         this.Mi_Usuario =usuario;
         inflater = LayoutInflater.from(mContext);
@@ -65,6 +56,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
     public void ColocarPines(String Url){
         try {
+            ListaPines.clear();
             if (Build.VERSION.SDK_INT >= 11) {
                 new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Url);
             } else {
@@ -73,10 +65,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         }catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public List<AsyncTask> getLista_AssyncTask() {
-        return Lista_AssyncTask;
     }
 
     public class ViewHolder {
@@ -240,9 +228,12 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -301,6 +292,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
             } catch (Exception e) {
                 // TODO: handle exception
             }
+            progressDialog.dismiss();
             notifyDataSetChanged();
         }
 
@@ -346,7 +338,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
 
     }
-
 
     private class AsyncTask_Eliminar extends AsyncTask<String,Void,Boolean>{
 

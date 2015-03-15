@@ -1,4 +1,4 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,35 +15,34 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
+import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.adapters.NestedListView;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_ModoLista;
 
-public class ModoLista extends Activity {
-
-    // Declare Variables
-    ListView lista_Pines;
-    ListViewAdapter_ModoLista adapter;
+public class ModoLista_Principal extends Activity {
 
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
     private Button Button_Buscar = null;
-    private Usuario Mi_Usuario = new Usuario();
 
-    private MetodosUtiles M_Utiles = new MetodosUtiles();
+    ListView lista_Pines;
+    ListViewAdapter_ModoLista adapter;
+
+    private Usuario Mi_Usuario = new Usuario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modo_lista);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
         lista_Pines = (NestedListView) findViewById(R.id.modo_lista_listapines);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Mi_Usuario.setId_usuario(extras.getString("id_usuario"));
         }
-
     }
 
     @Override
@@ -54,13 +53,19 @@ public class ModoLista extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mis__pins, menu);
+        getMenuInflater().inflate(R.menu.menu_modo_lista, menu);
 
-        Menu_SearchItem = menu.findItem(R.id.mis_pins_search);
+        Menu_SearchItem = menu.findItem(R.id.modo_lista_search);
 
         EditText_Search = (EditText) Menu_SearchItem.getActionView().findViewById( R.id.search );
         Button_Buscar = (Button) Menu_SearchItem.getActionView().findViewById(R.id.buscar);
         Button_Buscar.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
+        Button_Buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Actualizar_Boton();
+            }
+        });
 
         adapter = new ListViewAdapter_ModoLista(this,EditText_Search);
         lista_Pines.setAdapter(adapter);
@@ -87,15 +92,7 @@ public class ModoLista extends Activity {
                 if(Aux.contains("\n")){
                     Aux = Aux.replace("\n","");
                     EditText_Search.setText(Aux);
-                    String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-
-                    String Url = "http://pinit-api.herokuapp.com/pins";
-                    try {
-                        Url += URLEncoder.encode(text, "UTF-8") + ".json";
-                        adapter.ColocarPines(Url);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                    Actualizar_Boton();
                 }
             }
         } );
@@ -104,27 +101,33 @@ public class ModoLista extends Activity {
             String Url = "http://pinit-api.herokuapp.com/pins.json";
             adapter.ColocarPines(Url);
         }
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.modo_lista_actualizar) {
+            Actualizar();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public void actualizar_buscar( View v ){
+    private void Actualizar() {
+        String Url = "http://pinit-api.herokuapp.com/pins";
+        adapter.ColocarPines(Url);
+    }
 
+    private void Actualizar_Boton(){
+        String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
+        String Url = "http://pinit-api.herokuapp.com/pins";
+        try {
+            Url += URLEncoder.encode(text, "UTF-8") + ".json";
+            adapter.ColocarPines(Url);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

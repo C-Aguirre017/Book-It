@@ -1,4 +1,4 @@
-package proyecto.proyectobookit;
+package proyecto.proyectobookit.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +59,11 @@ public class MetodosUtiles {
         else
             Mensaje += "\t Sin Información";
 
-        Mensaje+= "\n Publicado el: \n";
-        if (aux.getPublicacion() != null && !aux.getPublicacion().equals("") ) {
-            Mensaje += "\t " + aux.getPublicacion();
+        Mensaje+= "\n Fecha: \n";
+        if (aux.getHora() != null && !aux.getHora().equals("") ) {
+            String[] tiem = aux.getHora().split(" ");
+
+            Mensaje += "\t " + tiem[0]  + "\n Hora: \n \t " + tiem[1].substring(0,5);
         } else {
             Mensaje += "\t Sin Información";
         }
@@ -69,13 +71,6 @@ public class MetodosUtiles {
         Mensaje+= "\n Dispuesto a Pagar: \n";
         if (aux.getPrecio() != null && !aux.getPrecio().equals("") ) {
             Mensaje += "\t " + aux.getPrecio();
-        } else {
-            Mensaje += "\t Sin Información";
-        }
-
-        Mensaje+= "\n Tipo de Ayuda: \n";
-        if (aux.getTipo_ayuda() != null && !aux.getTipo_ayuda().equals("") ) {
-            Mensaje += "\t " + aux.getTipo_ayuda();
         } else {
             Mensaje += "\t Sin Información";
         }
@@ -89,4 +84,5 @@ public class MetodosUtiles {
 
         return Mensaje;
     }
+
 }

@@ -1,28 +1,26 @@
-package proyecto.proyectobookit.menu_items;
+package proyecto.proyectobookit.activity;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import proyecto.proyectobookit.R;
 
 
-public class Help extends Activity {
+public class ModoLista_InfoPin extends ActionBarActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_modo_lista_info_pin);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_help, menu);
+        getMenuInflater().inflate(R.menu.menu_modo_lista_info_pin, menu);
         return true;
     }
 
@@ -39,10 +37,5 @@ public class Help extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public void Prueba(View v){
-        this.finish();
     }
 }

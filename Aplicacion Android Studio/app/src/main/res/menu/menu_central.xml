@@ -2,7 +2,7 @@
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_action_search"
-        android:showAsAction="ifRoom|collapseActionView"
+        android:showAsAction="always|collapseActionView"
         android:actionLayout="@layout/actionbar_search_layout"
         android:title="Buscar Cursos">
     </item>
@@ -10,8 +10,37 @@
     <item
         android:id="@+id/menucentral_viewasList"
         android:icon="@drawable/ic_action_view_as_list"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="Lista"></item>
+
+    <item
+        android:id="@+id/menucentral_dropdown_campus"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_mapa"
+        android:title="Campus">
+        <menu>
+            <item
+                android:title="San Joaquín"
+                android:id="@+id/menucentral_dropdown_campus_san_joaquin"
+                android:showAsAction="always"></item>
+            <item
+                android:title="Casa Central"
+                android:id="@+id/menucentral_dropdown_campus_casa_central"
+                android:showAsAction="always"></item>
+            <item
+                android:title="Lo Contador"
+                android:id="@+id/menucentral_dropdown_campus_lo_contador"
+                android:showAsAction="always"></item>
+            <item
+                android:title="Oriente"
+                android:id="@+id/menucentral_dropdown_campus_oriente"
+                android:showAsAction="always"></item>
+            <item
+                android:title="Villarica"
+                android:id="@+id/menucentral_dropdown_campus_villarica"
+                android:showAsAction="always"></item>
+        </menu>
+    </item>
 
     <item
         android:id="@+id/menucentral_refresh"

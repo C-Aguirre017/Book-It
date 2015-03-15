@@ -5,11 +5,11 @@
         android:layout_height="match_parent">
 
         <!-- Framelayout to display Fragments -->
-        <fragment
-            android:id="@+id/mapView"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:id="@+id/central_container"
+            android:layout_height="match_parent">
+        </FrameLayout>
 
         <!-- Listview to display slider menu -->
         <ListView

@@ -58,6 +58,7 @@
     <style name="AppTheme"
         parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:button">@style/ButtonView</item>
+        <item name="android:dialogTheme">@style/Theme.AppCompat.Dialog</item>
         <item name="android:spinnerDropDownItemStyle">@style/DropDownItem</item>
     </style>
 

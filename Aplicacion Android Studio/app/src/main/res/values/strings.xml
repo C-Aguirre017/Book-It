@@ -55,24 +55,12 @@
     <string name="Help_comofunciona_eliminar">¿Como elimino una clase?</string>
     <string name="Help_comofunciona_eliminarrespuesta"> \t Todas tus clases se encontrarán en la pestaña Mis Pins el cuál te permitira poder eliminar las clases que hayas creado o las que ya hayan sido realizadas </string>
 
-
     <!-- Mapa -->
     <string name="SignoMas">+</string>
-
-
     <string name="title_activity_maps">Map</string>
 
     <!-- FB Configuracion -->
     <string name="facebook_app_id">1396273664015950</string>
-
-    <!-- Action Bar -->
-    <string-array name="actionbar_campus">
-        <item>San Joaquín</item>
-        <item>Casa Central</item>
-        <item>Lo Contador</item>
-        <item>Oriente</item>
-        <item>Villarica</item>
-    </string-array>
 
     <!-- Feedback -->
 
@@ -85,18 +73,18 @@
     <string name="clave_mail_aplicacion">\"mamamia123\"</string>
     <string name="title_activity_modo_lista">Lista Publicaciones</string>
 
-    <!-- Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Mapa</item>
-        <item >Mis Pins</item>
-        <item >¿Cómo Funciona?</item>
-        <item >Escríbenos</item>
-        <item >Acerca De</item>
-        <item >Cerrar Sesión</item>
+        <item>Mis Pins</item>
+        <item>¿Cómo Funciona?</item>
+        <item>Escríbenos</item>
+        <item>Acerca De</item>
+        <item>Cerrar Sesión</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -112,6 +100,8 @@
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
-
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_modo_lista__info_pin">Descripcion</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

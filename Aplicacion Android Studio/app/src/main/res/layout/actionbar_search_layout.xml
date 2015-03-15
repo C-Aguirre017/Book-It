@@ -22,7 +22,6 @@
         android:layout_alignRight="@id/search"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
-        android:background="@drawable/ic_action_search"
-        android:onClick="actualizar_buscar"/>
+        android:background="@drawable/ic_action_search"/>
 
 </RelativeLayout>

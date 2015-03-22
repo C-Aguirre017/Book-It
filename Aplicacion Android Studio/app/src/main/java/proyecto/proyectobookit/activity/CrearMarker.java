@@ -132,14 +132,14 @@ public class CrearMarker extends Activity {
             return super.onOptionsItemSelected(item);
     }
 
-    public void Aceptar(View v){
+    public void Aceptar(View v) {
 
-        if(VerificarEscrito()) {
-            String  descripcion = "", precio = "", campus = "",titulo="",id_ramo="",hora="";
+        if (VerificarEscrito()) {
+            String descripcion = "", precio = "", campus = "", titulo = "", id_ramo = "", hora = "";
             EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
             EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
 
-            if(adapter.getElegido()!=null) {
+            if (adapter.getElegido() != null) {
                 id_ramo = adapter.getElegido().getId_ramo();
                 titulo = adapter.getElegido().getSigla() + " " + adapter.getElegido().getNombre();
                 descripcion = get_descripcion.getText().toString();
@@ -155,10 +155,10 @@ public class CrearMarker extends Activity {
                 final String finalTitulo = titulo;
                 final String finalHora = hora;
                 builder.setTitle(titulo)
-                        .setMessage(M_Utiles.CrearMensaje(descripcion,hora, precio,"clases"))
+                        .setMessage(M_Utiles.CrearMensaje(descripcion, hora, precio, "clases"))
                         .setPositiveButton("Crear Marker", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo,finalHora);
+                                Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo, finalHora);
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -168,8 +168,8 @@ public class CrearMarker extends Activity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-            }else{
-                CrearAlertDialog("Porfavor seleccione un curso de la lista","Error de Curso");
+            } else {
+                CrearAlertDialog("Porfavor seleccione un curso de la lista", "Error de Curso");
             }
         }
     }

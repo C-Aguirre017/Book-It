@@ -38,13 +38,10 @@ import proyecto.proyectobookit.model_adapters.NavDrawerItem;
 public class Central extends Activity {
 
     GoogleMap Mapas;
-    Boolean EsMapaActual=false;
-    //Menu
-    private Usuario Mi_Usuario = new Usuario();
+    Boolean EsMapaActual = false;
 
-    //Facebook
-    private Session fbSession;
-    private GraphUser gUser;
+    //Menu
+    private Usuario Mi_Usuario = null;
 
     //Navigation Drawner
     private DrawerLayout mDrawerLayout;
@@ -63,24 +60,7 @@ public class Central extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
 
-        // Facebook
-        fbSession = Session.getActiveSession();
-        Request request =  Request.newMeRequest(fbSession, new Request.GraphUserCallback() {
-            public void onCompleted(GraphUser user, Response response) {
-
-                if (user != null) {
-                    gUser = user;
-                    Log.d("Mensaje", gUser.getId());
-                    setFbImage(gUser.getId());
-                    // first_nameText.setText(user.getFirstName());
-                    // last_nameText.setText(user.getLastName());
-                }
-                if (response != null) {
-                    System.out.println("Response=" + response);
-                }
-            }
-        });
-        Request.executeBatchAsync(request);
+        Mi_Usuario = Usuario.getUsuarioActual();
 
         // Datos Usuario
         Mi_Usuario.setId_usuario("1");
@@ -157,11 +137,11 @@ public class Central extends Activity {
             case 0:
                     break;
             case 1:
-                        Mapa Aux = new Mapa();
-                        Aux.setContext(this);
-                        Aux.setMapa(Mapas);
-                        Aux.setMi_Usuario(Mi_Usuario);
-                        FragmentoELegido = Aux;
+                    Mapa Aux = new Mapa();
+                    Aux.setContext(this);
+                    Aux.setMapa(Mapas);
+                    Aux.setMi_Usuario(Mi_Usuario);
+                    FragmentoELegido = Aux;
                     break;
             case 2:
                     Mis_Pins Aux_pins = new Mis_Pins();

@@ -34,6 +34,7 @@ import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.fragment.Mapa;
+import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 public class ListViewAdapter_ModoLista extends BaseAdapter {
 
@@ -48,7 +49,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
 
     public ListViewAdapter_ModoLista(Context context, EditText Search) {
         mContext = context;
-        this.Search =Search;
+        this.Search = Search;
         this.ListaPines = new ArrayList<Pin>(Mapa.Tabla_Pines.values());
         inflater = LayoutInflater.from(mContext);
     }
@@ -216,7 +217,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
 
         @Override
         protected String doInBackground(String... urls) {
-            return GET(urls[0]);
+            return ConsultaHTTP.GET(urls[0]);
         }
         // onPostExecute displays the results of the AsyncTask.
 
@@ -294,45 +295,6 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
             }
             progressDialog.dismiss();
             notifyDataSetChanged();
-        }
-
-        private String GET(String url){
-            InputStream inputStream = null;
-            String result = "";
-            try {
-
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
-
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
-            }
-
-            return result;
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException{
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
         }
 
     }

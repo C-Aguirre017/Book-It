@@ -30,6 +30,8 @@ import java.util.Locale;
 
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Ramo;
+import proyecto.proyectobookit.utils.Configuracion;
+import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
 
@@ -46,7 +48,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
 
     public CrearMarker_ListViewAdapter_VerRamos(Context context, EditText Search) {
         mContext = context;
-        this.Search =Search;
+        this.Search = Search;
         this.ListaPalabras = new ArrayList<Ramo>();
         inflater = LayoutInflater.from(mContext);
         Getter =  new GetRamos();
@@ -88,7 +90,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
         }
 
         //Colocar el valor
-        holder.curso =ListaPalabras.get(position);
+        holder.curso = ListaPalabras.get(position);
 
         if(holder.curso !=null) {
             holder.Cambiar.setText(holder.curso.getSigla() + " " + holder.curso.getNombre());
@@ -117,11 +119,9 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
 
         if (charText.length() == 0) {
             notifyDataSetChanged();
-        }
-        else
-        {
-            String Url = "http://pinit-api.herokuapp.com/ramos/buscar/";
-            charText= charText.substring(0,1).toUpperCase() + charText.substring(1);
+        } else {
+            String Url = Configuracion.URLSERVIDOR + "/ramos/buscar/";
+            charText = charText.substring(0, 1).toUpperCase() + charText.substring(1);
             try {
                 Url += URLEncoder.encode(charText, "UTF-8") + ".json";
                 if (Build.VERSION.SDK_INT >= 11) {
@@ -129,74 +129,37 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
                 } else {
                     new GetRamos().execute(Url);
                 }
-            }catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
 
     }
 
-    public String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-        }
-
-        return result;
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
     private class GetRamos extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            return GET(urls[0]);
+            return ConsultaHTTP.GET(urls[0]);
         }
         // onPostExecute displays the results of the AsyncTask.
 
         @Override
         protected void onPostExecute(String result) {
-            if(result !=null) {
+            if(result != null) {
                 ListaPalabras.clear();
                 result = "{ \"ramos\":" + result + "}";
                 try {
                     JSONObject json = new JSONObject(result);
                     JSONArray articles = json.getJSONArray("ramos");
                     for (int i = 0; i < articles.length(); i++) {
-                        String NombreRamo = "", Sigla = "",unidad_academica="",id_ramo="";
-                        try { NombreRamo = articles.getJSONObject(i).getString("nombre");} catch (Exception e) {       }
-                        try {Sigla = articles.getJSONObject(i).getString("sigla");} catch (Exception e) {  }
-                        try {unidad_academica = articles.getJSONObject(i).getString("rama");} catch (Exception e) {  }
-                        try {id_ramo = articles.getJSONObject(i).getString("id");} catch (Exception e) {  }
-                        if(!id_ramo.equals("")&& !NombreRamo.equals("") && !Sigla.equals(""))
-                            ListaPalabras.add(new Ramo(NombreRamo,Sigla,unidad_academica,id_ramo));
+                        String NombreRamo = "", Sigla = "", unidad_academica = "", id_ramo = "";
+                        NombreRamo = articles.getJSONObject(i).getString("nombre");
+                        Sigla = articles.getJSONObject(i).getString("sigla");
+                        unidad_academica = articles.getJSONObject(i).getString("rama");
+                        id_ramo = articles.getJSONObject(i).getString("id");
+                        if (!id_ramo.equals("") && !NombreRamo.equals("") && !Sigla.equals("")) {
+                            ListaPalabras.add(new Ramo(NombreRamo, Sigla, unidad_academica, id_ramo));
+                        }
                     }
                     notifyDataSetChanged();
                 } catch (Exception e) {

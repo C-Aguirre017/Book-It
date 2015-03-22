@@ -1,13 +1,22 @@
 package proyecto.proyectobookit.base_datos;
 
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+
 /**
  * Created by Carlos on 22-02-2015.
  */
 public class Usuario {
 
-    private String nombre,email,carrera,role,token,telefono;
-    private String id_usuario;
+    private static Usuario usuarioActual = null;
 
+    private String nombre, email, carrera, role, token, telefono;
+    private String id_usuario;
+    private String fbUid;
+    private Session fbSession;
+    private GraphUser gUser;
+
+    // GETERS SETERS
 
     public String getNombre() {
         return nombre;
@@ -63,5 +72,35 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getFbUid() {
+        return fbUid;
+    }
+
+    public void setFbUid(String fbUid) {
+        this.fbUid = fbUid;
+    }
+
+    public static Usuario getUsuarioActual() {
+        if (usuarioActual == null) { usuarioActual = new Usuario(); }
+        return usuarioActual;
+    }
+
+    public Session getFbSession() {
+        return fbSession;
+    }
+
+    public void setFbSession(Session fbSession) {
+        this.fbSession = fbSession;
+    }
+
+    public GraphUser getgUser() {
+        return gUser;
+    }
+
+    public void setgUser(GraphUser gUser) {
+        this.gUser = gUser;
+        this.setFbUid(gUser.getId());
     }
 }

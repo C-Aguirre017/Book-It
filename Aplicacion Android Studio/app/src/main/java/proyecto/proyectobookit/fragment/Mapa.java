@@ -59,6 +59,8 @@ import proyecto.proyectobookit.activity.CrearMarker;
 import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.utils.Configuracion;
+import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 import static proyecto.proyectobookit.R.layout.fragment_mapa;
 
@@ -416,7 +418,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         @Override
         protected String doInBackground(String... urls) {
-            return GET(urls[0]);
+            return ConsultaHTTP.GET(urls[0]);
         }
         // onPostExecute displays the results of the AsyncTask.
 
@@ -499,45 +501,6 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 Toast.makeText(mContext,"Error al crear el Pin en onPostExecute_GetMarker()", Toast.LENGTH_LONG).show();
             }
             progressDialog.dismiss();
-        }
-
-        private String GET(String url){
-            InputStream inputStream = null;
-            String result = "";
-            try {
-
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
-
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
-            }
-
-            return result;
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException {
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
         }
 
         private void Colocar_Marker(Pin Aux){
@@ -634,71 +597,32 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         protected String doInBackground(String... urls) {
             String Url= "http://pinit-api.herokuapp.com/usuarios/" ;
             Url +=  Pin_Elegido.getUsuario_Pin().getId_usuario() + ".json";
-            return GET(Url);
+            return ConsultaHTTP.GET(Url);
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Boolean Paso=false;
+            Boolean Paso = false;
             try {
                 result = "{ \"usuarios\":[" + result + "]}";
                 JSONObject json = new JSONObject(result);
                 JSONArray articles = json.getJSONArray("usuarios");
-                if(Pin_Elegido!=null) {
-                    try {Pin_Elegido.getUsuario_Pin().setEmail(articles.getJSONObject(0).getString("email")); } catch (Exception e) {     }
-                    try {Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));} catch (Exception e) {    }
-                    try {Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));            } catch (Exception e) {    }
-                    try {Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));       } catch (Exception e) {     }
+                if (Pin_Elegido != null) {
+                    Pin_Elegido.getUsuario_Pin().setEmail(articles.getJSONObject(0).getString("email"));
+                    Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));
+                    Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));
+                    Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));
                     Pin_Elegido.getUsuario_Pin().setTelefono("+56994405326");
                     M_Utiles.setContext(mContext);
                     M_Utiles.CrearAlertDialog(Pin_Elegido);
                 }
-            }  catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
-                Paso=true;
+                Paso = true;
             }
 
-            if(Paso)
+            if (Paso)
                 progressDialog.dismiss();
-        }
-
-        private String GET(String url){
-            InputStream inputStream = null;
-            String result = "";
-            try {
-
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
-
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
-            }
-
-            return result;
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException{
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
         }
     }
 
@@ -706,14 +630,14 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
         private String NombreUsuario,Token;
-        Pin Pin_Elegido=null;
+        Pin Pin_Elegido = null;
         private ProgressDialog progressDialog;
 
 
         public AsyncTask_PostMarker(String usuario,String token,Pin Aux) {
             this.Pin_Elegido = Aux;
-            this.NombreUsuario=usuario;
-            this.Token=token;
+            this.NombreUsuario = usuario;
+            this.Token = token;
         }
         @Override
         protected void onPreExecute() {
@@ -723,7 +647,6 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         @Override
         protected Boolean doInBackground(String... params) {
-            // TODO Auto-generated method stub
             return postData_Pins(NombreUsuario,Token,Pin_Elegido);
         }
 
@@ -732,7 +655,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         }
 
-        private boolean postData_Pins(String usuario, String token,Pin Aux_Pin) {
+        private boolean postData_Pins(String usuario, String token, Pin Aux_Pin) {
 
             HttpURLConnection connection = null;
             try {
@@ -752,23 +675,8 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                                 "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
                                 "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");
 
-                String UrlEntera = "http://pinit-api.herokuapp.com/pins" +
-                        "?user_email=" + URLEncoder.encode(usuario, "UTF-8") +
-                        "&user_token=" + URLEncoder.encode(token, "UTF-8") +
-                        "&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8") +
-                        "&descripcion=" + URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +
-                        "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
-                        "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +
-                        "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
-                        "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8") +
-                        "&ramo_id=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8")+
-                        "&publicacion=" + URLEncoder.encode(Aux_Pin.getPublicacion(), "UTF-8") +
-                        "&realizacion=" + URLEncoder.encode(Aux_Pin.getRealizacion(), "UTF-8") +
-                        "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
-                        "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");
-
                 //Create connection
-                URL url = new URL("http://pinit-api.herokuapp.com/pins");
+                URL url = new URL(Configuracion.URLSERVIDOR + "/pins");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");

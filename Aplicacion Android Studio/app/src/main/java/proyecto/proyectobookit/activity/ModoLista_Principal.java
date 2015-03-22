@@ -19,6 +19,7 @@ import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.adapters.NestedListView;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_ModoLista;
+import proyecto.proyectobookit.utils.Configuracion;
 
 public class ModoLista_Principal extends Activity {
 
@@ -115,7 +116,7 @@ public class ModoLista_Principal extends Activity {
 
     private void Actualizar_Boton(){
         String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String Url = "http://pinit-api.herokuapp.com/pins";
+        String Url = Configuracion.URLSERVIDOR + "/pins";
         try {
             Url += URLEncoder.encode(text, "UTF-8") + ".json";
             adapter.Actualizar_ColocarPines(Url);

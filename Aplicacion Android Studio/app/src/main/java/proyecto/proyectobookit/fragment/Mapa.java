@@ -309,16 +309,16 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
-            //Columnas
-            String id_ramo = "" + data.getStringExtra("id_ramo");
-            String precio =""+ data.getStringExtra("precio");
-            String descripcion =""+ data.getStringExtra("descripcion");
-            String hora ="" + data.getStringExtra("hora");
+            // Columnas
+            String id_ramo = data.getStringExtra("id_ramo");
+            String precio = data.getStringExtra("precio");
+            String descripcion = data.getStringExtra("descripcion");
+            String hora = data.getStringExtra("hora");
             String realizacion = "false";
             String duracion = "5000";
             String Tipo_ayuda ="clase";
 
-            //Crear Pin
+            // Crear Pin
             Pin Aux = new Pin();
             Aux.getRamo_Pin().setId_ramo(id_ramo);
             Aux.setPrecio(precio);
@@ -331,7 +331,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             Aux.setHora(hora);
             Aux.setPublicacion(hora);
 
-            //ObtenerCampus
+            // ObtenerCampus
             Aux.setCampus(ObtenerCampus());
 
 

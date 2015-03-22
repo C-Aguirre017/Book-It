@@ -68,7 +68,7 @@ public class Inicio extends FragmentActivity {
 
     }
 
-    public void existeUsuario(String fbUid) {
+    public void existeUsuario(final String fbUid) {
         (new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... fbUid) {
@@ -79,7 +79,17 @@ public class Inicio extends FragmentActivity {
             protected void onPostExecute(String result) {
                 // Depende si existe o no usuario
                 // Si existe solo cargamos datos
-                // Si no existe debemos crearlo
+                try {
+                    // Si no existe debemos crearlo
+                    if (ConsultaHTTP.response_code == 404) {
+                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getToken());
+                    } else {
+                        // Existe, cargamos informacion
+                        Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
+                    }
+                }catch (Exception e) {
+
+                }
             }
         }).execute(fbUid);
     }
@@ -92,20 +102,21 @@ public class Inicio extends FragmentActivity {
                 rparams.put("email", params[0]);
                 rparams.put("uid", params[1]);
                 rparams.put("fbsecrettoken", params[2]);
-                return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/usuarios/registar_movil.json", rparams);
+                try {
+                    return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/usuarios/registar_movil.json", rparams);
+                }catch(Exception e) {
+                    return null;
+                }
             }
 
             @Override
             protected void onPostExecute(String result) {
                 // Necesatiramos cargar datos
                 // Seguir con el programa
+                Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
                 seguirCentro();
             }
         }).execute(email, uid, fbsecret );
-    }
-
-    public void cargarDatosUsuario(String response) {
-
     }
 
     private boolean yaHaIngresado() {

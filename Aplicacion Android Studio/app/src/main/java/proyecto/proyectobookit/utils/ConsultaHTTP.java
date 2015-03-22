@@ -8,16 +8,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -29,10 +25,14 @@ import javax.net.ssl.HttpsURLConnection;
 public class ConsultaHTTP {
 
     // Constantes
-    private final static String USER_AGENT = "Mozilla/5.0";
+    private final static String USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)";
 
     // Variables estaticas
     private static HttpsURLConnection connection;
+
+    // Ultimos Datos
+    public static int response_code;
+    public static String resultString;
 
     public static String POST(String url, Hashtable<String, String> params) throws Exception {
         StringBuffer urlParameters = new StringBuffer();
@@ -62,13 +62,18 @@ public class ConsultaHTTP {
         writer.write(urlParameters.toString());
         writer.flush();
 
+        response_code = connection.getResponseCode();
+
         // receive response as inputStream
         InputStream inputStream = connection.getInputStream();
         // convert inputstream to string
-        if(inputStream != null)
-            return convertInputStreamToString(inputStream);
-        else
-            return null;
+        resultString = null;
+        if(inputStream != null) {
+            resultString = convertInputStreamToString(inputStream);
+        }
+        disconnect();
+
+        return resultString;
     }
 
     public static String GET(String url) {

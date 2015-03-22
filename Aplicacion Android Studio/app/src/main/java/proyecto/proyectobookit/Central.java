@@ -135,38 +135,38 @@ public class Central extends Activity {
 
         switch (position) {
             case 0:
-                    break;
+                break;
             case 1:
-                    Mapa Aux = new Mapa();
-                    Aux.setContext(this);
-                    Aux.setMapa(Mapas);
-                    Aux.setMi_Usuario(Mi_Usuario);
-                    FragmentoELegido = Aux;
-                    break;
+                Mapa Aux = new Mapa();
+                Aux.setContext(this);
+                Aux.setMapa(Mapas);
+                Aux.setMi_Usuario(Mi_Usuario);
+                FragmentoELegido = Aux;
+                break;
             case 2:
-                    Mis_Pins Aux_pins = new Mis_Pins();
-                    Aux_pins.setmContext(this);
-                    Aux_pins.setMi_Usuario(Mi_Usuario);
-                    FragmentoELegido = Aux_pins;
-                    break;
+                Mis_Pins Aux_pins = new Mis_Pins();
+                Aux_pins.setmContext(this);
+                Aux_pins.setMi_Usuario(Mi_Usuario);
+                FragmentoELegido = Aux_pins;
+                break;
             case 3:
-                    FragmentoELegido = new Help();
-                    break;
+                FragmentoELegido = new Help();
+                break;
             case 4:
-                    String[] TO = {getResources().getString(R.string.mailaplicacion)};
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                    emailIntent.setData(Uri.parse("mailto:"));
-                    emailIntent.setType("text/plain");
+                String[] TO = {getResources().getString(R.string.mailaplicacion)};
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("text/plain");
 
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-                    try {
-                        startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
-                        Log.i("Finished sending email...", "");
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                    }
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
+                    Log.i("Finished sending email...", "");
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 5:
                 FragmentoELegido = new Acerca_De();

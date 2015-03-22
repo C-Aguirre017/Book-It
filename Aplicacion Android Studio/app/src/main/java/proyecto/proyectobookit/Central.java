@@ -9,7 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,8 +31,10 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 
+import java.net.URL;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import proyecto.proyectobookit.activity.ModoLista_Principal;
 import proyecto.proyectobookit.adapters.NavDrawer_ListAdapter;
 import proyecto.proyectobookit.base_datos.Usuario;
@@ -64,15 +70,6 @@ public class Central extends Activity {
         setContentView(R.layout.activity_central);
 
         Mi_Usuario = Usuario.getUsuarioActual();
-
-        // Datos Usuario
-        /* Mi_Usuario.setId_usuario("1");
-        Mi_Usuario.setNombre("Enrique");
-        Mi_Usuario.setCarrera("Ing Civil");
-        Mi_Usuario.setEmail("ejcorrea@uc.cl");
-        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");*/
-        Log.d("Informacion de usuario:", Mi_Usuario.getId_usuario() + "-" + Mi_Usuario.getNombre() + "-" + Mi_Usuario.getEmail() + Mi_Usuario.getToken());
-
 
         mTitle = mDrawerTitle = getTitle();
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
@@ -113,6 +110,8 @@ public class Central extends Activity {
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        setFbImage(Mi_Usuario.getFbUid());
 
         if (savedInstanceState == null) {
             displayView(1);
@@ -221,16 +220,28 @@ public class Central extends Activity {
 
     }
 
-    private void setFbImage(String id){
-      /*  ImageView user_picture = (ImageView)findViewById(R.id.profile_image);
-        URL img_value = null;
-        try {
-            img_value = new URL("http://graph.facebook.com/" + id + "/picture?type=large");
-            Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-            user_picture.setImageBitmap(mIcon1);
-        } catch(Exception e) {
+    private void setFbImage(String fbid){
+        (new AsyncTask<String, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(String... fbid) {
+                try {
+                    URL img_value = new URL("http://graph.facebook.com/" + fbid[0] + "/picture?type=square");
+                    Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+                    return mIcon1;
+                } catch(Exception e) {
+                    Log.d("Informacion", "Problemas al cargar imagen de fb: " + e.toString());
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Bitmap result) {
+                Log.d("Informacion", "Cargando imagen de fb");
+                CircleImageView  user_picture = (CircleImageView) findViewById(R.id.centralheader_profile_image);
+                user_picture.setImageBitmap(result);
+                user_picture.invalidate();
+            }
+        }).execute(fbid);
 
-        }*/
     }
 
     @Override

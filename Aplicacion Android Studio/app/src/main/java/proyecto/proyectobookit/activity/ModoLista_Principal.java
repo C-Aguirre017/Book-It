@@ -98,8 +98,7 @@ public class ModoLista_Principal extends Activity {
         } );
 
         if(Mi_Usuario.getId_usuario() !=null){
-            String Url = "http://pinit-api.herokuapp.com/pins.json";
-            adapter.ColocarPines(Url);
+            adapter.Colocar();
         }
         return true;
     }
@@ -108,15 +107,10 @@ public class ModoLista_Principal extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.modo_lista_actualizar) {
-            Actualizar();
+            Actualizar_Boton();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void Actualizar() {
-        String Url = "http://pinit-api.herokuapp.com/pins";
-        adapter.ColocarPines(Url);
     }
 
     private void Actualizar_Boton(){
@@ -124,7 +118,7 @@ public class ModoLista_Principal extends Activity {
         String Url = "http://pinit-api.herokuapp.com/pins";
         try {
             Url += URLEncoder.encode(text, "UTF-8") + ".json";
-            adapter.ColocarPines(Url);
+            adapter.Actualizar_ColocarPines(Url);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

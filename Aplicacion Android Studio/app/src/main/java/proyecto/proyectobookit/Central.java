@@ -1,8 +1,11 @@
 package proyecto.proyectobookit;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -173,6 +176,13 @@ public class Central extends Activity {
                 FragmentoELegido = new Acerca_De();
                 break;
             default:
+                Usuario.getUsuarioActual().getFbSession().closeAndClearTokenInformation();
+                Inicio.setIngreso(false);
+                Intent mStartActivity = new Intent(this, Inicio.class);
+                int mPendingIntentId = 123456;
+                PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
                 this.finish();
                 break;
         }

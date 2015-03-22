@@ -32,9 +32,9 @@ public class Inicio extends FragmentActivity {
     private ProgressBar spinner;
 
     private UiLifecycleHelper uiHelper;
-    private SharedPreferences sharedPref;
+    private static SharedPreferences sharedPref;
 
-    private String KEY_LOGIN = "ingresado";
+    private static String KEY_LOGIN = "ingresado";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +62,7 @@ public class Inicio extends FragmentActivity {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean(KEY_LOGIN, true);
-                    editor.commit();
+                    Inicio.setIngreso(true);
                 } else {
                     Log.d("MainActivity", "Nop.");
                 }
@@ -134,8 +132,15 @@ public class Inicio extends FragmentActivity {
         spinner.setVisibility(View.VISIBLE);
     }
 
-    private boolean yaHaIngresado() {
-        return false;// return sharedPref.getBoolean(KEY_LOGIN, false);
+    public static boolean yaHaIngresado() {
+        // return sharedPref.getBoolean(KEY_LOGIN, false);
+        return false;
+    }
+
+    public static void setIngreso(boolean value) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(KEY_LOGIN, value);
+        editor.commit();
     }
 
     private void seguirCentro() {

@@ -1,5 +1,7 @@
 package proyecto.proyectobookit.base_datos;
 
+import android.util.Log;
+
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 
@@ -23,6 +25,7 @@ public class Usuario {
 
     public static void cargarDatos(Usuario u, String datos) {
         try {
+            Log.d("Informacion", datos);
             JSONObject jo = new JSONObject(datos);
             u.setId_usuario(jo.getString("id"));
             u.setEmail(jo.getString("email"));

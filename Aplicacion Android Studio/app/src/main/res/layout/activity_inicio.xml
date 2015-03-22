@@ -29,10 +29,10 @@
             android:layout_gravity="center">
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/logo"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20dp" />
 
             <com.facebook.widget.LoginButton
@@ -46,6 +46,17 @@
                 login_text="Ingresar con Facebook"
                 logout_text="Cerrar sesión"
                 />
+            <ProgressBar
+                android:id="@+id/progressBarUserLoading"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button1"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="70dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </FrameLayout>
 

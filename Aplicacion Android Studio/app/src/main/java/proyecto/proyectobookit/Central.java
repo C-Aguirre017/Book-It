@@ -63,11 +63,12 @@ public class Central extends Activity {
         Mi_Usuario = Usuario.getUsuarioActual();
 
         // Datos Usuario
-        Mi_Usuario.setId_usuario("1");
+        /* Mi_Usuario.setId_usuario("1");
         Mi_Usuario.setNombre("Enrique");
         Mi_Usuario.setCarrera("Ing Civil");
         Mi_Usuario.setEmail("ejcorrea@uc.cl");
-        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
+        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");*/
+        Log.d("Informacion de usuario:", Mi_Usuario.getId_usuario() + "-" + Mi_Usuario.getNombre() + "-" + Mi_Usuario.getEmail() + Mi_Usuario.getToken());
 
 
         mTitle = mDrawerTitle = getTitle();
@@ -77,7 +78,7 @@ public class Central extends Activity {
         mDrawerList = (ListView) findViewById(R.id.central_navigation_drawner);
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
-        //Cargar Menu
+        // Cargar Menu
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
@@ -85,6 +86,9 @@ public class Central extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
         navMenuIcons.recycle();
+
+        View header = getLayoutInflater().inflate(R.layout.navigationdrawer_header, mDrawerList, false);
+        mDrawerList.addHeaderView(header, null, false);
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
@@ -110,9 +114,6 @@ public class Central extends Activity {
         if (savedInstanceState == null) {
             displayView(1);
         }
-
-        View header = getLayoutInflater().inflate(R.layout.navigationdrawer_header, mDrawerList, false);
-        mDrawerList.addHeaderView(header, null, false);
     }
 
     private class SlideMenuClickListener implements ListView.OnItemClickListener {

@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -27,6 +29,8 @@ import proyecto.proyectobookit.utils.ConsultaHTTP;
 public class Inicio extends FragmentActivity {
 
     private LoginButton authButton;
+    private ProgressBar spinner;
+
     private UiLifecycleHelper uiHelper;
     private SharedPreferences sharedPref;
 
@@ -50,6 +54,8 @@ public class Inicio extends FragmentActivity {
 
         setContentView(R.layout.activity_inicio);
 
+        spinner = (ProgressBar)findViewById(R.id.progressBarUserLoading);
+
         authButton = (LoginButton) findViewById(R.id.authButton);
         authButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         authButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
@@ -59,7 +65,6 @@ public class Inicio extends FragmentActivity {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean(KEY_LOGIN, true);
                     editor.commit();
-                    seguirCentro();
                 } else {
                     Log.d("MainActivity", "Nop.");
                 }
@@ -82,11 +87,14 @@ public class Inicio extends FragmentActivity {
                 try {
                     // Si no existe debemos crearlo
                     if (ConsultaHTTP.response_code == 404) {
+                        Log.d("Informacion", "Usuario no existe, lo creamos");
                         crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getToken());
-                    } else {
-                        // Existe, cargamos informacion
-                        Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
+                        return;
                     }
+                    // Existe, cargamos informacion
+                    Log.d("Informacion", "Cargando informacion de usuario existente");
+                    Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
+                    seguirCentro();
                 }catch (Exception e) {
 
                 }
@@ -103,6 +111,7 @@ public class Inicio extends FragmentActivity {
                 rparams.put("uid", params[1]);
                 rparams.put("fbsecrettoken", params[2]);
                 try {
+                    Log.d("Informacion", "Creando");
                     return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/usuarios/registar_movil.json", rparams);
                 }catch(Exception e) {
                     return null;
@@ -113,14 +122,20 @@ public class Inicio extends FragmentActivity {
             protected void onPostExecute(String result) {
                 // Necesatiramos cargar datos
                 // Seguir con el programa
+                Log.d("Informacion", "Creado!");
                 Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
                 seguirCentro();
             }
         }).execute(email, uid, fbsecret );
     }
 
+    public void mostrarLoading() {
+        authButton.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+    }
+
     private boolean yaHaIngresado() {
-         return sharedPref.getBoolean(KEY_LOGIN, false);
+        return false;// return sharedPref.getBoolean(KEY_LOGIN, false);
     }
 
     private void seguirCentro() {
@@ -140,6 +155,7 @@ public class Inicio extends FragmentActivity {
 
                         if (user != null) {
                             Usuario.getUsuarioActual().setgUser(user);
+                            mostrarLoading();
                             existeUsuario(Usuario.getUsuarioActual().getFbUid());
                         }
                         if (response != null) {

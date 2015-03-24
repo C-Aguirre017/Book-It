@@ -37,6 +37,8 @@ import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.utils.Configuracion;
+import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 public class ListViewAdapter_VerPins extends BaseAdapter {
 
@@ -125,7 +127,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                             .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    String Url = "http://pinit-api.herokuapp.com/pins/" + holder.Aux_Pin.getId_pin();
+                                    String Url = Configuracion.URLSERVIDOR + "/pins/" + holder.Aux_Pin.getId_pin();
 
                                     if (Build.VERSION.SDK_INT >= 11) {
                                         //--post GB use serial executor by default --
@@ -238,7 +240,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
         @Override
         protected String doInBackground(String... urls) {
-            return GET(urls[0]);
+            return ConsultaHTTP.GET(urls[0]);
         }
         // onPostExecute displays the results of the AsyncTask.
 
@@ -294,45 +296,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
             }
             progressDialog.dismiss();
             notifyDataSetChanged();
-        }
-
-        private String GET(String url){
-            InputStream inputStream = null;
-            String result = "";
-            try {
-
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
-
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
-            }
-
-            return result;
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException{
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
         }
 
 

@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,17 +31,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -337,10 +331,10 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
-                new AsyncTask_PostMarker(Mi_Usuario.getEmail(),Mi_Usuario.getToken(),Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+                new AsyncTask_PostMarker(Mi_Usuario, Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
             } else {
                 //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_PostMarker(Mi_Usuario.getEmail(),Mi_Usuario.getToken(),Aux).execute("");
+                new AsyncTask_PostMarker(Mi_Usuario, Aux).execute("");
             }
 
         }
@@ -595,7 +589,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         @Override
         protected String doInBackground(String... urls) {
-            String Url= "http://pinit-api.herokuapp.com/usuarios/" ;
+            String Url = Configuracion.URLSERVIDOR + "/usuarios/" ;
             Url +=  Pin_Elegido.getUsuario_Pin().getId_usuario() + ".json";
             return ConsultaHTTP.GET(Url);
         }
@@ -629,15 +623,15 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     //AsyncTasks Post
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
-        private String NombreUsuario,Token;
+        private Usuario usuario;
+        private String Token;
         Pin Pin_Elegido = null;
         private ProgressDialog progressDialog;
 
 
-        public AsyncTask_PostMarker(String usuario,String token,Pin Aux) {
+        public AsyncTask_PostMarker(Usuario usuario, Pin Aux) {
             this.Pin_Elegido = Aux;
-            this.NombreUsuario = usuario;
-            this.Token = token;
+            this.usuario = usuario;
         }
         @Override
         protected void onPreExecute() {
@@ -647,7 +641,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         @Override
         protected Boolean doInBackground(String... params) {
-            return postData_Pins(NombreUsuario,Token,Pin_Elegido);
+            return postData_Pins(this.usuario, this.usuario.getToken(), Pin_Elegido);
         }
 
         @Override
@@ -655,56 +649,27 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         }
 
-        private boolean postData_Pins(String usuario, String token, Pin Aux_Pin) {
+        private boolean postData_Pins(Usuario usuario, String token, Pin Aux_Pin) {
 
-            HttpURLConnection connection = null;
             try {
+                Hashtable<String, String> rparams = new Hashtable<String, String>();
+                rparams.put("user_id", usuario.getId_usuario());
+                rparams.put("user_token", token);
+                rparams.put("duracion", Aux_Pin.getDuracion());
+                rparams.put("descripcion", Aux_Pin.getDescripcion());
+                rparams.put("precio", Aux_Pin.getPrecio());
+                rparams.put("facultad", Aux_Pin.getCampus());
+                rparams.put("latitude", Aux_Pin.getLatitude());
+                rparams.put("longitude", Aux_Pin.getLongitude());
+                rparams.put("ramo_id", Aux_Pin.getRamo_Pin().getId_ramo());
+                rparams.put("publicacion", Aux_Pin.getHora());
+                rparams.put("realizacion", Aux_Pin.getRealizacion());
+                rparams.put("tipo_ayuda", Aux_Pin.getTipo_ayuda());
+                rparams.put("titulo", Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() );
 
-                String urlParameters =
-                        "user_email=" + URLEncoder.encode(usuario, "UTF-8") +
-                                "&user_token=" + URLEncoder.encode(token, "UTF-8") +
-                                "&duracion=" + URLEncoder.encode(Aux_Pin.getDuracion(), "UTF-8") +
-                                "&descripcion=" + URLEncoder.encode(Aux_Pin.getDescripcion(), "UTF-8") +
-                                "&precio=" + URLEncoder.encode(Aux_Pin.getPrecio(), "UTF-8") +
-                                "&facultad=" + URLEncoder.encode(Aux_Pin.getCampus(), "UTF-8") +
-                                "&latitude=" + URLEncoder.encode(Aux_Pin.getLatitude(), "UTF-8") +
-                                "&longitude=" + URLEncoder.encode(Aux_Pin.getLongitude(), "UTF-8") +
-                                "&ramo_id=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getId_ramo(), "UTF-8")+
-                                "&publicacion=" + URLEncoder.encode(Aux_Pin.getHora(), "UTF-8") +
-                                "&realizacion=" + URLEncoder.encode(Aux_Pin.getRealizacion(), "UTF-8") +
-                                "&tipo_ayuda=" + URLEncoder.encode(Aux_Pin.getTipo_ayuda(), "UTF-8") +
-                                "&titulo=" + URLEncoder.encode(Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() , "UTF-8");
-
-                //Create connection
-                URL url = new URL(Configuracion.URLSERVIDOR + "/pins");
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-                connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-                connection.setRequestProperty("Content-Language", "en-US");
-                connection.setUseCaches(false);
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-
-                //Send request
-                DataOutputStream wr = new DataOutputStream(
-                        connection.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
+                ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins", rparams);
 
                 progressDialog.dismiss();
-
-                //Get Response
-                InputStream is = connection.getInputStream();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-                String line;
-                StringBuffer response = new StringBuffer();
-                while ((line = rd.readLine()) != null) {
-                    response.append(line);
-                    response.append('\r');
-                }
-                rd.close();
 
                 return true;
 
@@ -714,14 +679,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 progressDialog.dismiss();
                 return false;
 
-            } finally {
-
-                if (connection != null) {
-                    connection.disconnect();
-                }
-
             }
-
         }
 
     }

@@ -3,6 +3,7 @@ package proyecto.proyectobookit.adapters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -114,7 +115,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
     // Filter Class
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        //Resetear Valores
+        // Resetear Valores
         ListaPalabras.clear();
 
         if (charText.length() == 0) {
@@ -141,7 +142,6 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
         protected String doInBackground(String... urls) {
             return ConsultaHTTP.GET(urls[0]);
         }
-        // onPostExecute displays the results of the AsyncTask.
 
         @Override
         protected void onPostExecute(String result) {
@@ -155,7 +155,6 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
                         String NombreRamo = "", Sigla = "", unidad_academica = "", id_ramo = "";
                         NombreRamo = articles.getJSONObject(i).getString("nombre");
                         Sigla = articles.getJSONObject(i).getString("sigla");
-                        unidad_academica = articles.getJSONObject(i).getString("rama");
                         id_ramo = articles.getJSONObject(i).getString("id");
                         if (!id_ramo.equals("") && !NombreRamo.equals("") && !Sigla.equals("")) {
                             ListaPalabras.add(new Ramo(NombreRamo, Sigla, unidad_academica, id_ramo));
@@ -164,7 +163,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     // TODO: handle exception
-
+                    Log.d("Informacion", "Excepcion al ver ramos: " + e.getMessage());
                 }
             }
         }

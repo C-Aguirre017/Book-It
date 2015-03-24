@@ -174,7 +174,7 @@ public class CrearMarker extends Activity {
         }
     }
 
-    private void Salir(String id_ramo, String descripcion, String precio, String campus, String titulo, String finalHora){
+    private void Salir(String id_ramo, String descripcion, String precio, String campus, String titulo, String finalHora) {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("id_ramo",id_ramo);
@@ -187,8 +187,7 @@ public class CrearMarker extends Activity {
         this.finish();
     }
 
-    private boolean VerificarEscrito()
-    {
+    private boolean VerificarEscrito() {
 
         //Ramo
         EditText Aux_Ramo = (EditText) findViewById(R.id.crearmarker_search);
@@ -197,9 +196,9 @@ public class CrearMarker extends Activity {
                 CrearAlertDialog("La opcion curso se encuentra vacia", "Faltan Datos");
                 return false;
             }
-        }
-        else
+        } else {
             return false;
+        }
 
         //Precio
         EditText Aux_Precio = (EditText) findViewById(R.id.crearmarker_precio);
@@ -208,9 +207,9 @@ public class CrearMarker extends Activity {
                 CrearAlertDialog("La opcion precio se encuentra vacia", "Faltan Datos");
                 return false;
             }
-        }
-        else
+        } else {
             return false;
+        }
 
 
         //Dia Antes que ahora

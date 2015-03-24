@@ -64,6 +64,7 @@ public class ConsultaHTTP {
         if(inputStream != null) {
             resultString = convertInputStreamToString(inputStream);
         }
+
         disconnect();
 
         return resultString;
@@ -106,7 +107,6 @@ public class ConsultaHTTP {
                 result = convertInputStreamToString(inputStream);
             else
                 result = "Did not work!";
-
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }

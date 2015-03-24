@@ -162,7 +162,6 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
                     }
                     notifyDataSetChanged();
                 } catch (Exception e) {
-                    // TODO: handle exception
                     Log.d("Informacion", "Excepcion al ver ramos: " + e.getMessage());
                 }
             }

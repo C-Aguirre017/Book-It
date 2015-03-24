@@ -302,7 +302,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK ) {
+        if( requestCode == 1 && resultCode == Activity.RESULT_OK ) {
             // Columnas
             String id_ramo = data.getStringExtra("id_ramo");
             String precio = data.getStringExtra("precio");
@@ -348,10 +348,13 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         LatLng latLng_villarica = new LatLng(-38.738457, -72.601795);
 
         List<LatLng> Lista = new ArrayList<LatLng>();
-        Lista.add(latLng_sj);Lista.add(latLng_casacentral);Lista.add(latLng_locontador);
-        Lista.add(latLng_oriente);Lista.add(latLng_villarica);
+        Lista.add(latLng_sj);
+        Lista.add(latLng_casacentral);
+        Lista.add(latLng_locontador);
+        Lista.add(latLng_oriente);
+        Lista.add(latLng_villarica);
 
-        Double distmin=SacarDistancia(latLng_sj,point);
+        Double distmin=SacarDistancia(latLng_sj, point);
         LatLng min_latlng = latLng_sj;
 
         for (int i=0;i<Lista.size();i++){
@@ -620,11 +623,9 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         }
     }
 
-    //AsyncTasks Post
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
         private Usuario usuario;
-        private String Token;
         Pin Pin_Elegido = null;
         private ProgressDialog progressDialog;
 
@@ -667,7 +668,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 rparams.put("tipo_ayuda", Aux_Pin.getTipo_ayuda());
                 rparams.put("titulo", Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() );
 
-                ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins", rparams);
+                ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins.json", rparams);
 
                 progressDialog.dismiss();
 

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Hashtable;
@@ -28,7 +29,7 @@ public class ConsultaHTTP {
     private final static String USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)";
 
     // Variables estaticas
-    private static HttpsURLConnection connection;
+    private static HttpURLConnection connection;
 
     // Ultimos Datos
     public static int response_code;
@@ -40,7 +41,7 @@ public class ConsultaHTTP {
         urlParameters = params2String(params);
 
         URL u = new URL(url);
-        connection = (HttpsURLConnection) u.openConnection();
+        connection = (HttpURLConnection) u.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
         connection.setRequestProperty("User-Agent", USER_AGENT);

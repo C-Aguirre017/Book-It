@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_item_title">#fff</color>
+    <color name="list_item_title">#ffffff</color>
     <color name="list_background">#303030</color>
-    <color name="list_background_pressed">#FF7300</color> <!--#992416-->
+    <color name="list_background_pressed">#FF8800</color> <!--#992416-->
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
 
     <color name="Fondo">#FFFFFF</color>
-    <color name="ColorNaranjo">#FF7300</color>
+    <color name="ColorNaranjo">#FFBB33</color>
+    <color name="ColorNaranjoFuerte">#FF8800</color>
     <color name="ColorGris">#123a24d4</color>
     <color name="Blancoo">#FFFFFF</color>
 

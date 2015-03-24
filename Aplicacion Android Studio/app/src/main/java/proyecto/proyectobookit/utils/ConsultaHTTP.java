@@ -35,31 +35,24 @@ public class ConsultaHTTP {
     public static String resultString;
 
     public static String POST(String url, Hashtable<String, String> params) throws Exception {
-        StringBuffer urlParameters = new StringBuffer();
+
+        String urlParameters;
+        urlParameters = params2String(params);
+
         URL u = new URL(url);
         connection = (HttpsURLConnection) u.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
         connection.setRequestProperty("User-Agent", USER_AGENT);
-        connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.toString().getBytes().length));
+        connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
         connection.setRequestProperty("Content-Language", "en-US");
         connection.setUseCaches(false);
         connection.setDoInput(true);
         connection.setDoOutput(true);
 
-        // Unimos parametros en una mismo string
-        Iterator<String> paramIterator = params.keySet().iterator();
-        while (paramIterator.hasNext()) {
-            String key = paramIterator.next();
-            String value = params.get(key);
-            urlParameters.append(URLEncoder.encode(key, "UTF-8"));
-            urlParameters.append("=").append(URLEncoder.encode(value, "UTF-8"));
-            urlParameters.append("&");
-        }
-
         // Enviamos parametros
         OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write(urlParameters.toString());
+        writer.write(urlParameters);
         writer.flush();
 
         response_code = connection.getResponseCode();
@@ -74,6 +67,24 @@ public class ConsultaHTTP {
         disconnect();
 
         return resultString;
+    }
+
+    public static String params2String(Hashtable<String, String> params) {
+        StringBuffer urlParameters = new StringBuffer();
+        try {
+            // Unimos parametros en una mismo string
+            Iterator<String> paramIterator = params.keySet().iterator();
+            while (paramIterator.hasNext()) {
+                String key = paramIterator.next();
+                String value = params.get(key);
+                urlParameters.append(URLEncoder.encode(key, "UTF-8"));
+                urlParameters.append("=").append(URLEncoder.encode(value, "UTF-8"));
+                urlParameters.append("&");
+            }
+        }catch(Exception e) {
+
+        }
+        return urlParameters.toString();
     }
 
     public static String GET(String url) {

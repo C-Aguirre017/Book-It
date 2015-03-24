@@ -17,6 +17,8 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -86,13 +88,13 @@ public class Inicio extends FragmentActivity {
                     // Si no existe debemos crearlo
                     if (ConsultaHTTP.response_code == 404) {
                         Log.d("Informacion", "Usuario no existe, lo creamos");
-                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getToken());
+                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken());
                         return;
                     }
                     // Existe, cargamos informacion
                     Log.d("Informacion", "Cargando informacion de usuario existente");
                     Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
-                    seguirCentro();
+                    crearToken(Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken());
                 }catch (Exception e) {
 
                 }
@@ -122,9 +124,41 @@ public class Inicio extends FragmentActivity {
                 // Seguir con el programa
                 Log.d("Informacion", "Creado!");
                 Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
-                seguirCentro();
+                crearToken(Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken());
             }
         }).execute(email, uid, fbsecret );
+    }
+
+    public void crearToken(String uid, String fbsecret) {
+        (new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                Hashtable<String, String> rparams = new Hashtable<String, String>();
+                rparams.put("fbuid", params[0]);
+                rparams.put("fbsecrettoken", params[1]);
+                try {
+                    Log.d("Informacion", "Creando");
+                    return ConsultaHTTP.GET(Configuracion.URLSERVIDOR + "/token/create.json?" + ConsultaHTTP.params2String(rparams));
+                }catch(Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                // Necesatiramos cargar datos
+                // Seguir con el programa
+                Log.d("Informacion", "Token cargado");
+                try {
+                    JSONObject jo = new JSONObject(result);
+                    Usuario.getUsuarioActual().setToken(jo.getString("token"));
+                } catch (Exception e) {
+                    Log.d("Informacion", "Error al cargar token: " + result);
+                }
+                Log.d("Informacion", "Token cargado " + Usuario.getUsuarioActual().getToken());
+                seguirCentro();
+            }
+        }).execute(uid, fbsecret );
     }
 
     public void mostrarLoading() {

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 /**
  * Created by Carlos on 22-02-2015.
  */
+
 public class Usuario {
 
     private static Usuario usuarioActual = null;

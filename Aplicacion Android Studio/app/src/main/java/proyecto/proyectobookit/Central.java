@@ -70,7 +70,6 @@ public class Central extends Activity {
         setContentView(R.layout.activity_central);
 
         Mi_Usuario = Usuario.getUsuarioActual();
-        Mi_Usuario.setToken("LDskzPi1vfr31746VKG3");
 
         mTitle = mDrawerTitle = getTitle();
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);

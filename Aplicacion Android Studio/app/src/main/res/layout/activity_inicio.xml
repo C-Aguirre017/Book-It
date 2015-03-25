@@ -41,11 +41,12 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="0.08"
                 login_text="Ingresar con Facebook"
                 logout_text="Cerrar sesión"
                 />
+
             <ProgressBar
                 android:id="@+id/progressBarUserLoading"
                 style="?android:attr/progressBarStyleLarge"
@@ -57,6 +58,18 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="70dp"
                 android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Nunca publicaremos nada en tu cuenta"
+                android:id="@+id/textView"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="60dp"
+                android:textStyle="bold"
+                android:textSize="16dp" />
+
         </LinearLayout>
     </FrameLayout>
 

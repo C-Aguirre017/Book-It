@@ -131,10 +131,10 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
                                     if (Build.VERSION.SDK_INT >= 11) {
                                         //--post GB use serial executor by default --
-                                        new AsyncTask_Eliminar(Mi_Usuario.getEmail(),Mi_Usuario.getToken()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
+                                        new AsyncTask_Eliminar(Mi_Usuario).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
                                     } else {
                                         //--GB uses ThreadPoolExecutor by default--
-                                        new AsyncTask_Eliminar(Mi_Usuario.getEmail(),Mi_Usuario.getToken()).execute(Url);
+                                        new AsyncTask_Eliminar(Mi_Usuario).execute(Url);
                                     }
                                     ListaPines.remove(holder.Aux_Pin);
                                     notifyDataSetChanged();
@@ -302,14 +302,13 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
     }
 
-    private class AsyncTask_Eliminar extends AsyncTask<String,Void,Boolean>{
+    private class AsyncTask_Eliminar extends AsyncTask<String, Void, Boolean>{
 
-        private String Email,Token;
+        private Usuario usuario;
         private ProgressDialog progressDialog;
 
-        public AsyncTask_Eliminar(String usuario,String token) {
-            this.Email=usuario;
-            this.Token=token;
+        public AsyncTask_Eliminar(Usuario usuario) {
+            this.usuario = usuario;
         }
 
         @Override
@@ -334,7 +333,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
             HttpURLConnection connection = null;
             String Sabe = url_entrante;
             try {
-                URL url = new URL(url_entrante+  "?user_email=" + URLEncoder.encode(Email, "UTF-8") +"&user_token=" + URLEncoder.encode(Token, "UTF-8"));
+                URL url = new URL(url_entrante+  "?user_id=" + URLEncoder.encode(usuario.getId_usuario(), "UTF-8") +"&user_token=" + URLEncoder.encode(usuario.getToken(), "UTF-8"));
                 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
                 httpCon.setRequestProperty(
                         "Content-Type", "application/x-www-form-urlencoded" );

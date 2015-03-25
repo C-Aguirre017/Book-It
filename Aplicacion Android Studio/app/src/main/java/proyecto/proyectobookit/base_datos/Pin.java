@@ -1,19 +1,45 @@
 package proyecto.proyectobookit.base_datos;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 /**
  * Created by Carlos on 22-02-2015.
  */
 public class Pin {
     private String id_pin;
-    private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus,titulo, realizacion,hora;
+    private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus, titulo, realizacion, hora;
     private double latitude, longitude;
 
     private Ramo Ramo_Pin = new Ramo("","","","");
     private Usuario Usuario_Pin = new Usuario();
 
     public Pin(){
-        latitude =-1;
-        longitude=-1;
+        latitude = -1;
+        longitude = -1;
+    }
+
+    public static void cargarDatos(String datos, Pin u) {
+        try {
+            JSONObject jo = new JSONObject(datos);
+            u.setId_pin(jo.getString("id"));
+            u.getUsuario_Pin().setId_usuario(jo.getString("usuario_id"));
+            String Date_Aux = "";
+            Date_Aux = jo.getString("publicacion");
+            u.setHora(Date_Aux.replace("T", " "));
+            u.setRealizacion(jo.getString("realizacion"));
+            u.setDuracion(jo.getString("duracion"));
+            u.getRamo_Pin().setId_ramo(jo.getString("titulo"));
+            u.setDescripcion(jo.getString("descripcion"));
+            u.setPrecio(jo.getString("precio"));
+            u.setTipo_ayuda(jo.getString("tipo_ayuda"));
+            u.setCampus(jo.getString("facultad"));
+            u.setLatitude(Double.parseDouble(jo.getString("latitude")));
+            u.setLongitude(Double.parseDouble(jo.getString("longitude")));
+        } catch (Exception e) {
+            Log.d("Informacion", "Error al cargar datos de pines:" + datos);
+        }
     }
 
     //Setters

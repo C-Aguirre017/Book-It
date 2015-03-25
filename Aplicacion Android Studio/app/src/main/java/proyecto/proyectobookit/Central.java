@@ -30,6 +30,8 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import proyecto.proyectobookit.fragment.Help;
 import proyecto.proyectobookit.fragment.Mapa;
 import proyecto.proyectobookit.fragment.Mis_Pins;
 import proyecto.proyectobookit.model_adapters.NavDrawerItem;
+import proyecto.proyectobookit.utils.RoundedTransformation;
 
 public class Central extends Activity {
 
@@ -111,11 +114,11 @@ public class Central extends Activity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        setFbImage(Mi_Usuario.getFbUid());
-
         if (savedInstanceState == null) {
             displayView(1);
         }
+
+        setFbImage(Mi_Usuario.getFbUid());
     }
 
     private class SlideMenuClickListener implements ListView.OnItemClickListener {
@@ -221,27 +224,23 @@ public class Central extends Activity {
     }
 
     private void setFbImage(String fbid){
-        (new AsyncTask<String, Void, Bitmap>() {
+        CircleImageView  user_picture = (CircleImageView) findViewById(R.id.centralheader_profile_image);
+        Log.d("Informacion", "http://graph.facebook.com/" + fbid + "/picture?type=square");
+        Picasso.with(this)
+                .load("https://graph.facebook.com/" + fbid + "/picture?type=square")
+                .resize(50, 50)
+                .centerCrop()
+                .into(user_picture, new Callback() {
             @Override
-            protected Bitmap doInBackground(String... fbid) {
-                try {
-                    URL img_value = new URL("http://graph.facebook.com/" + fbid[0] + "/picture?type=square");
-                    Bitmap mIcon1 = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-                    return mIcon1;
-                } catch(Exception e) {
-                    Log.d("Informacion", "Problemas al cargar imagen de fb: " + e.toString());
-                }
-                return null;
+            public void onSuccess() {
+                Log.d("Informacion", "Se logro poner imagen de fb");
             }
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                Log.d("Informacion", "Cargando imagen de fb");
-                CircleImageView  user_picture = (CircleImageView) findViewById(R.id.centralheader_profile_image);
-                user_picture.setImageBitmap(result);
-                user_picture.invalidate();
-            }
-        }).execute(fbid);
 
+            @Override
+            public void onError() {
+                Log.d("Informacion", "No se pudo poner imagen de facebook");
+            }
+        });
     }
 
     @Override

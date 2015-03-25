@@ -33,6 +33,7 @@ import java.util.Locale;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.base_datos.Pin;
+import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.fragment.Mapa;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
@@ -203,7 +204,7 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
 
     }
 
-    //AsyncTasks Get
+    // AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
         private ProgressDialog progressDialog;
@@ -230,26 +231,12 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
                 JSONArray articles = json.getJSONArray("pins");
 
                 for (int i = 0; i < articles.length(); i++) {
-                    //Crear Pin
+                    // Crear Pin
                     Pin Aux = new Pin();
-                    //Encontramos los valores
-                    try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
-                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
-                    String Date_Aux="";
-                    try {Date_Aux= articles.getJSONObject(i).getString("publicacion"); } catch (Exception e) {}
-                    Aux.setHora(Date_Aux.replace("T"," "));
-                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
-                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
-                    //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("titulo"));}catch(Exception e){}
-                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("descripcion"));} catch (Exception e) {}
-                    try {Aux.setPrecio(articles.getJSONObject(i).getString("precio"));} catch (Exception e) {}
-                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("tipo_ayuda"));} catch (Exception e) {}
-                    try {Aux.setCampus(articles.getJSONObject(i).getString("facultad"));} catch (Exception e) {}
-                    try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
-                    try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
+                    // Encontramos los valores
+                    Pin.cargarDatos(articles.getJSONObject(i).toString(), Aux);
 
-                    //Obtener Usuarios
+                    // Obtener Usuarios
 
                     try {
                         String usuarios = articles.getJSONObject(i).getString("usuario");

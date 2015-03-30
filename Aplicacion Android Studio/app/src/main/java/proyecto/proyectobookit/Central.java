@@ -228,7 +228,7 @@ public class Central extends Activity {
         Log.d("Informacion", "http://graph.facebook.com/" + fbid + "/picture?type=square");
         Picasso.with(this)
                 .load("https://graph.facebook.com/" + fbid + "/picture?type=square")
-                .resize(50, 50)
+                .resize(100, 100)
                 .centerCrop()
                 .into(user_picture, new Callback() {
             @Override

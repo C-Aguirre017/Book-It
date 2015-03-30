@@ -109,5 +109,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_modo_lista__info_pin">Descripcion</string>
     <string name="hello_world">Hello world!</string>
+    <string name="facebookLoginExplanation">Nunca publicaremos nada en tu cuenta</string>
 
 </resources>

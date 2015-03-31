@@ -110,5 +110,12 @@
     <string name="title_activity_modo_lista__info_pin">Descripcion</string>
     <string name="hello_world">Hello world!</string>
     <string name="facebookLoginExplanation">Nunca publicaremos nada en tu cuenta</string>
+    <string name="acerca_de_texto">Bukit fue creado por:\n
+    \tEnrique Correa (@ejcorreav)\n
+    \tCarlos Aguirre (@c_aguirre)\n
+        \n
+    Iconos por:\n
+    \tBenjamin Abarca
+    </string>
 
 </resources>

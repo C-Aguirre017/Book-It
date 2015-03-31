@@ -46,6 +46,7 @@ public class Mis_Pins extends Fragment {
         menu.findItem(R.id.menucentral_viewasList).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menucentral_dropdown_campus).setVisible(false);
+        menu.findItem(R.id.menucentral_editar).setVisible(false);
 
         ActionBar actions = getActivity().getActionBar();
         actions.setDisplayHomeAsUpEnabled(true);

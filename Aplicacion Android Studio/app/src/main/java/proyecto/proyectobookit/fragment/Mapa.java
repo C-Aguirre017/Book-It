@@ -131,6 +131,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         super.onCreateOptionsMenu(menu, inflater);
 
         Menu_SearchItem = menu.findItem( R.id.menu_search );
+        menu.findItem(R.id.menu_search).setVisible(false);
         EditText_Search = (EditText) Menu_SearchItem.getActionView().findViewById( R.id.search );
         Button_Buscar = (Button) Menu_SearchItem.getActionView().findViewById(R.id.buscar);
         Button_Buscar.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
@@ -263,15 +264,6 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         M_Utiles.setContext(mContext);
         M_Utiles.CrearAlertDialog(Pin_Elegido);
 
-        /*if (Build.VERSION.SDK_INT >= 11) {
-            //--post GB use serial executor by default --
-            new AsyncTask_GetEmail(Pin_Elegido).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
-        } else {
-            //--GB uses ThreadPoolExecutor by default--
-            new AsyncTask_GetEmail(Pin_Elegido).execute("");
-        }
-        marker.hideInfoWindow();
-        */
         return false;
     }
 
@@ -627,7 +619,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         private Usuario usuario;
         Pin Pin_Elegido = null;
-        private ProgressDialog progressDialog;
+        //private ProgressDialog progressDialog;
 
 
         public AsyncTask_PostMarker(Usuario usuario, Pin Aux) {
@@ -637,7 +629,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Creando ...", "Espere porfavor", true, false);
+            //progressDialog = ProgressDialog.show(mContext, "Creando ...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -670,14 +662,14 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
                 ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins.json", rparams);
 
-                progressDialog.dismiss();
+               // progressDialog.dismiss();
 
                 return true;
 
             } catch (Exception e) {
 
                 e.printStackTrace();
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 return false;
 
             }

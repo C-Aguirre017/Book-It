@@ -43,6 +43,7 @@ import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.fragment.Acerca_De;
 import proyecto.proyectobookit.fragment.Help;
 import proyecto.proyectobookit.fragment.Mapa;
+import proyecto.proyectobookit.fragment.Mi_Perfil;
 import proyecto.proyectobookit.fragment.Mis_Pins;
 import proyecto.proyectobookit.model_adapters.NavDrawerItem;
 import proyecto.proyectobookit.utils.RoundedTransformation;
@@ -88,6 +89,7 @@ public class Central extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
         navMenuIcons.recycle();
 
         View header = getLayoutInflater().inflate(R.layout.navigationdrawer_header, mDrawerList, false);
@@ -150,15 +152,19 @@ public class Central extends Activity {
                 FragmentoELegido = Aux;
                 break;
             case 2:
+                Mi_Perfil Aux_Mi_Perfil = new Mi_Perfil();
+                FragmentoELegido = Aux_Mi_Perfil;
+                break;
+            case 3:
                 Mis_Pins Aux_pins = new Mis_Pins();
                 Aux_pins.setmContext(this);
                 Aux_pins.setMi_Usuario(Mi_Usuario);
                 FragmentoELegido = Aux_pins;
                 break;
-            case 3:
+            case 4:
                 FragmentoELegido = new Help();
                 break;
-            case 4:
+            case 5:
                 String[] TO = {getResources().getString(R.string.mailaplicacion)};
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 emailIntent.setData(Uri.parse("mailto:"));
@@ -174,7 +180,7 @@ public class Central extends Activity {
                     Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 5:
+            case 6:
                 FragmentoELegido = new Acerca_De();
                 break;
             default:

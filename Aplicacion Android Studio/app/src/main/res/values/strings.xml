@@ -86,6 +86,7 @@
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Mapa</item>
+        <item>Mi Perfil</item>
         <item>Mis Pins</item>
         <item>¿Cómo Funciona?</item>
         <item>Escríbenos</item>
@@ -97,6 +98,7 @@
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
         <item>@drawable/ic_action_mapa</item>
+        <item>@drawable/ic_action_person</item>
         <item>@drawable/ic_action_pin</item>
         <item>@drawable/ic_action_help</item>
         <item>@drawable/ic_action_writeus</item>

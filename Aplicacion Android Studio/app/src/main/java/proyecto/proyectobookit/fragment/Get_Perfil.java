@@ -23,12 +23,10 @@ public class Get_Perfil extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_get__perfil, container, false);
-
         //Colocar Cosas
 
         TextView Nombre = (TextView) v.findViewById(R.id.get_perfil_nombre);
@@ -44,8 +42,8 @@ public class Get_Perfil extends Fragment {
         return v;
     }
 
-
     public void setMi_perfil(Usuario mi_perfil) {
         this.mi_perfil = mi_perfil;
     }
+
 }

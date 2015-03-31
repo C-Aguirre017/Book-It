@@ -305,7 +305,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     private class AsyncTask_Eliminar extends AsyncTask<String, Void, Boolean>{
 
         private Usuario usuario;
-        private ProgressDialog progressDialog;
+       // private ProgressDialog progressDialog;
 
         public AsyncTask_Eliminar(Usuario usuario) {
             this.usuario = usuario;
@@ -314,7 +314,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Eliminando ...", "Espere porfavor", true, false);
+           // progressDialog = ProgressDialog.show(mContext, "Eliminando ...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -340,13 +340,13 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                 httpCon.setRequestMethod("DELETE");
                 httpCon.connect();
                 httpCon.getInputStream();
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 return true;
 
             } catch (Exception e) {
 
                 e.printStackTrace();
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 return false;
 
             } finally {

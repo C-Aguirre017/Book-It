@@ -397,12 +397,12 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
-        private ProgressDialog progressDialog;
+        //private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
+            //progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -489,7 +489,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 // TODO: handle exception
                 Toast.makeText(mContext,"Error al crear el Pin en onPostExecute_GetMarker()", Toast.LENGTH_LONG).show();
             }
-            progressDialog.dismiss();
+           // progressDialog.dismiss();
         }
 
         private void Colocar_Marker(Pin Aux){
@@ -566,60 +566,11 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
     }
 
-
-    private class AsyncTask_GetEmail extends AsyncTask<String, Void, String> {
-
-        private ProgressDialog progressDialog;
-        private Pin Pin_Elegido;
-
-        public AsyncTask_GetEmail(Pin aux) {
-            this.Pin_Elegido = aux;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            String Url = Configuracion.URLSERVIDOR + "/usuarios/" ;
-            Url +=  Pin_Elegido.getUsuario_Pin().getId_usuario() + ".json";
-            return ConsultaHTTP.GET(Url);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Boolean Paso = false;
-            try {
-                result = "{ \"usuarios\":[" + result + "]}";
-                JSONObject json = new JSONObject(result);
-                JSONArray articles = json.getJSONArray("usuarios");
-                if (Pin_Elegido != null) {
-                    Pin_Elegido.getUsuario_Pin().setEmail(articles.getJSONObject(0).getString("email"));
-                    Pin_Elegido.getUsuario_Pin().setNombre(articles.getJSONObject(0).getString("nombre"));
-                    Pin_Elegido.getUsuario_Pin().setCarrera(articles.getJSONObject(0).getString("carrera"));
-                    Pin_Elegido.getUsuario_Pin().setRole(articles.getJSONObject(0).getString("role"));
-                    Pin_Elegido.getUsuario_Pin().setTelefono("+56994405326");
-                    M_Utiles.setContext(mContext);
-                    M_Utiles.CrearAlertDialog(Pin_Elegido);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Paso = true;
-            }
-
-            if (Paso)
-                progressDialog.dismiss();
-        }
-    }
-
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
         private Usuario usuario;
         Pin Pin_Elegido = null;
-        //private ProgressDialog progressDialog;
+        private ProgressDialog progressDialog;
 
 
         public AsyncTask_PostMarker(Usuario usuario, Pin Aux) {
@@ -629,7 +580,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //progressDialog = ProgressDialog.show(mContext, "Creando ...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Creando ...", "Espere porfavor", true, false);
         }
 
         @Override
@@ -669,7 +620,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             } catch (Exception e) {
 
                 e.printStackTrace();
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
                 return false;
 
             }

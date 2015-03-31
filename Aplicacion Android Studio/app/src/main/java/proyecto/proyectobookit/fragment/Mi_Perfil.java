@@ -4,6 +4,8 @@ package proyecto.proyectobookit.fragment;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,7 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import proyecto.proyectobookit.Central;
 import proyecto.proyectobookit.R;
+import proyecto.proyectobookit.activity.CrearMarker;
+import proyecto.proyectobookit.activity.Editar_Perfil;
 import proyecto.proyectobookit.base_datos.Usuario;
 
 /**
@@ -21,6 +26,8 @@ import proyecto.proyectobookit.base_datos.Usuario;
  */
 
 public class Mi_Perfil extends Fragment {
+
+    Context mContext;
 
 
     public Mi_Perfil() {
@@ -64,11 +71,15 @@ public class Mi_Perfil extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.menucentral_editar) {
+            Intent i = new Intent(mContext, Editar_Perfil.class);
+            startActivity(i);
         }
 
         return true;
     }
 
+    public void setContext(Context Aux){
+        mContext = Aux;
+    }
 }

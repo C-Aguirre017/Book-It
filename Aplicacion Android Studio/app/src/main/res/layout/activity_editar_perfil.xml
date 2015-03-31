@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.example.aplicacionbookit.CrearMarker"
+    android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/editar_perfil_labelNombre"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre: " />
+
+            <TextView
+                android:id="@+id/editar_perfil_nombre"
+                android:layout_width="match_parent"
+                android:paddingTop="5dp"
+                android:layout_height="50dp"/>
+
+            <TextView
+                android:id="@+id/editar_perfil_labelUniversidad"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Universidad: " />
+
+            <Spinner
+                android:id="@+id/editar_perfil_dropdownUniversidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"/>
+
+            <!--EditText
+                android:id="@+id/editar_perfil_Universidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+            </EditText-->
+
+            <TextView
+                android:id="@+id/editar_perfil_labelCarrera"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Carrera: " />
+
+            <EditText
+                android:id="@+id/editar_perfil_carrera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+            </EditText>
+
+            <TextView
+                android:id="@+id/editar_perfil_labelBiografíaAcademica"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Biografía Academica: " />
+
+            <EditText
+                android:id="@+id/editar_perfil_biografíaAcademica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingTop="10dp"
+                android:ems="10">
+            </EditText>
+
+
+            <Button
+                android:id="@+id/crearmarker_aceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="5dp"
+                android:onClick="Aceptar"
+                android:background="@drawable/property_rounded_button"
+                android:text="Cambiar Perfil"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

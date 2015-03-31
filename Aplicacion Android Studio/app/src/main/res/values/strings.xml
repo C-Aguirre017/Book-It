@@ -98,7 +98,7 @@
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
         <item>@drawable/ic_action_mapa</item>
-        <item>@drawable/ic_action_person</item>
+        <item>@drawable/ic_action_perfil</item>
         <item>@drawable/ic_action_pin</item>
         <item>@drawable/ic_action_help</item>
         <item>@drawable/ic_action_writeus</item>
@@ -112,5 +112,13 @@
     <string name="title_activity_modo_lista__info_pin">Descripcion</string>
     <string name="hello_world">Hello world!</string>
     <string name="facebookLoginExplanation">Nunca publicaremos nada en tu cuenta</string>
+    <string name="title_activity_editar__perfil">Editar Perfil</string>
+
+    <!-- Editar Perfil -->
+
+    <string-array name="universidades">
+        <item>Pontificia Universidad Católica de Chile</item>
+    </string-array>
+
 
 </resources>

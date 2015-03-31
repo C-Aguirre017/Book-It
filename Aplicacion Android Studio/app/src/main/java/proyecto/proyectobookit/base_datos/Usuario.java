@@ -16,7 +16,7 @@ public class Usuario {
 
     private static Usuario usuarioActual = null;
 
-    private String nombre, email, carrera, role, token, telefono;
+    private String nombre, email, carrera, role, token, telefono, biografia,universidad;
     private String id_usuario;
     private String fbUid;
     private Session fbSession;
@@ -34,6 +34,8 @@ public class Usuario {
             u.setCarrera(jo.getString("carrera"));
             u.setRole(jo.getString("role"));
             u.setTelefono(jo.getString("telefono"));
+            u.setBiografia(jo.getString("biografia"));
+            u.setUniversidad(jo.getString("universidad"));
         } catch (Exception e) {
 
         }
@@ -126,5 +128,21 @@ public class Usuario {
     public void setgUser(GraphUser gUser) {
         this.gUser = gUser;
         this.setFbUid(gUser.getId());
+    }
+
+    public String getBiografia() {
+        return biografia;
+    }
+
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
+    }
+
+    public String getUniversidad() {
+        return universidad;
+    }
+
+    public void setUniversidad(String universidad) {
+        this.universidad = universidad;
     }
 }

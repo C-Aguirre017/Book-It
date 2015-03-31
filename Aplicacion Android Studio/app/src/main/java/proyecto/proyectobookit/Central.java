@@ -153,6 +153,7 @@ public class Central extends Activity {
                 break;
             case 2:
                 Mi_Perfil Aux_Mi_Perfil = new Mi_Perfil();
+                Aux_Mi_Perfil.setContext(this);
                 FragmentoELegido = Aux_Mi_Perfil;
                 break;
             case 3:

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="proyecto.proyectobookit.activity.Editar_Perfil">
+
+    <item android:id="@+id/editar_perfil_send"
+        android:title="@string/feedbackmenu_enviar"
+        android:icon="@drawable/ic_action_send_now"
+        android:showAsAction="always" />
+
+</menu>

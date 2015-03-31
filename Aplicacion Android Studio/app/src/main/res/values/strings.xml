@@ -112,6 +112,7 @@
     <string name="title_activity_modo_lista__info_pin">Descripcion</string>
     <string name="hello_world">Hello world!</string>
     <string name="facebookLoginExplanation">Nunca publicaremos nada en tu cuenta</string>
+<<<<<<< HEAD
     <string name="title_activity_editar__perfil">Editar Perfil</string>
 
     <!-- Editar Perfil -->
@@ -120,5 +121,14 @@
         <item>Pontificia Universidad Católica de Chile</item>
     </string-array>
 
+=======
+    <string name="acerca_de_texto">Bukit fue creado por:\n
+    \tEnrique Correa (@ejcorreav)\n
+    \tCarlos Aguirre (@c_aguirre)\n
+        \n
+    Iconos por:\n
+    \tBenjamin Abarca
+    </string>
+>>>>>>> dd6ecb127f0c53409b6ea0b1bb8070236b9a07d8
 
 </resources>

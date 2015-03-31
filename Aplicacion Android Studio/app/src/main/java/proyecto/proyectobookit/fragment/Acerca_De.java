@@ -31,6 +31,7 @@ public class Acerca_De extends Fragment {
         menu.findItem(R.id.menucentral_refresh).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menucentral_dropdown_campus).setVisible(false);
+        menu.findItem(R.id.menucentral_editar).setVisible(false);
 
 
         ActionBar actions = getActivity().getActionBar();

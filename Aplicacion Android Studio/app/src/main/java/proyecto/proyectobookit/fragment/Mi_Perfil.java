@@ -1,7 +1,9 @@
 package proyecto.proyectobookit.fragment;
 
+
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,12 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import proyecto.proyectobookit.R;
+import proyecto.proyectobookit.base_datos.Usuario;
 
-public class Help extends Fragment {
+/**
+ * A simple {@link android.app.Fragment} subclass.
+ */
+
+public class Mi_Perfil extends Fragment {
+
+
+    public Mi_Perfil() {
+        // Required empty public constructor
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_help, container, false);
+        View v = inflater.inflate(R.layout.fragment_mi__perfil, container, false);
         setHasOptionsMenu(true);
         return v;
     }
@@ -26,16 +39,23 @@ public class Help extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.findItem(R.id.menucentral_viewasList).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menucentral_refresh).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menucentral_dropdown_campus).setVisible(false);
-        menu.findItem(R.id.menucentral_editar).setVisible(false);
+        menu.findItem(R.id.menucentral_editar).setVisible(true);
 
         ActionBar actions = getActivity().getActionBar();
         actions.setDisplayHomeAsUpEnabled(true);
-
-        actions.setTitle("Ayuda");
+        actions.setTitle("Mi Perfil");
         actions.setDisplayShowTitleEnabled(true);
+
+        //Colocar Mi Perfil
+
+        Get_Perfil Get_Perfil = new proyecto.proyectobookit.fragment.Get_Perfil();
+        Get_Perfil.setMi_perfil(Usuario.getUsuarioActual());
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.mi_perfil_container,Get_Perfil);
+        transaction.commit();
     }
 
     @Override
@@ -50,4 +70,5 @@ public class Help extends Fragment {
 
         return true;
     }
+
 }

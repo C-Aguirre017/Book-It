@@ -5,7 +5,7 @@
         android:showAsAction="always|collapseActionView"
         android:actionLayout="@layout/actionbar_search_layout"
         android:title="Buscar Cursos">
-    </item>
+    </item>s
 
     <item
         android:id="@+id/menucentral_viewasList"
@@ -47,4 +47,10 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="always"
         android:title="Actualizar"></item>
+
+    <item
+        android:id="@+id/menucentral_editar"
+        android:icon="@drawable/ic_action_edit"
+        android:showAsAction="ifRoom"
+        android:title="Editar"></item>
 </menu>

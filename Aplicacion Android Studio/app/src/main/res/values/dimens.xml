@@ -21,4 +21,9 @@
 <dimen name="list_pin_genre">13dip</dimen>
 <dimen name="list_pin_year">12dip</dimen>
 
+
+<!-- Get Perfil -->
+
+<dimen name="get_perfil_tamañoletra">23dp</dimen>
+
 </resources>

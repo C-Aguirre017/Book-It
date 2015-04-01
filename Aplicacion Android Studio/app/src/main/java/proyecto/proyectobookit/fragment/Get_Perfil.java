@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import proyecto.proyectobookit.R;
@@ -17,6 +18,7 @@ import proyecto.proyectobookit.base_datos.Usuario;
 public class Get_Perfil extends Fragment {
 
     private Usuario mi_perfil;
+    private String numero_telefono = null;
 
     public Get_Perfil() {
         // Required empty public constructor
@@ -31,6 +33,7 @@ public class Get_Perfil extends Fragment {
 
         TextView Nombre = (TextView) v.findViewById(R.id.get_perfil_nombre);
         TextView Carrera = (TextView) v.findViewById(R.id.get_perfil_carrera);
+        TextView Telefono = (TextView) v.findViewById(R.id.get_perfil_telefono);
         //TextView Nivel = (TextView) v.findViewById(R.id.get_perfil_nivel);
         TextView Curriculum = (TextView) v.findViewById(R.id.get_perfil_curriculum);
 
@@ -38,6 +41,12 @@ public class Get_Perfil extends Fragment {
         Carrera.setText(mi_perfil.getCarrera());
         //Nivel.setText(mi_perfil.getNivel());
         //Curriculum.setText(mi_perfil.getHabilidades());
+        if(numero_telefono!=null){
+            Telefono.setText(numero_telefono);
+        }else{
+            Telefono.setText("+569 XXXXXXXX");
+        }
+
 
         return v;
     }
@@ -46,4 +55,8 @@ public class Get_Perfil extends Fragment {
         this.mi_perfil = mi_perfil;
     }
 
+
+    public void setNumero_telefono(String numero_telefono) {
+        this.numero_telefono = numero_telefono;
+    }
 }

@@ -71,6 +71,42 @@ public class ConsultaHTTP {
         return resultString;
     }
 
+    public static String PUT(String url, Hashtable<String, String> params) throws Exception {
+
+        String urlParameters;
+        urlParameters = params2String(params);
+
+        URL u = new URL(url);
+        connection = (HttpURLConnection) u.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+        connection.setRequestProperty("Content-Language", "en-US");
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+
+        // Enviamos parametros
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        writer.write(urlParameters);
+        writer.flush();
+
+        response_code = connection.getResponseCode();
+
+        // receive response as inputStream
+        InputStream inputStream = connection.getInputStream();
+        // convert inputstream to string
+        resultString = null;
+        if(inputStream != null) {
+            resultString = convertInputStreamToString(inputStream);
+        }
+
+        disconnect();
+
+        return resultString;
+    }
+
     public static String params2String(Hashtable<String, String> params) {
         StringBuffer urlParameters = new StringBuffer();
         try {

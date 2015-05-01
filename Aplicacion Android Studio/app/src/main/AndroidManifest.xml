@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="21" />
 
     <permission
         android:name="proyecto.proyectobookit.permission.MAPS_RECEIVE"
@@ -37,7 +37,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDXCRWK4Vts6CiU0XN8T_OBTOSEecdAn3s" />
+            android:value="AIzaSyDhCAJcnIqg0WiCpOHUa0CFH2j5uRWjm5w" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

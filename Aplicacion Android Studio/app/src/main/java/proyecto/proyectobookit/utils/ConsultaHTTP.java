@@ -23,6 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by isseu on 22-03-15.
  */
+
 public class ConsultaHTTP {
 
     // Constantes

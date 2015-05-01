@@ -17,7 +17,6 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/get_perfil_profile_image"
-                android:background="@drawable/logo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:border_width="2dp"
@@ -30,20 +29,35 @@
                 android:paddingLeft="7dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/get_perfil_nombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/get_perfil_tamañoletra"
-                    android:text="Nombre"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
 
-                <!--TextView
-                    android:id="@+id/get_perfil_nivel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="30dp"
-                    android:text="Nivel:"/-->
+                    <TextView
+                        android:id="@+id/get_perfil_labelnombre"
+                        android:paddingTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/get_perfil_tamañoletra"
+                        android:text="Nombre"/>
 
+                    <TextView
+                        android:id="@+id/get_perfil_nombre"
+                        android:paddingTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/get_perfil_tamañoletra"
+                        android:text="Carlos "/>
+
+                    <!--TextView
+                        android:id="@+id/get_perfil_nivel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="30dp"
+                        android:text="Nivel:"/-->
+
+                    </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -69,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/get_perfil_tamañoletra"
-            android:text="Carrera:"/>
+            android:text="Telefono:"/>
 
         <TextView
             android:id="@+id/get_perfil_telefono"

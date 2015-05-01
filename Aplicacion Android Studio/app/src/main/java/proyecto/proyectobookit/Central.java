@@ -159,7 +159,6 @@ public class Central extends Activity {
             case 3:
                 Mis_Pins Aux_pins = new Mis_Pins();
                 Aux_pins.setmContext(this);
-                Aux_pins.setMi_Usuario(Mi_Usuario);
                 FragmentoELegido = Aux_pins;
                 break;
             case 4:

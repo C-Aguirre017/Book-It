@@ -3,6 +3,7 @@ package proyecto.proyectobookit.fragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,7 +103,8 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         try {
             rootView = inflater.inflate(fragment_mapa, container, false);
             if(null == Mapas){
-                Mapas = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapView)).getMap();
+                //Mapas = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapView)).getMap();
+                Mapas = getMapFragment().getMap();
                 Mapas.setMyLocationEnabled(true);
                 Mapas.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 Mapas.setBuildingsEnabled(true);
@@ -124,6 +127,23 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         }
 
         return rootView;
+    }
+
+    private MapFragment getMapFragment() {
+        FragmentManager fm = null;
+
+        //Log.d(TAG, "sdk: " + Build.VERSION.SDK_INT);
+       // Log.d(TAG, "release: " + Build.VERSION.RELEASE);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            //Log.d(TAG, "using getFragmentManager");
+            fm = getFragmentManager();
+        } else {
+           // Log.d(TAG, "using getChildFragmentManager");
+            fm = getChildFragmentManager();
+        }
+
+        return (MapFragment) fm.findFragmentById(R.id.mapView);
     }
 
     @Override
@@ -219,30 +239,30 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
     private void Actualizar_Boton(){
         String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String Url = "http://pinit-api.herokuapp.com/pins";
+        String Url = Configuracion.URLSERVIDOR + "/pins.json";
         try {
-            Url += URLEncoder.encode(text, "UTF-8") + ".json";
             Mapas.clear();
             if (Build.VERSION.SDK_INT >= 11) {
                 //--post GB use serial executor by default --
                 new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
             } else {
                 //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_GetMarker().execute("http://pinit-api.herokuapp.com/pins.json");
+                new AsyncTask_GetMarker().execute(Url);
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void Actualizar() {
+        String Url = Configuracion.URLSERVIDOR + "/pins.json";
         Mapas.clear();
         if (Build.VERSION.SDK_INT >= 11) {
             //--post GB use serial executor by default --
-            new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://pinit-api.herokuapp.com/pins.json");
+            new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
         } else {
             //--GB uses ThreadPoolExecutor by default--
-            new AsyncTask_GetMarker().execute("http://pinit-api.herokuapp.com/pins.json");
+            new AsyncTask_GetMarker().execute(Url);
         }
         Tiempo_Start = System.currentTimeMillis();
     }

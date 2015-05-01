@@ -6,5 +6,5 @@ package proyecto.proyectobookit.utils;
 public class Configuracion {
     // CONSTANTES
     public static String NOMBRE = "Bukit";
-    public static String URLSERVIDOR = "http://pinit-api.herokuapp.com";
+    public static String URLSERVIDOR = "http://bukit.cl";
 }

@@ -19,6 +19,7 @@ import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.adapters.NestedListView;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_VerPins;
+import proyecto.proyectobookit.utils.Configuracion;
 
 public class Mis_Pins extends Fragment {
 
@@ -34,8 +35,9 @@ public class Mis_Pins extends Fragment {
         View v = inflater.inflate(R.layout.fragment_mis_pins, container, false);
         setHasOptionsMenu(true);
         lista_Pines = (NestedListView) v.findViewById(R.id.mis_pins_lista);
-        adapter = new ListViewAdapter_VerPins(mContext,Mi_Usuario);
+        adapter = new ListViewAdapter_VerPins(mContext);
         lista_Pines.setAdapter(adapter);
+        Mi_Usuario = Usuario.getUsuarioActual();
         Actualizar();
         return v;
     }
@@ -71,7 +73,7 @@ public class Mis_Pins extends Fragment {
 
     private void Actualizar() {
         if(Mi_Usuario.getId_usuario() !=null){
-            String Url = "http://pinit-api.herokuapp.com/usuarios/";
+            String Url = Configuracion.URLSERVIDOR + "/usuarios/";
 
             try {
                 Url += URLEncoder.encode(Mi_Usuario.getId_usuario(), "UTF-8") +"/pins.json";
@@ -86,7 +88,4 @@ public class Mis_Pins extends Fragment {
         this.mContext = mContext;
     }
 
-    public void setMi_Usuario(Usuario mi_Usuario) {
-        Mi_Usuario = mi_Usuario;
-    }
 }

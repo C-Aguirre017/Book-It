@@ -37,8 +37,11 @@ public class Get_Perfil extends Fragment {
         //TextView Nivel = (TextView) v.findViewById(R.id.get_perfil_nivel);
         TextView Curriculum = (TextView) v.findViewById(R.id.get_perfil_curriculum);
 
-        Nombre.setText(mi_perfil.getNombre());
-        Carrera.setText(mi_perfil.getCarrera());
+        if(mi_perfil.getNombre() != null)
+            Nombre.setText(mi_perfil.getNombre());
+        if(mi_perfil.getCarrera()!= null)
+            Carrera.setText(mi_perfil.getCarrera());
+
         //Nivel.setText(mi_perfil.getNivel());
         //Curriculum.setText(mi_perfil.getHabilidades());
         if(numero_telefono!=null){
@@ -46,7 +49,6 @@ public class Get_Perfil extends Fragment {
         }else{
             Telefono.setText("+569 XXXXXXXX");
         }
-
 
         return v;
     }

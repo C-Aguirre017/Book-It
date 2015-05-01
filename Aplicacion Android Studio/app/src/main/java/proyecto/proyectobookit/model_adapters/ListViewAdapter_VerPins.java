@@ -1,12 +1,9 @@
 package proyecto.proyectobookit.model_adapters;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,20 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +23,6 @@ import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
-import proyecto.proyectobookit.utils.Configuracion;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 public class ListViewAdapter_VerPins extends BaseAdapter {
@@ -47,12 +32,12 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     LayoutInflater inflater;
     private List<Pin> ListaPines = null;
     private MetodosUtiles M_Utiles = new MetodosUtiles();
-    private Usuario Mi_Usuario = new Usuario();
+    private Usuario Mi_Usuario;
 
-    public ListViewAdapter_VerPins(Context context,Usuario usuario) {
+    public ListViewAdapter_VerPins(Context context) {
         mContext = context;
         this.ListaPines = new ArrayList<Pin>();
-        this.Mi_Usuario =usuario;
+        this.Mi_Usuario =Usuario.getUsuarioActual();
         inflater = LayoutInflater.from(mContext);
     }
 
@@ -96,11 +81,11 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.listview_pin, null);
-            holder.NombreRamo = (TextView) view.findViewById(R.id.listview_pin_NombreRamo);
-            holder.Fecha = (TextView) view.findViewById(R.id.listview_pin_FechayHora);
-            holder.Pago = (TextView) view.findViewById(R.id.listview_pin_Pago);
-            holder.Imagen = (ImageView) view.findViewById(R.id.listview_pin_icono);
+            view = inflater.inflate(R.layout.listview_mispins, null);
+            holder.NombreRamo = (TextView) view.findViewById(R.id.listview_mis_pins_NombreRamo);
+            holder.Fecha = (TextView) view.findViewById(R.id.listview_mis_pins_FechayHora);
+            holder.Pago = (TextView) view.findViewById(R.id.listview_mis_pins_Pago);
+            holder.Imagen = (ImageView) view.findViewById(R.id.listview_mis_pins_icono);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -121,31 +106,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                 @Override
                 public void onClick(View arg0) {
                     // Send single item click data to SingleItemView Class
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle(holder.Aux_Pin.getRamo_Pin().getSigla() + " " + holder.Aux_Pin.getRamo_Pin().getNombre())
-                            .setMessage(M_Utiles.CrearMensaje(holder.Aux_Pin))
-                            .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    String Url = Configuracion.URLSERVIDOR + "/pins/" + holder.Aux_Pin.getId_pin();
-
-                                    if (Build.VERSION.SDK_INT >= 11) {
-                                        //--post GB use serial executor by default --
-                                        new AsyncTask_Eliminar(Mi_Usuario).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
-                                    } else {
-                                        //--GB uses ThreadPoolExecutor by default--
-                                        new AsyncTask_Eliminar(Mi_Usuario).execute(Url);
-                                    }
-                                    ListaPines.remove(holder.Aux_Pin);
-                                    notifyDataSetChanged();
-                                }
-                            })
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
 
                 }
             });
@@ -209,7 +169,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         }
         return false;
     }
-
 
     // Filter Class
     public void filter(String charText,String Url) {
@@ -302,6 +261,38 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
     }
 
+
+
+    /*
+
+    ELIMINAR PIN
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    builder.setTitle(holder.Aux_Pin.getRamo_Pin().getSigla() + " " + holder.Aux_Pin.getRamo_Pin().getNombre())
+            .setMessage(M_Utiles.CrearMensaje(holder.Aux_Pin))
+            .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+
+            String Url = Configuracion.URLSERVIDOR + "/pins/" + holder.Aux_Pin.getId_pin();
+
+            if (Build.VERSION.SDK_INT >= 11) {
+                //--post GB use serial executor by default --
+                new AsyncTask_Eliminar(Mi_Usuario).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
+            } else {
+                //--GB uses ThreadPoolExecutor by default--
+                new AsyncTask_Eliminar(Mi_Usuario).execute(Url);
+            }
+            ListaPines.remove(holder.Aux_Pin);
+            notifyDataSetChanged();
+        }
+    })
+            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+        }
+    });
+    AlertDialog alert = builder.create();
+    alert.show();
+
     private class AsyncTask_Eliminar extends AsyncTask<String, Void, Boolean>{
 
         private Usuario usuario;
@@ -359,5 +350,8 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
         }
     }
+
+    */
+
 }
 

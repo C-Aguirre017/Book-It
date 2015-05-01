@@ -30,20 +30,16 @@ public class ModoLista_Principal extends Activity {
     ListView lista_Pines;
     ListViewAdapter_ModoLista adapter;
 
-    private Usuario Mi_Usuario = new Usuario();
+    private Usuario Mi_Usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modo_lista);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
         lista_Pines = (NestedListView) findViewById(R.id.modo_lista_listapines);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            Mi_Usuario.setId_usuario(extras.getString("id_usuario"));
-        }
+        Mi_Usuario = Usuario.getUsuarioActual();
     }
 
     @Override

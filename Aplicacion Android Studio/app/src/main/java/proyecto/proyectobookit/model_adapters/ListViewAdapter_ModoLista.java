@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,17 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +24,6 @@ import java.util.Locale;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.base_datos.Pin;
-import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.fragment.Mapa;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
@@ -99,11 +89,11 @@ public class ListViewAdapter_ModoLista extends BaseAdapter {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.listview_pin, null);
-            holder.NombreRamo = (TextView) view.findViewById(R.id.listview_pin_NombreRamo);
-            holder.Fecha = (TextView) view.findViewById(R.id.listview_pin_FechayHora);
-            holder.Pago = (TextView) view.findViewById(R.id.listview_pin_Pago);
-            holder.Imagen = (ImageView) view.findViewById(R.id.listview_pin_icono);
+            view = inflater.inflate(R.layout.listview_modolista_pin, null);
+            holder.NombreRamo = (TextView) view.findViewById(R.id.listview_modolista_NombreRamo);
+            holder.Fecha = (TextView) view.findViewById(R.id.listview_modolista_FechayHora);
+            holder.Pago = (TextView) view.findViewById(R.id.listview_modolista_Pago);
+            holder.Imagen = (ImageView) view.findViewById(R.id.listview_modolista_icono);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

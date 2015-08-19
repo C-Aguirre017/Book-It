@@ -447,33 +447,33 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                     try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
                     try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
                     String Date_Aux="";
-                    try {Date_Aux= articles.getJSONObject(i).getString("publicacion"); } catch (Exception e) {}
+                    try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
                     Aux.setHora(Date_Aux.replace("T"," "));
-                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
-                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
+                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realization"));} catch (Exception e) {}
+                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duration"));} catch (Exception e) {}
                     //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("titulo"));}catch(Exception e){}
-                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("descripcion"));} catch (Exception e) {}
-                    try {Aux.setPrecio(articles.getJSONObject(i).getString("precio"));} catch (Exception e) {}
-                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("tipo_ayuda"));} catch (Exception e) {}
-                    try {Aux.setCampus(articles.getJSONObject(i).getString("facultad"));} catch (Exception e) {}
+                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("tite"));}catch(Exception e){}
+                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("description"));} catch (Exception e) {}
+                    try {Aux.setPrecio(articles.getJSONObject(i).getString("price"));} catch (Exception e) {}
+                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("help_type"));} catch (Exception e) {}
+                    try {Aux.setCampus(articles.getJSONObject(i).getString("faculty"));} catch (Exception e) {}
                     try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
                     try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
 
                     //Obtener Usuarios
 
                     try {
-                        String usuarios = articles.getJSONObject(i).getString("usuario");
+                        String usuarios = articles.getJSONObject(i).getString("user");
                         usuarios = "{ \"usuarios\":[" + usuarios + "]}";
                         JSONObject json_usuarios = new JSONObject(usuarios);
                         JSONArray articles_usuarios = json_usuarios.getJSONArray("usuarios");
 
                         try {Aux.getUsuario_Pin().setId_usuario(articles_usuarios.getJSONObject(0).getString("id")); } catch (Exception e) {  }
                         try {Aux.getUsuario_Pin().setEmail(articles_usuarios.getJSONObject(0).getString("email")); } catch (Exception e) {  }
-                        try {Aux.getUsuario_Pin().setNombre(articles_usuarios.getJSONObject(0).getString("nombre"));      } catch (Exception e){       }
-                        try {Aux.getUsuario_Pin().setCarrera(articles_usuarios.getJSONObject(0).getString("carrera"));  } catch (Exception e) {    }
+                        try {Aux.getUsuario_Pin().setNombre(articles_usuarios.getJSONObject(0).getString("name"));      } catch (Exception e){       }
+                        try {Aux.getUsuario_Pin().setCarrera(articles_usuarios.getJSONObject(0).getString("profession"));  } catch (Exception e) {    }
                         try {Aux.getUsuario_Pin().setRole(articles_usuarios.getJSONObject(0).getString("role"));   } catch (Exception e) {  }
-                        try {Aux.getUsuario_Pin().setTelefono(articles_usuarios.getJSONObject(0).getString("telefono"));   } catch (Exception e) {  }
+                        try {Aux.getUsuario_Pin().setTelefono(articles_usuarios.getJSONObject(0).getString("phone"));   } catch (Exception e) {  }
                         Aux.getUsuario_Pin().setTelefono("+56994405326");
                     }
                     catch (Exception e){
@@ -482,15 +482,15 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
                     //Obtener Ramos
                     try {
-                        String ramos = articles.getJSONObject(i).getString("ramo");
+                        String ramos = articles.getJSONObject(i).getString("course");
                         ramos = "{ \"ramos\":[" + ramos + "]}";
                         try {
                             JSONObject json_ramos = new JSONObject(ramos);
                             JSONArray articles_ramos = json_ramos.getJSONArray("ramos");
                             //Completar Pin
-                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("nombre"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("sigla"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("rama"));                                } catch (Exception e) {                               }
+                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("name"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("initials"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("branch"));                                } catch (Exception e) {                               }
 
                             //Filtrar
                             if (Aux.getRamo_Pin().getNombre() != null) {
@@ -619,17 +619,17 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
                 rparams.put("user_id", usuario.getId_usuario());
                 rparams.put("user_token", token);
-                rparams.put("duracion", Aux_Pin.getDuracion());
-                rparams.put("descripcion", Aux_Pin.getDescripcion());
-                rparams.put("precio", Aux_Pin.getPrecio());
-                rparams.put("facultad", Aux_Pin.getCampus());
+                rparams.put("duration", Aux_Pin.getDuracion());
+                rparams.put("description", Aux_Pin.getDescripcion());
+                rparams.put("price", Aux_Pin.getPrecio());
+                rparams.put("faculty", Aux_Pin.getCampus());
                 rparams.put("latitude", Aux_Pin.getLatitude());
                 rparams.put("longitude", Aux_Pin.getLongitude());
-                rparams.put("ramo_id", Aux_Pin.getRamo_Pin().getId_ramo());
-                rparams.put("publicacion", Aux_Pin.getHora());
-                rparams.put("realizacion", Aux_Pin.getRealizacion());
-                rparams.put("tipo_ayuda", Aux_Pin.getTipo_ayuda());
-                rparams.put("titulo", Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() );
+                rparams.put("course_id", Aux_Pin.getRamo_Pin().getId_ramo());
+                rparams.put("publication", Aux_Pin.getHora());
+                rparams.put("realization", Aux_Pin.getRealizacion());
+                rparams.put("help_type", Aux_Pin.getTipo_ayuda());
+                rparams.put("title", Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() );
 
                 ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins.json", rparams);
 

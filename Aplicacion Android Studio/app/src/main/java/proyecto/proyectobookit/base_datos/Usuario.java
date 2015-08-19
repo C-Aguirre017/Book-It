@@ -30,12 +30,12 @@ public class Usuario {
             JSONObject jo = new JSONObject(datos);
             u.setId_usuario(jo.getString("id"));
             u.setEmail(jo.getString("email"));
-            u.setNombre(jo.getString("nombre"));
-            u.setCarrera(jo.getString("carrera"));
+            u.setNombre(jo.getString("name"));
+            u.setCarrera(jo.getString("profession"));
             u.setRole(jo.getString("role"));
-            u.setTelefono(jo.getString("telefono"));
-            u.setBiografia(jo.getString("biografia"));
-            u.setUniversidad(jo.getString("universidad"));
+            u.setTelefono(jo.getString("phone"));
+            u.setBiografia(jo.getString("biografy"));
+            u.setUniversidad(jo.getString("university"));
         } catch (Exception e) {
 
         }
@@ -109,7 +109,8 @@ public class Usuario {
     }
 
     public static Usuario getUsuarioActual() {
-        if (usuarioActual == null) { usuarioActual = new Usuario(); }
+        if (usuarioActual == null) {
+            usuarioActual = new Usuario(); }
         return usuarioActual;
     }
 
@@ -127,6 +128,8 @@ public class Usuario {
 
     public void setgUser(GraphUser gUser) {
         this.gUser = gUser;
+        this.nombre = gUser.getFirstName();
+        this.email = (String)gUser.getProperty("email");
         this.setFbUid(gUser.getId());
     }
 

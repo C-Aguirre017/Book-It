@@ -1,5 +1,6 @@
 package proyecto.proyectobookit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -77,7 +78,7 @@ public class Inicio extends FragmentActivity {
         (new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... fbUid) {
-                return ConsultaHTTP.GET(Configuracion.URLSERVIDOR + "/usuarios/fb/" + fbUid[0] + ".json");
+                return ConsultaHTTP.GET(Configuracion.URLSERVIDOR + "/fb/" + fbUid[0] + ".json");
             }
 
             @Override
@@ -88,7 +89,7 @@ public class Inicio extends FragmentActivity {
                     // Si no existe debemos crearlo
                     if (ConsultaHTTP.response_code == 404) {
                         Log.d("Informacion", "Usuario no existe, lo creamos");
-                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken());
+                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken().toString());
                         return;
                     }
                     // Existe, cargamos informacion
@@ -112,7 +113,7 @@ public class Inicio extends FragmentActivity {
                 rparams.put("fbsecrettoken", params[2]);
                 try {
                     Log.d("Informacion", "Creando");
-                    return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/usuarios/registar_movil.json", rparams);
+                    return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/users/register.json", rparams);
                 }catch(Exception e) {
                     return null;
                 }
@@ -158,7 +159,7 @@ public class Inicio extends FragmentActivity {
                 Log.d("Informacion", "Token cargado " + Usuario.getUsuarioActual().getToken());
                 seguirCentro();
             }
-        }).execute(uid, fbsecret );
+        }).execute(uid, fbsecret);
     }
 
     public void mostrarLoading() {
@@ -193,6 +194,7 @@ public class Inicio extends FragmentActivity {
                     public void onCompleted(GraphUser user, Response response) {
 
                         if (user != null) {
+
                             Usuario.getUsuarioActual().setgUser(user);
                             mostrarLoading();
                             existeUsuario(Usuario.getUsuarioActual().getFbUid());

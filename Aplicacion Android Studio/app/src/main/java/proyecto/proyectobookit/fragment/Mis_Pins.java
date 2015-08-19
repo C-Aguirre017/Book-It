@@ -71,6 +71,10 @@ public class Mis_Pins extends Fragment {
         return true;
     }
 
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
     private void Actualizar() {
         if(Mi_Usuario.getId_usuario() !=null){
             String Url = Configuracion.URLSERVIDOR + "/usuarios/";
@@ -82,10 +86,6 @@ public class Mis_Pins extends Fragment {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
     }
 
 }

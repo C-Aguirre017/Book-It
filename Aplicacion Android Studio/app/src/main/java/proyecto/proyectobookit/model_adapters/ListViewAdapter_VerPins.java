@@ -217,30 +217,30 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                     try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
                     try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
                     String Date_Aux="";
-                    try {Date_Aux= articles.getJSONObject(i).getString("publicacion"); } catch (Exception e) {}
+                    try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
                     Aux.setPublicacion(Date_Aux.replace("T"," "));
-                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realizacion"));} catch (Exception e) {}
-                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duracion"));} catch (Exception e) {}
+                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realization"));} catch (Exception e) {}
+                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duration"));} catch (Exception e) {}
                     //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("titulo"));}catch(Exception e){}
-                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("descripcion"));} catch (Exception e) {}
-                    try {Aux.setPrecio(articles.getJSONObject(i).getString("precio"));} catch (Exception e) {}
-                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("tipo_ayuda"));} catch (Exception e) {}
-                    try {Aux.setCampus(articles.getJSONObject(i).getString("facultad"));} catch (Exception e) {}
+                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("title"));}catch(Exception e){}
+                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("description"));} catch (Exception e) {}
+                    try {Aux.setPrecio(articles.getJSONObject(i).getString("price"));} catch (Exception e) {}
+                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("help_type"));} catch (Exception e) {}
+                    try {Aux.setCampus(articles.getJSONObject(i).getString("faculty"));} catch (Exception e) {}
                     try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
                     try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
 
                     //Obtener Ramos
                     try {
-                        String ramos = articles.getJSONObject(i).getString("ramo");
+                        String ramos = articles.getJSONObject(i).getString("course");
                         ramos = "{ \"ramos\":[" + ramos + "]}";
                         try {
                             JSONObject json_ramos = new JSONObject(ramos);
                             JSONArray articles_ramos = json_ramos.getJSONArray("ramos");
                             //Completar Pin
-                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("nombre"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("sigla"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("rama"));                                } catch (Exception e) {                               }
+                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("name"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("initials"));                                } catch (Exception e) {                                }
+                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("branch"));                                } catch (Exception e) {                               }
 
                             ListaPines.add(Aux);
                         } catch (Exception e) {

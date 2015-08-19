@@ -140,6 +140,7 @@ public class ConsultaHTTP {
             // receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
 
+            response_code = httpResponse.getStatusLine().getStatusCode();
             // convert inputstream to string
             if(inputStream != null)
                 result = convertInputStreamToString(inputStream);

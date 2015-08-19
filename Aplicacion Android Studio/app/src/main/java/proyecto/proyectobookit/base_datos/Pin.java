@@ -24,17 +24,17 @@ public class Pin {
         try {
             JSONObject jo = new JSONObject(datos);
             u.setId_pin(jo.getString("id"));
-            u.getUsuario_Pin().setId_usuario(jo.getString("usuario_id"));
+            u.getUsuario_Pin().setId_usuario(jo.getString("user_id"));
             String Date_Aux = "";
-            Date_Aux = jo.getString("publicacion");
+            Date_Aux = jo.getString("publication");
             u.setHora(Date_Aux.replace("T", " "));
-            u.setRealizacion(jo.getString("realizacion"));
-            u.setDuracion(jo.getString("duracion"));
-            u.getRamo_Pin().setId_ramo(jo.getString("titulo"));
-            u.setDescripcion(jo.getString("descripcion"));
-            u.setPrecio(jo.getString("precio"));
-            u.setTipo_ayuda(jo.getString("tipo_ayuda"));
-            u.setCampus(jo.getString("facultad"));
+            u.setRealizacion(jo.getString("realization"));
+            u.setDuracion(jo.getString("duration"));
+            u.getRamo_Pin().setId_ramo(jo.getString("title"));
+            u.setDescripcion(jo.getString("description"));
+            u.setPrecio(jo.getString("price"));
+            u.setTipo_ayuda(jo.getString("help_type"));
+            u.setCampus(jo.getString("faculty"));
             u.setLatitude(Double.parseDouble(jo.getString("latitude")));
             u.setLongitude(Double.parseDouble(jo.getString("longitude")));
         } catch (Exception e) {

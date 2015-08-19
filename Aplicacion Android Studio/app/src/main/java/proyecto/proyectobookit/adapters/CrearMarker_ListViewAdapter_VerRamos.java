@@ -121,7 +121,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
         if (charText.length() == 0) {
             notifyDataSetChanged();
         } else {
-            String Url = Configuracion.URLSERVIDOR + "/ramos/buscar/";
+            String Url = Configuracion.URLSERVIDOR + "/courses/search/";
             charText = charText.substring(0, 1).toUpperCase() + charText.substring(1);
             try {
                 Url += URLEncoder.encode(charText, "UTF-8") + ".json";
@@ -153,8 +153,8 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
                     JSONArray articles = json.getJSONArray("ramos");
                     for (int i = 0; i < articles.length(); i++) {
                         String NombreRamo = "", Sigla = "", unidad_academica = "", id_ramo = "";
-                        NombreRamo = articles.getJSONObject(i).getString("nombre");
-                        Sigla = articles.getJSONObject(i).getString("sigla");
+                        NombreRamo = articles.getJSONObject(i).getString("name");
+                        Sigla = articles.getJSONObject(i).getString("initials");
                         id_ramo = articles.getJSONObject(i).getString("id");
                         if (!id_ramo.equals("") && !NombreRamo.equals("") && !Sigla.equals("")) {
                             ListaPalabras.add(new Ramo(NombreRamo, Sigla, unidad_academica, id_ramo));

@@ -112,7 +112,7 @@ public class ModoLista_Principal extends Activity {
 
     private void Actualizar_Boton(){
         String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String Url = Configuracion.URLSERVIDOR + "/pins";
+        String Url = Configuracion.URLSERVIDOR + "/pins/";
         try {
             Url += URLEncoder.encode(text, "UTF-8") + ".json";
             adapter.Actualizar_ColocarPines(Url);

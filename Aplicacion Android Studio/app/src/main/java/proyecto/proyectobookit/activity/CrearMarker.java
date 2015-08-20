@@ -179,6 +179,7 @@ public class CrearMarker extends Activity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("id_ramo",id_ramo);
         returnIntent.putExtra("descripcion", descripcion);
+        returnIntent.putExtra("titulo",titulo);
         returnIntent.putExtra("precio", precio);
         returnIntent.putExtra("hora", finalHora);
 

@@ -320,11 +320,12 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             String precio = data.getStringExtra("precio");
             String descripcion = data.getStringExtra("descripcion");
             String hora = data.getStringExtra("hora");
+            String titulo = data.getStringExtra("titulo");
             String realizacion = "false";
             String duracion = "5000";
             String Tipo_ayuda ="clase";
 
-            // Crear Pin
+            // Crear PinElegido
             Pin Aux = new Pin();
             Aux.getRamo_Pin().setId_ramo(id_ramo);
             Aux.setPrecio(precio);
@@ -336,6 +337,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             Aux.setLongitude(point.longitude);
             Aux.setHora(hora);
             Aux.setPublicacion(hora);
+            Aux.setTitulo(titulo);
 
             // ObtenerCampus
             Aux.setCampus(ObtenerCampus());
@@ -445,14 +447,14 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                     Pin Aux = new Pin();
                     //Encontramos los valores
                     try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
-                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
+                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("user_id")); } catch (Exception e) {}
                     String Date_Aux="";
                     try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
                     Aux.setHora(Date_Aux.replace("T"," "));
                     try {Aux.setRealizacion(articles.getJSONObject(i).getString("realization"));} catch (Exception e) {}
                     try {Aux.setDuracion(articles.getJSONObject(i).getString("duration"));} catch (Exception e) {}
                     //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("tite"));}catch(Exception e){}
+                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("title"));}catch(Exception e){}
                     try {Aux.setDescripcion(articles.getJSONObject(i).getString("description"));} catch (Exception e) {}
                     try {Aux.setPrecio(articles.getJSONObject(i).getString("price"));} catch (Exception e) {}
                     try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("help_type"));} catch (Exception e) {}
@@ -597,6 +599,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             this.Pin_Elegido = Aux;
             this.usuario = usuario;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -617,23 +620,23 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
             try {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("user_id", usuario.getId_usuario());
+                rparams.put("pin[user_id]", usuario.getId_usuario());
                 rparams.put("user_token", token);
-                rparams.put("duration", Aux_Pin.getDuracion());
-                rparams.put("description", Aux_Pin.getDescripcion());
-                rparams.put("price", Aux_Pin.getPrecio());
-                rparams.put("faculty", Aux_Pin.getCampus());
-                rparams.put("latitude", Aux_Pin.getLatitude());
-                rparams.put("longitude", Aux_Pin.getLongitude());
-                rparams.put("course_id", Aux_Pin.getRamo_Pin().getId_ramo());
-                rparams.put("publication", Aux_Pin.getHora());
-                rparams.put("realization", Aux_Pin.getRealizacion());
-                rparams.put("help_type", Aux_Pin.getTipo_ayuda());
-                rparams.put("title", Aux_Pin.getRamo_Pin().getSigla() + " " + Aux_Pin.getRamo_Pin().getNombre() );
+                rparams.put("pin[duration]", Aux_Pin.getDuracion());
+                rparams.put("pin[description]", Aux_Pin.getDescripcion());
+                rparams.put("pin[price]", Aux_Pin.getPrecio());
+                rparams.put("pin[faculty]", Aux_Pin.getCampus());
+                rparams.put("pin[latitude]", Aux_Pin.getLatitude());
+                rparams.put("pin[longitude]", Aux_Pin.getLongitude());
+                rparams.put("pin[course_id]", Aux_Pin.getRamo_Pin().getId_ramo());
+                rparams.put("pin[publication]", Aux_Pin.getHora());
+                rparams.put("pin[realization]", Aux_Pin.getRealizacion());
+                rparams.put("pin[help_type]", Aux_Pin.getTipo_ayuda());
+                rparams.put("pin[title]", Aux_Pin.getTitulo());
 
                 ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/pins.json", rparams);
 
-               // progressDialog.dismiss();
+                progressDialog.dismiss();
 
                 return true;
 

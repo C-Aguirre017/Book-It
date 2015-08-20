@@ -215,7 +215,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
                     Pin Aux = new Pin();
                     //Encontramos los valores
                     try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
-                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("usuario_id")); } catch (Exception e) {}
+                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("user_id")); } catch (Exception e) {}
                     String Date_Aux="";
                     try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
                     Aux.setPublicacion(Date_Aux.replace("T"," "));

@@ -128,8 +128,8 @@ public class Usuario {
 
     public void setgUser(GraphUser gUser) {
         this.gUser = gUser;
-        this.nombre = gUser.getFirstName();
         this.email = (String)gUser.getProperty("email");
+        this.nombre = gUser.getFirstName() + " " + gUser.getLastName();
         this.setFbUid(gUser.getId());
     }
 

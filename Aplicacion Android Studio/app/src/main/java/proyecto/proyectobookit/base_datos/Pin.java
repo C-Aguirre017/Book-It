@@ -79,13 +79,14 @@ public class Pin {
         this.tipo_ayuda = tipo_ayuda;
     }
 
-   /* public void setTitulo(String titulo) {
+    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-        public String getTitulo() {
+
+    public String getTitulo() {
         return titulo;
     }
-*/
+
     //Getters
     public String getLatitude() {
         return latitude + "";

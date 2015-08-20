@@ -77,7 +77,7 @@ public class Mis_Pins extends Fragment {
 
     private void Actualizar() {
         if(Mi_Usuario.getId_usuario() !=null){
-            String Url = Configuracion.URLSERVIDOR + "/usuarios/";
+            String Url = Configuracion.URLSERVIDOR + "/users/";
 
             try {
                 Url += URLEncoder.encode(Mi_Usuario.getId_usuario(), "UTF-8") +"/pins.json";

@@ -89,7 +89,7 @@ public class Inicio extends FragmentActivity {
                     // Si no existe debemos crearlo
                     if (ConsultaHTTP.response_code == 404) {
                         Log.d("Informacion", "Usuario no existe, lo creamos");
-                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken().toString());
+                        crearUsuario(Usuario.getUsuarioActual().getEmail(), Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken().toString(),Usuario.getUsuarioActual().getNombre());
                         return;
                     }
                     // Existe, cargamos informacion
@@ -103,19 +103,22 @@ public class Inicio extends FragmentActivity {
         }).execute(fbUid);
     }
 
-    public void crearUsuario(String email, String uid, String fbsecret ) {
+    public void crearUsuario(String email, String uid, String fbsecret, String nombre) {
         (new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("email", params[0]);
+                rparams.put("user[email]", params[0]);
+                rparams.put("user[name]",params[3]);
                 rparams.put("uid", params[1]);
                 rparams.put("fbsecrettoken", params[2]);
                 try {
                     Log.d("Informacion", "Creando");
                     return ConsultaHTTP.POST(Configuracion.URLSERVIDOR + "/users/register.json", rparams);
                 }catch(Exception e) {
-                    return null;
+                    String m = e.toString();
+                    Log.d("Error", m);
+                    return e.toString();
                 }
             }
 
@@ -127,7 +130,7 @@ public class Inicio extends FragmentActivity {
                 Usuario.cargarDatos(Usuario.getUsuarioActual(), result);
                 crearToken(Usuario.getUsuarioActual().getFbUid(), Usuario.getUsuarioActual().getFbSession().getAccessToken());
             }
-        }).execute(email, uid, fbsecret );
+        }).execute(email, uid, fbsecret,nombre);
     }
 
     public void crearToken(String uid, String fbsecret) {
@@ -141,7 +144,7 @@ public class Inicio extends FragmentActivity {
                     Log.d("Informacion", "Creando");
                     return ConsultaHTTP.GET(Configuracion.URLSERVIDOR + "/token/create.json?" + ConsultaHTTP.params2String(rparams));
                 }catch(Exception e) {
-                    return null;
+                    return e.toString();
                 }
             }
 

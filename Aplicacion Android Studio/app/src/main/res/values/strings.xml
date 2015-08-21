@@ -119,6 +119,66 @@
 
     <string-array name="universidades">
         <item>Pontificia Universidad Católica de Chile</item>
+        <item>Universidad de Chile</item>
+        <item>Pontificia Universidad Católica de Chile</item>
+        <item>Universidad de Concepción</item>
+        <item>Pontificia Universidad Católica de Valparaíso</item>
+        <item>Universidad Austral de Chile</item>
+        <item>Universidad de Talca</item>
+        <item>Universidad Técnica Federico Santa María</item>
+        <item>Universidad de La Frontera</item>
+        <item>Universidad Diego Portales</item>
+        <item>Universidad Católica del Norte</item>
+        <item>Universidad Adolfo Ibáñez</item>
+        <item>Universidad Andrés Bello</item>
+        <item>Universidad de Santiago de Chile</item>
+        <item>Universidad del Bío-Bío</item>
+        <item>Universidad de Valparaíso</item>
+        <item>Universidad de los Andes</item>
+        <item>Universidad de Tarapacá</item>
+        <item>Universidad de La Serena</item>
+        <item>Universidad Alberto Hurtado</item>
+        <item>Universidad del Desarrollo</item>
+        <item>Universidad de Antofagasta</item>
+        <item>Universidad de Los Lagos</item>
+        <item>Universidad Mayor</item>
+        <item>Universidad Metropolitana de Ciencias de la Educación</item>
+        <item>Universidad Católica de Temuco</item>
+        <item>Universidad Tecnológica Metropolitana</item>
+        <item>Universidad de Magallanes</item>
+        <item>Universidad Arturo Prat</item>
+        <item>Universidad de Atacama</item>
+        <item>Universidad Católica de la Santísima Concepción</item>
+        <item>Universidad Católica del Maule</item>
+        <item>Universidad Santo Tomás</item>
+        <item>Universidad Central de Chile</item>
+        <item>Universidad San Sebastián</item>
+        <item>Universidad Adventista de Chile</item>
+        <item>Universidad de Playa Ancha</item>
+        <item>Universidad Finis Terrae</item>
+        <item>Universidad de Artes, Ciencias y Comunicación</item>
+        <item>Universidad Viña del Mar</item>
+        <item>Universidad Tecnológica de Chile Inacap</item>
+        <item>Universidad Católica Silva Henríquez</item>
+        <item>Universidad Academia de Humanismo Cristiano</item>
+        <item>Universidad de Artes y Ciencias Sociales</item>
+        <item>Universidad Autónoma de Chile</item>
+        <item>Universidad del Pacífico</item>
+        <item>Universidad de Las Américas</item>
+        <item>Universidad Gabriela Mistral</item>
+        <item>Universidad Bernardo OHiggins</item>
+        <item>Universidad Ciencias de la Informática</item>
+        <item>Universidad Internacional SEK</item>
+        <item>Universidad del Mar</item>
+        <item>Universidad Pedro de Valdivia</item>
+        <item>Universidad Bolivariana</item>
+        <item>Universidad Iberoamericana de Ciencias y Tecnología</item>
+        <item>Universidad La República</item>
+        <item>Universidad de Aconcagua</item>
+        <item>Universidad Los Leones</item>
+        <item>Universidad Chileno-Británica de Cultura</item>
+        <item>Universidad Miguel de Cervantes</item>
+        <item>Universidad La Araucana</item>
     </string-array>
 
 
@@ -129,5 +189,6 @@
     Iconos por:\n
     \tBenjamin Abarca
     </string>
+    <string name="sin_informacion">Sin información</string>
 
 </resources>

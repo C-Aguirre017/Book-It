@@ -8,6 +8,8 @@ import com.facebook.model.GraphUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.InetSocketAddress;
+
 /**
  * Created by Carlos on 22-02-2015.
  */
@@ -32,15 +34,14 @@ public class Usuario {
             u.setEmail(jo.getString("email"));
             u.setNombre(jo.getString("name"));
             u.setCarrera(jo.getString("profession"));
-            u.setRole(jo.getString("role"));
             u.setTelefono(jo.getString("phone"));
-            u.setBiografia(jo.getString("biografy"));
-            u.setUniversidad(jo.getString("university"));
+            u.setBiografia(jo.getString("biography"));
+            //u.setUniversidad(jo.getString("university"));
+            //u.setRole(jo.getString("role"));
         } catch (Exception e) {
-
+            Log.d(e.toString(),"");
         }
     }
-
 
     // GETERS SETERS
 
@@ -134,7 +135,7 @@ public class Usuario {
     }
 
     public String getBiografia() {
-        return biografia;
+        return this.biografia;
     }
 
     public void setBiografia(String biografia) {
@@ -148,4 +149,5 @@ public class Usuario {
     public void setUniversidad(String universidad) {
         this.universidad = universidad;
     }
+
 }

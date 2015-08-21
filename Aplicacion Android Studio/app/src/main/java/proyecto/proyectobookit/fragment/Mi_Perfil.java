@@ -29,7 +29,6 @@ public class Mi_Perfil extends Fragment {
 
     Context mContext;
 
-
     public Mi_Perfil() {
         // Required empty public constructor
     }
@@ -60,7 +59,6 @@ public class Mi_Perfil extends Fragment {
 
         Get_Perfil Get_Perfil = new proyecto.proyectobookit.fragment.Get_Perfil();
         Get_Perfil.setMi_perfil(Usuario.getUsuarioActual());
-        Get_Perfil.setNumero_telefono(Usuario.getUsuarioActual().getTelefono());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.mi_perfil_container,Get_Perfil);
         transaction.commit();

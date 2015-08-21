@@ -28,11 +28,7 @@ public class ConsultaHTTP {
 
     // Constantes
     private final static String USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)";
-
-    // Variables estaticas
     private static HttpURLConnection connection;
-
-    // Ultimos Datos
     public static int response_code;
     public static String resultString;
 
@@ -108,24 +104,6 @@ public class ConsultaHTTP {
         return resultString;
     }
 
-    public static String params2String(Hashtable<String, String> params) {
-        StringBuffer urlParameters = new StringBuffer();
-        try {
-            // Unimos parametros en una mismo string
-            Iterator<String> paramIterator = params.keySet().iterator();
-            while (paramIterator.hasNext()) {
-                String key = paramIterator.next();
-                String value = params.get(key);
-                urlParameters.append(URLEncoder.encode(key, "UTF-8"));
-                urlParameters.append("=").append(URLEncoder.encode(value, "UTF-8"));
-                urlParameters.append("&");
-            }
-        }catch(Exception e) {
-
-        }
-        return urlParameters.toString();
-    }
-
     public static String GET(String url) {
         InputStream inputStream = null;
         String result = "";
@@ -172,5 +150,23 @@ public class ConsultaHTTP {
         inputStream.close();
         return result.toString();
 
+    }
+
+    public static String params2String(Hashtable<String, String> params) {
+        StringBuffer urlParameters = new StringBuffer();
+        try {
+            // Unimos parametros en una mismo string
+            Iterator<String> paramIterator = params.keySet().iterator();
+            while (paramIterator.hasNext()) {
+                String key = paramIterator.next();
+                String value = params.get(key);
+                urlParameters.append(URLEncoder.encode(key, "UTF-8"));
+                urlParameters.append("=").append(URLEncoder.encode(value, "UTF-8"));
+                urlParameters.append("&");
+            }
+        }catch(Exception e) {
+
+        }
+        return urlParameters.toString();
     }
 }

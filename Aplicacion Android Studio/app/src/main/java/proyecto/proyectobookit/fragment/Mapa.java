@@ -474,7 +474,6 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                         try {Aux.getUsuario_Pin().setEmail(articles_usuarios.getJSONObject(0).getString("email")); } catch (Exception e) {  }
                         try {Aux.getUsuario_Pin().setNombre(articles_usuarios.getJSONObject(0).getString("name"));      } catch (Exception e){       }
                         try {Aux.getUsuario_Pin().setCarrera(articles_usuarios.getJSONObject(0).getString("profession"));  } catch (Exception e) {    }
-                        try {Aux.getUsuario_Pin().setRole(articles_usuarios.getJSONObject(0).getString("role"));   } catch (Exception e) {  }
                         try {Aux.getUsuario_Pin().setTelefono(articles_usuarios.getJSONObject(0).getString("phone"));   } catch (Exception e) {  }
                         Aux.getUsuario_Pin().setTelefono("+56994405326");
                     }

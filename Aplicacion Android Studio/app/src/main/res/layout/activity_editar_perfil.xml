@@ -16,102 +16,108 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/editar_perfil_labelNombre"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre: " />
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:text="Nombre" />
 
             <TextView
                 android:id="@+id/editar_perfil_nombre"
+                android:layout_height="50dp"
                 android:layout_width="match_parent"
-                android:paddingTop="5dp"
-                android:layout_height="50dp"/>
+                android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
+                android:gravity="center"
+                android:text="...."/>
 
             <TextView
                 android:id="@+id/editar_perfil_labelUniversidad"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Universidad: " />
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:text="Universidad " />
 
             <Spinner
                 android:id="@+id/editar_perfil_dropdownUniversidad"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:spinnerMode="dropdown"
-                android:layout_marginTop="5dp"/>
-
-            <!--EditText
-                android:id="@+id/editar_perfil_Universidad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-            </EditText-->
+                android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
+                android:gravity="center"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/editar_perfil_labelCarrera"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Carrera: " />
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:text="Carrera " />
 
             <EditText
                 android:id="@+id/editar_perfil_carrera"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_width="match_parent"
+                android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
+                android:gravity="center"
+                android:text="....">
             </EditText>
 
             <TextView
                 android:id="@+id/editar_perfil_labelTelefono"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Telefono: " />
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:text="Telefono (Ej: +56994205357)" />
 
             <EditText
                 android:id="@+id/editar_perfil_telefono"
-                android:layout_width="match_parent"
+                android:inputType="number"
+                android:ems="10"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_width="match_parent"
+                android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
+                android:gravity="center"
+                android:text="....">
             </EditText>
 
             <TextView
                 android:id="@+id/editar_perfil_labelBiografíaAcademica"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:text="Biografía Academica: " />
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:text="Biografía Académica " />
 
             <EditText
                 android:id="@+id/editar_perfil_biografíaAcademica"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
-                android:ems="10">
+                android:layout_width="match_parent"
+                android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
+                android:gravity="center"
+                android:ems="10"
+                android:text="....">
             </EditText>
-
 
             <Button
                 android:id="@+id/crearmarker_aceptar"
-                android:layout_width="wrap_content"
+                android:layout_margin="20dp"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
                 android:onClick="Aceptar"
                 android:background="@drawable/property_rounded_button"
                 android:text="Cambiar Perfil"
-                android:layout_gravity="right"/>
-
+                android:layout_gravity="center|bottom"/>
         </LinearLayout>
     </ScrollView>
 

@@ -63,7 +63,7 @@
             android:id="@+id/listview_mis_pins_cantsolicitudes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/get_perfil_tamañoletra"
+            android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
             android:textColor="@color/Fondo"
             android:text="2"/>
 

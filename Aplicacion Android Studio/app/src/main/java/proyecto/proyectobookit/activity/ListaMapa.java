@@ -11,10 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.net.URLEncoder;
 import java.util.Locale;
 
 import proyecto.proyectobookit.R;
-import proyecto.proyectobookit.adapters.NestedListView;
+import proyecto.proyectobookit.nav_drawner.NestedListView;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_ListaMapa;
 import proyecto.proyectobookit.utils.Configuracion;
@@ -102,9 +103,9 @@ public class ListaMapa extends Activity {
 
     private void actualizarBoton(){
         String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String url = Configuracion.URLSERVIDOR + "/pins.json";
+        String url = Configuracion.URLSERVIDOR + "/pins/search/";
         try {
-            //url += URLEncoder.encode(text, "UTF-8") + ".json";
+            url += URLEncoder.encode(text, "UTF-8") + "%20.json";
             adapter.actualizarPines_ListaMapa(url);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package proyecto.proyectobookit.model_adapters;
+package proyecto.proyectobookit.nav_drawner;
 
 public class NavDrawerItem {
 	

@@ -86,15 +86,6 @@
                 android:value="proyecto.proyectobookit.Central" />
         </activity>
         <activity
-            android:name=".activity.ModoLista_InfoPin"
-            android:label="@string/title_activity_modo_lista__info_pin"
-            android:parentActivityName=".activity.ListaMapa"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ListaMapa" />
-        </activity>
-        <activity
             android:name=".activity.Editar_Perfil"
             android:label="@string/title_activity_editar__perfil"
             android:parentActivityName=".Central" >

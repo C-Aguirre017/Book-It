@@ -41,14 +41,14 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp" >
 
-                <proyecto.proyectobookit.adapters.NestedListView
+                <proyecto.proyectobookit.nav_drawner.NestedListView
                     android:id="@+id/crearmarker_list"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
                     android:layout_weight="1"
                     android:cacheColorHint="#00000000" >
-                </proyecto.proyectobookit.adapters.NestedListView>
+                </proyecto.proyectobookit.nav_drawner.NestedListView>
             </LinearLayout>
 
             <TextView

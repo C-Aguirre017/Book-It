@@ -30,12 +30,10 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     Context mContext;
     LayoutInflater inflater;
     private List<Pin> ListaPines = null;
-    private Usuario Mi_Usuario;
 
     public ListViewAdapter_VerPins(Context context) {
         mContext = context;
         this.ListaPines = new ArrayList<Pin>();
-        this.Mi_Usuario =Usuario.getUsuarioActual();
         inflater = LayoutInflater.from(mContext);
     }
 

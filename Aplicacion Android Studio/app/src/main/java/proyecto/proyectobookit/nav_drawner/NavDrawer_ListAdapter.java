@@ -1,4 +1,4 @@
-package proyecto.proyectobookit.adapters;
+package proyecto.proyectobookit.nav_drawner;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import proyecto.proyectobookit.R;
-import proyecto.proyectobookit.model_adapters.NavDrawerItem;
 
 
 public class NavDrawer_ListAdapter extends BaseAdapter {

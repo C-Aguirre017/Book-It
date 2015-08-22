@@ -29,8 +29,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import proyecto.proyectobookit.R;
-import proyecto.proyectobookit.adapters.CrearMarker_ListViewAdapter_VerRamos;
-import proyecto.proyectobookit.adapters.NestedListView;
+import proyecto.proyectobookit.model_adapters.ListViewAdapter_CrearMarker;
+import proyecto.proyectobookit.nav_drawner.NestedListView;
 import proyecto.proyectobookit.utils.AlertDialogMetodos;
 
 
@@ -38,7 +38,7 @@ public class CrearMarker extends Activity {
 
     // Declare Variables
     ListView lista_ramos;
-    CrearMarker_ListViewAdapter_VerRamos adapter;
+    ListViewAdapter_CrearMarker adapter;
     EditText editsearch;
     public static TextView hora_label;
     public static TextView dia_label;
@@ -53,7 +53,7 @@ public class CrearMarker extends Activity {
         lista_ramos = (NestedListView) findViewById(R.id.crearmarker_list);
         editsearch = (EditText) findViewById(R.id.crearmarker_search);
 
-        adapter = new CrearMarker_ListViewAdapter_VerRamos(this,editsearch);
+        adapter = new ListViewAdapter_CrearMarker(this,editsearch);
         lista_ramos.setAdapter(adapter);
         editsearch.addTextChangedListener(new TextWatcher() {
 

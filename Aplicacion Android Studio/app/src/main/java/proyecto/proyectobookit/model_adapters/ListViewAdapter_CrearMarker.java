@@ -1,4 +1,4 @@
-package proyecto.proyectobookit.adapters;
+package proyecto.proyectobookit.model_adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -34,7 +34,7 @@ import proyecto.proyectobookit.base_datos.Ramo;
 import proyecto.proyectobookit.utils.Configuracion;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
-public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
+public class ListViewAdapter_CrearMarker extends BaseAdapter {
 
     // Declare Variables
     Context mContext;
@@ -47,7 +47,7 @@ public class CrearMarker_ListViewAdapter_VerRamos extends BaseAdapter {
     AsyncTask Getter;
     public Ramo Elegido = null;
 
-    public CrearMarker_ListViewAdapter_VerRamos(Context context, EditText Search) {
+    public ListViewAdapter_CrearMarker(Context context, EditText Search) {
         mContext = context;
         this.Search = Search;
         this.ListaPalabras = new ArrayList<Ramo>();

@@ -2,12 +2,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <proyecto.proyectobookit.adapters.NestedListView
+    <proyecto.proyectobookit.nav_drawner.NestedListView
         android:id="@+id/modo_lista_listapines"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:cacheColorHint="#00000000" >
-    </proyecto.proyectobookit.adapters.NestedListView>
+    </proyecto.proyectobookit.nav_drawner.NestedListView>
 </LinearLayout>

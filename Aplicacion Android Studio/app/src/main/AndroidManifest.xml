@@ -77,7 +77,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".activity.ModoLista_Principal"
+            android:name=".activity.ListaMapa"
             android:label="@string/title_activity_modo_lista"
             android:parentActivityName=".Central"
             android:screenOrientation="portrait" >
@@ -88,11 +88,11 @@
         <activity
             android:name=".activity.ModoLista_InfoPin"
             android:label="@string/title_activity_modo_lista__info_pin"
-            android:parentActivityName=".activity.ModoLista_Principal"
+            android:parentActivityName=".activity.ListaMapa"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ModoLista_Principal" />
+                android:value=".activity.ListaMapa" />
         </activity>
         <activity
             android:name=".activity.Editar_Perfil"

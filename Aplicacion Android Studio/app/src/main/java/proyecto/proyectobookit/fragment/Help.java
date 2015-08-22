@@ -25,6 +25,7 @@ public class Help extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         menu.findItem(R.id.menucentral_viewasList).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menucentral_refresh).setVisible(false);

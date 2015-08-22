@@ -3,6 +3,7 @@ package proyecto.proyectobookit.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ public class Editar_Perfil extends Activity {
     private EditText Carrera,Biografia,Telefono;
     private Spinner Universidad_Spinner;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,8 @@ public class Editar_Perfil extends Activity {
 
         //Verificar
         verificarInfo();
+
+        this.mContext = this;
     }
 
     private void verificarInfo(){
@@ -141,7 +146,7 @@ public class Editar_Perfil extends Activity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                //progressDialog = ProgressDialog.show(getApplicationContext(), "Modificando Información ...", "Espere porfavor", true, false);
+                progressDialog = ProgressDialog.show(mContext, "Actualizando", "Espere porfavor ...", true, false);
             }
 
             @Override
@@ -152,13 +157,12 @@ public class Editar_Perfil extends Activity {
             @Override
             protected void onPostExecute(String result) {
                 try{
-                    int x = 0;
+                    Usuario.cargarDatos(Usuario.getUsuarioActual(),result);
                 }
                 catch (Exception e){
 
                 }
-                Usuario.cargarDatos(Usuario.getUsuarioActual(),result);
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
             }
 
 

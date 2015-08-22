@@ -81,7 +81,7 @@
 
             <EditText
                 android:id="@+id/editar_perfil_telefono"
-                android:inputType="number"
+                android:inputType="phone"
                 android:ems="10"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"

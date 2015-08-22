@@ -11,35 +11,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Locale;
 
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.adapters.NestedListView;
 import proyecto.proyectobookit.base_datos.Usuario;
-import proyecto.proyectobookit.model_adapters.ListViewAdapter_ModoLista;
+import proyecto.proyectobookit.model_adapters.ListViewAdapter_ListaMapa;
 import proyecto.proyectobookit.utils.Configuracion;
 
-public class ModoLista_Principal extends Activity {
+public class ListaMapa extends Activity {
 
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
     private Button Button_Buscar = null;
 
     ListView lista_Pines;
-    ListViewAdapter_ModoLista adapter;
-
-    private Usuario Mi_Usuario;
+    ListViewAdapter_ListaMapa adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modo_lista);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        lista_Pines = (NestedListView) findViewById(R.id.modo_lista_listapines);
 
-        Mi_Usuario = Usuario.getUsuarioActual();
+        lista_Pines = (NestedListView) findViewById(R.id.modo_lista_listapines);
     }
 
     @Override
@@ -49,7 +44,6 @@ public class ModoLista_Principal extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_modo_lista, menu);
 
         Menu_SearchItem = menu.findItem(R.id.modo_lista_search);
@@ -60,42 +54,38 @@ public class ModoLista_Principal extends Activity {
         Button_Buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Actualizar_Boton();
+                actualizarBoton();
             }
         });
 
-        adapter = new ListViewAdapter_ModoLista(this,EditText_Search);
-        lista_Pines.setAdapter(adapter);
-        EditText_Search.addTextChangedListener( new TextWatcher()
-        {
+        EditText_Search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged( CharSequence s, int start, int before, int count )
-            {
-                Button_Buscar.setVisibility( s.length() > 0 ? View.VISIBLE : View.INVISIBLE );
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Button_Buscar.setVisibility(s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
             }
 
             @Override
-            public void beforeTextChanged( CharSequence s, int start, int count,
-                                           int after )
-            {
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
             }
 
             @Override
-            public void afterTextChanged( Editable s )
-            {
-                Button_Buscar.setVisibility( s.length() > 0 ? View.VISIBLE : View.GONE );
+            public void afterTextChanged(Editable s) {
+                Button_Buscar.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
 
                 String Aux = EditText_Search.getText().toString();
-                if(Aux.contains("\n")){
-                    Aux = Aux.replace("\n","");
+                if (Aux.contains("\n")) {
+                    Aux = Aux.replace("\n", "");
                     EditText_Search.setText(Aux);
-                    Actualizar_Boton();
+                    actualizarBoton();
                 }
             }
-        } );
+        });
 
-        if(Mi_Usuario.getId_usuario() !=null){
-            adapter.Colocar();
+        adapter = new ListViewAdapter_ListaMapa(this,EditText_Search);
+        lista_Pines.setAdapter(adapter);
+        if(Usuario.getUsuarioActual().getId_usuario() !=null){
+            adapter.actualizarListaMapa();
         }
         return true;
     }
@@ -104,19 +94,19 @@ public class ModoLista_Principal extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.modo_lista_actualizar) {
-            Actualizar_Boton();
+            actualizarBoton();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void Actualizar_Boton(){
+    private void actualizarBoton(){
         String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String Url = Configuracion.URLSERVIDOR + "/pins/";
+        String url = Configuracion.URLSERVIDOR + "/pins.json";
         try {
-            Url += URLEncoder.encode(text, "UTF-8") + ".json";
-            adapter.Actualizar_ColocarPines(Url);
-        } catch (UnsupportedEncodingException e) {
+            //url += URLEncoder.encode(text, "UTF-8") + ".json";
+            adapter.actualizarPines_ListaMapa(url);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

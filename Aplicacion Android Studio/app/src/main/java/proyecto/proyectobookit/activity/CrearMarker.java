@@ -31,6 +31,7 @@ import java.util.Locale;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.adapters.CrearMarker_ListViewAdapter_VerRamos;
 import proyecto.proyectobookit.adapters.NestedListView;
+import proyecto.proyectobookit.utils.AlertDialogMetodos;
 
 
 public class CrearMarker extends Activity {
@@ -41,8 +42,6 @@ public class CrearMarker extends Activity {
     EditText editsearch;
     public static TextView hora_label;
     public static TextView dia_label;
-
-    MetodosUtiles M_Utiles = new MetodosUtiles();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +154,7 @@ public class CrearMarker extends Activity {
                 final String finalTitulo = titulo;
                 final String finalHora = hora;
                 builder.setTitle(titulo)
-                        .setMessage(M_Utiles.CrearMensaje(descripcion, hora, precio, "clases"))
+                        .setMessage(AlertDialogMetodos.crearInfoPin(descripcion, hora, precio, "clases"))
                         .setPositiveButton("Crear Marker", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Salir(finalid_ramo, finalDescripcion, finalPrecio, finalCampus, finalTitulo, finalHora);

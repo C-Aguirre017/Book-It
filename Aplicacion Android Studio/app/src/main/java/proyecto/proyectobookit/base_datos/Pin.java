@@ -8,8 +8,8 @@ import org.json.JSONObject;
  * Created by Carlos on 22-02-2015.
  */
 public class Pin {
-    private String id_pin;
-    private String publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus, titulo, realizacion, hora;
+
+    private String id_pin, publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus, titulo, realizacion, hora;
     private double latitude, longitude;
 
     private Ramo Ramo_Pin = new Ramo("","","","");
@@ -20,23 +20,24 @@ public class Pin {
         longitude = -1;
     }
 
-    public static void cargarDatos(String datos, Pin u) {
+    public static void cargarDatos(String datos, Pin auxPin) {
         try {
             JSONObject jo = new JSONObject(datos);
-            u.setId_pin(jo.getString("id"));
-            u.getUsuario_Pin().setId_usuario(jo.getString("user_id"));
-            String Date_Aux = "";
-            Date_Aux = jo.getString("publication");
-            u.setHora(Date_Aux.replace("T", " "));
-            u.setRealizacion(jo.getString("realization"));
-            u.setDuracion(jo.getString("duration"));
-            u.getRamo_Pin().setId_ramo(jo.getString("title"));
-            u.setDescripcion(jo.getString("description"));
-            u.setPrecio(jo.getString("price"));
-            u.setTipo_ayuda(jo.getString("help_type"));
-            u.setCampus(jo.getString("faculty"));
-            u.setLatitude(Double.parseDouble(jo.getString("latitude")));
-            u.setLongitude(Double.parseDouble(jo.getString("longitude")));
+            try {auxPin.setId_pin(jo.getString("id")); } catch (Exception e) {}
+            try {auxPin.getUsuario_Pin().setId_usuario(jo.getString("user_id")); } catch (Exception e) {}
+            String Date_Aux="";
+            try {Date_Aux= jo.getString("publication"); } catch (Exception e) {}
+            auxPin.setHora(Date_Aux.replace("T", " "));
+            try {auxPin.setRealizacion(jo.getString("realization"));} catch (Exception e) {}
+            try {auxPin.setDuracion(jo.getString("duration"));} catch (Exception e) {}
+            try {auxPin.getRamo_Pin().setId_ramo(jo.getString("title"));}catch(Exception e){}
+            try {auxPin.setDescripcion(jo.getString("description"));} catch (Exception e) {}
+            try {auxPin.setPrecio(jo.getString("price"));} catch (Exception e) {}
+            try {auxPin.setTipo_ayuda(jo.getString("help_type"));} catch (Exception e) {}
+            try {auxPin.setCampus(jo.getString("faculty"));} catch (Exception e) {}
+            try {auxPin.setLatitude(Double.parseDouble(jo.getString("latitude")));} catch (Exception e) {}
+            try {auxPin.setLongitude(Double.parseDouble(jo.getString("longitude"))); } catch (Exception e) {}
+
         } catch (Exception e) {
             Log.d("Informacion", "Error al cargar datos de pines:" + datos);
         }
@@ -83,11 +84,11 @@ public class Pin {
         this.titulo = titulo;
     }
 
+    //Getters
     public String getTitulo() {
         return titulo;
     }
 
-    //Getters
     public String getLatitude() {
         return latitude + "";
     }
@@ -119,8 +120,6 @@ public class Pin {
     public String getTipo_ayuda() {
         return tipo_ayuda;
     }
-
-
 
     public String getRealizacion() {
         return realizacion;

@@ -1,4 +1,4 @@
-package proyecto.proyectobookit.activity;
+package proyecto.proyectobookit.utils;
 
 import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
@@ -13,32 +13,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import proyecto.proyectobookit.base_datos.Pin;
-import proyecto.proyectobookit.base_datos.Ramo;
 
 /**
- * Created by Carlos on 21-02-2015.
+ * Created by carlos on 22-08-15.
  */
-public class MetodosUtiles {
+public class AlertDialogMetodos {
 
-    private List<Ramo> Lista_Ramos = new ArrayList<Ramo>();
-    private Context mContext;
-
-    public void setContext(Context context) {
-        this.mContext = context;
-    }
-
-    public List<Ramo> getLista_Ramos() {
-        return Lista_Ramos;
-    }
-
-    public void Agregar_Ramo(Ramo Aux) {
-        Lista_Ramos.add(Aux);
-    }
-
-    public String CrearMensaje(String Descripcion, String Publicacion, String precio,String Tipo_ayuda){
+    //Info Pin
+    public static String crearInfoPin(String Descripcion, String Publicacion, String precio,String Tipo_ayuda){
         String Mensaje="Descripcion: \n";
         if (Descripcion != null && !Descripcion.equals(""))
             Mensaje += "\t " + Descripcion;
@@ -69,13 +53,45 @@ public class MetodosUtiles {
         return Mensaje;
     }
 
+    private static String crearInfoPin(Pin aux) {
+        String Mensaje="Descripcion: \n";
+        if (aux.getDescripcion() != null && !aux.getDescripcion().equals(""))
+            Mensaje += "\t " +aux.getDescripcion();
+        else
+            Mensaje += "\t Sin Información";
 
-    // Alert Dialog cuando Apretan Click
-    public void CrearAlertDialog(final Pin Pin_Elegido) {
+        Mensaje+= "\n Fecha: \n";
+        if (aux.getHora() != null && !aux.getHora().equals("") ) {
+            String[] tiem = aux.getHora().split(" ");
+
+            Mensaje += "\t " + tiem[0]  + "\n Hora: \n \t " + tiem[1].substring(0,5);
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
+        Mensaje+= "\n Dispuesto a Pagar: \n";
+        if (aux.getPrecio() != null && !aux.getPrecio().equals("") ) {
+            Mensaje += "\t " + aux.getPrecio();
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
+        Mensaje+= "\n Facultad: \n";
+        if (aux.getCampus() != null && !aux.getCampus().equals("") ) {
+            Mensaje += "\t " + aux.getCampus();
+        } else {
+            Mensaje += "\t Sin Información";
+        }
+
+        return Mensaje;
+    }
+
+    //Alert Dialogs
+    public static void crearAlertPin(final Pin Pin_Elegido, final Context mContext) {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(Pin_Elegido.getRamo_Pin().getSigla() + " " + Pin_Elegido.getRamo_Pin().getNombre())
-                    .setMessage(CrearMensaje(Pin_Elegido))
+                    .setMessage(crearInfoPin(Pin_Elegido))
                     .setPositiveButton("Mail", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             String[] TO = {Pin_Elegido.getUsuario_Pin().getEmail()};
@@ -84,23 +100,23 @@ public class MetodosUtiles {
                             emailIntent.setType("text/plain");
 
                             emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book IT: Aceptar " + Pin_Elegido.getRamo_Pin().getNombre());
-                            emailIntent.putExtra(Intent.EXTRA_TEXT, "Me gustaría realizar la clase que publicaste en Book IT \n " +
+                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, Configuracion.NOMBRE + ": Aceptar " + Pin_Elegido.getRamo_Pin().getNombre());
+                            emailIntent.putExtra(Intent.EXTRA_TEXT, "Me gustaría realizar la clase que publicaste en " + Configuracion.NOMBRE + "  \n " +
                                     "Para Contactarme te envío mi telefono. \n" +
                                     "Tel: " + "\n Saludos");
                             try {
                                 mContext.startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
-                                Log.i("Finished sending email...", "");
+                                Log.i("Email enviado", "");
                             } catch (android.content.ActivityNotFoundException ex) {
-                                Toast.makeText(mContext, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "No hay cliente de correo electónico instalado!!!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     })
                     .setNeutralButton("Whatsapp", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+                            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp",mContext);
                             if (isWhatsappInstalled) {
-                                Boolean ContactoCreado = CreateContact("Book-IT / " + Pin_Elegido.getUsuario_Pin().getNombre(), Pin_Elegido.getUsuario_Pin().getTelefono());
+                                Boolean ContactoCreado = createContactBukit(Configuracion.NOMBRE + " / " + Pin_Elegido.getUsuario_Pin().getNombre(), Pin_Elegido.getUsuario_Pin().getTelefono(),mContext);
                                 if (ContactoCreado) {
                                     Uri uri = Uri.parse("smsto:" + Pin_Elegido.getUsuario_Pin().getTelefono());
                                     Intent i = new Intent(Intent.ACTION_SENDTO, uri);
@@ -108,7 +124,6 @@ public class MetodosUtiles {
                                     mContext.startActivity(Intent.createChooser(i, ""));
                                     //deleteContact(numero,nombre);
                                 }
-
                             } else {
                                 Toast.makeText(mContext, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
                                 Uri uri = Uri.parse("market://details?id=com.whatsapp");
@@ -128,7 +143,21 @@ public class MetodosUtiles {
         }
     }
 
-    private Boolean CreateContact(String nombre, String numero) {
+
+    //Metodos Privados
+    private static boolean whatsappInstalledOrNot(String uri,Context mContext) {
+        PackageManager pm = mContext.getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
+
+    private static Boolean createContactBukit(String nombre, String numero,Context mContext) {
         String displayName = nombre;
         String mobileNumber = numero;
         String email = null;
@@ -184,7 +213,7 @@ public class MetodosUtiles {
         return false;
     }
 
-    public boolean deleteContact(String phone, String name) {
+    private boolean deleteContact(String phone, String name ,Context mContext) {
         Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phone));
         Cursor cur = mContext.getContentResolver().query(contactUri, null, null, null, null);
         try {
@@ -204,51 +233,5 @@ public class MetodosUtiles {
         }
         return false;
     }
-
-    private boolean whatsappInstalledOrNot(String uri) {
-        PackageManager pm = mContext.getPackageManager();
-        boolean app_installed = false;
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            app_installed = false;
-        }
-        return app_installed;
-    }
-
-    public String CrearMensaje(Pin aux) {
-        String Mensaje="Descripcion: \n";
-        if (aux.getDescripcion() != null && !aux.getDescripcion().equals(""))
-            Mensaje += "\t " +aux.getDescripcion();
-        else
-            Mensaje += "\t Sin Información";
-
-        Mensaje+= "\n Fecha: \n";
-        if (aux.getHora() != null && !aux.getHora().equals("") ) {
-            String[] tiem = aux.getHora().split(" ");
-
-            Mensaje += "\t " + tiem[0]  + "\n Hora: \n \t " + tiem[1].substring(0,5);
-        } else {
-            Mensaje += "\t Sin Información";
-        }
-
-        Mensaje+= "\n Dispuesto a Pagar: \n";
-        if (aux.getPrecio() != null && !aux.getPrecio().equals("") ) {
-            Mensaje += "\t " + aux.getPrecio();
-        } else {
-            Mensaje += "\t Sin Información";
-        }
-
-        Mensaje+= "\n Facultad: \n";
-        if (aux.getCampus() != null && !aux.getCampus().equals("") ) {
-            Mensaje += "\t " + aux.getCampus();
-        } else {
-            Mensaje += "\t Sin Información";
-        }
-
-        return Mensaje;
-    }
-
 
 }

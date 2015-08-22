@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,24 +26,12 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -52,48 +39,30 @@ import java.util.Locale;
 
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.activity.CrearMarker;
-import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.utils.AlertDialogMetodos;
 import proyecto.proyectobookit.utils.Configuracion;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
+import proyecto.proyectobookit.utils.AsyncMetodos;
+
 
 import static proyecto.proyectobookit.R.layout.fragment_mapa;
 
 
 public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-
-    MapView mapView;
-    GoogleMap Mapas;
-    LatLng point;
 
     Context mContext;
 
-    private Usuario Mi_Usuario;
+    GoogleMap Mapas;
+    LatLng point;
 
+    public static Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
+    private long tiempoStart;
     private View rootView;
-    private Menu menu;
     private MenuItem Menu_SearchItem = null;
     private EditText EditText_Search = null;
     private Button Button_Buscar = null;
-
-    //Hacer Getters
-    private MetodosUtiles M_Utiles = new MetodosUtiles();
-    public static Hashtable<String,Pin> Tabla_Pines = new Hashtable<String,Pin>();
-    private long Tiempo_Start;
-
-    public void setMi_Usuario(Usuario mi_Usuario) {
-        Mi_Usuario = mi_Usuario;
-    }
-
-    public void setMapa (GoogleMap Aux){
-        Mapas = Aux;
-    }
-
-    public void setContext(Context Aux){
-        mContext = Aux;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -120,7 +89,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                     onDestroy();
                 }
 
-                Actualizar();
+                actualizarGoogleMaps(null);
             }
         } catch (NullPointerException exception){
                 Toast.makeText(mContext,"Ocurrio un Error: ",Toast.LENGTH_SHORT);
@@ -129,36 +98,24 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         return rootView;
     }
 
-    private MapFragment getMapFragment() {
-        FragmentManager fm = null;
-
-        //Log.d(TAG, "sdk: " + Build.VERSION.SDK_INT);
-       // Log.d(TAG, "release: " + Build.VERSION.RELEASE);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            //Log.d(TAG, "using getFragmentManager");
-            fm = getFragmentManager();
-        } else {
-           // Log.d(TAG, "using getChildFragmentManager");
-            fm = getChildFragmentManager();
-        }
-
-        return (MapFragment) fm.findFragmentById(R.id.mapView);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         Menu_SearchItem = menu.findItem( R.id.menu_search );
+
+        //Escondidos
         menu.findItem(R.id.menu_search).setVisible(false);
+        //menu.findItem(R.id.menucentral_viewasList).setVisible(false);
+        menu.findItem(R.id.menucentral_editar).setVisible(false);
+
         EditText_Search = (EditText) Menu_SearchItem.getActionView().findViewById( R.id.search );
         Button_Buscar = (Button) Menu_SearchItem.getActionView().findViewById(R.id.buscar);
         Button_Buscar.setVisibility( EditText_Search.getText().length() > 0 ? View.VISIBLE : View.GONE );
         Button_Buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Actualizar_Boton();
+                actualizarBoton();
             }
         });
 
@@ -185,7 +142,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
                 if(Aux.contains("\n")){
                     Aux = Aux.replace("\n","");
                     EditText_Search.setText(Aux);
-                    Actualizar_Boton();
+                    actualizarBoton();
                 }
             }
         } );
@@ -206,7 +163,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             case android.R.id.home:
                 break;
             case R.id.menucentral_refresh:
-                Actualizar();
+                actualizarGoogleMaps(null);
                 break;
             case R.id.menucentral_dropdown_campus_san_joaquin:
                 LatLng latLng = new LatLng(-33.498444, -70.611722);
@@ -237,56 +194,14 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         return true;
     }
 
-    private void Actualizar_Boton(){
-        String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
-        String Url = Configuracion.URLSERVIDOR + "/pins.json";
-        try {
-            Mapas.clear();
-            if (Build.VERSION.SDK_INT >= 11) {
-                //--post GB use serial executor by default --
-                new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
-            } else {
-                //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_GetMarker().execute(Url);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void Actualizar() {
-        String Url = Configuracion.URLSERVIDOR + "/pins.json";
-        Mapas.clear();
-        if (Build.VERSION.SDK_INT >= 11) {
-            //--post GB use serial executor by default --
-            new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Url);
-        } else {
-            //--GB uses ThreadPoolExecutor by default--
-            new AsyncTask_GetMarker().execute(Url);
-        }
-        Tiempo_Start = System.currentTimeMillis();
-    }
 
-    public void delete( View v ){
-        if (EditText_Search != null)
-        {
-            EditText_Search.setText( "" );
-        }
-    }
-
-    //De Google Map
+    //Google Maps Methods
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String id_ramo = marker.getSnippet();
-
-        //Obtener Pin
-        Pin Pin_Elegido = Tabla_Pines.get(id_ramo);
-        M_Utiles.setContext(mContext);
-        M_Utiles.CrearAlertDialog(Pin_Elegido);
-
+        AlertDialogMetodos.crearAlertPin(Tabla_Pines.get(marker.getSnippet()),mContext);
         return false;
     }
-
 
     @Override
     public void onMapLongClick(LatLng point) {
@@ -301,7 +216,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     public void onMapClick(LatLng latLng) {
     /*
         long Aux = (new Date()).getTime();
-        if(( Aux - Tiempo_Start) > 3/2*60*1000) {
+        if(( Aux - tiempoStart) > 3/2*60*1000) {
             //perform db poll/check
             Actualizar();
             Tiempo_Start = System.currentTimeMillis();
@@ -310,12 +225,41 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
     }
 
+    private void actualizarBoton(){
+        String text = EditText_Search.getText().toString().toLowerCase(Locale.getDefault());
+        String url = Configuracion.URLSERVIDOR + "/pins.json";
+        actualizarGoogleMaps(url);
+    }
+
+    private void actualizarGoogleMaps(String url) {
+        if(url == null)
+          url = Configuracion.URLSERVIDOR + "/pins.json";
+
+        Mapas.clear();
+        if (Build.VERSION.SDK_INT >= 11) {
+            new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,url);
+        } else {
+            new AsyncTask_GetMarker().execute(url);
+        }
+        tiempoStart = System.currentTimeMillis();
+    }
+
+    public void delete( View v ){
+        if (EditText_Search != null)
+        {
+            EditText_Search.setText( "" );
+        }
+    }
+
+
+
     //Obtener Resultados
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if( requestCode == 1 && resultCode == Activity.RESULT_OK ) {
-            // Columnas
+
+            //Datos
             String id_ramo = data.getStringExtra("id_ramo");
             String precio = data.getStringExtra("precio");
             String descripcion = data.getStringExtra("descripcion");
@@ -325,7 +269,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             String duracion = "5000";
             String Tipo_ayuda ="clase";
 
-            // Crear PinElegido
+            //Crear Pin
             Pin Aux = new Pin();
             Aux.getRamo_Pin().setId_ramo(id_ramo);
             Aux.setPrecio(precio);
@@ -342,13 +286,10 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
             // ObtenerCampus
             Aux.setCampus(ObtenerCampus());
 
-
             if (Build.VERSION.SDK_INT >= 11) {
-                //--post GB use serial executor by default --
-                new AsyncTask_PostMarker(Mi_Usuario, Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
+                new AsyncTask_PostMarker(Aux).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"");
             } else {
-                //--GB uses ThreadPoolExecutor by default--
-                new AsyncTask_PostMarker(Mi_Usuario, Aux).execute("");
+                new AsyncTask_PostMarker(Aux).execute("");
             }
 
         }
@@ -416,105 +357,29 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         return (deg * Math.PI / 180.0);
     }
 
+
+
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
-
-        //private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
-        }
 
         @Override
         protected String doInBackground(String... urls) {
             return ConsultaHTTP.GET(urls[0]);
         }
-        // onPostExecute displays the results of the AsyncTask.
 
         @Override
         protected void onPostExecute(String result) {
-            result = "{ \"pins\":" + result +   "}" ;
-            try {
-                JSONObject json = new JSONObject(result);
-                JSONArray articles = json.getJSONArray("pins");
-
-                Tabla_Pines.clear();
-
-                for (int i = 0; i < articles.length(); i++) {
-                    //Crear Pin
-                    Pin Aux = new Pin();
-                    //Encontramos los valores
-                    try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
-                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("user_id")); } catch (Exception e) {}
-                    String Date_Aux="";
-                    try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
-                    Aux.setHora(Date_Aux.replace("T"," "));
-                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realization"));} catch (Exception e) {}
-                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duration"));} catch (Exception e) {}
-                    //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("title"));}catch(Exception e){}
-                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("description"));} catch (Exception e) {}
-                    try {Aux.setPrecio(articles.getJSONObject(i).getString("price"));} catch (Exception e) {}
-                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("help_type"));} catch (Exception e) {}
-                    try {Aux.setCampus(articles.getJSONObject(i).getString("faculty"));} catch (Exception e) {}
-                    try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
-                    try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
-
-                    //Obtener Usuarios
-
-                    try {
-                        String usuarios = articles.getJSONObject(i).getString("user");
-                        usuarios = "{ \"usuarios\":[" + usuarios + "]}";
-                        JSONObject json_usuarios = new JSONObject(usuarios);
-                        JSONArray articles_usuarios = json_usuarios.getJSONArray("usuarios");
-
-                        try {Aux.getUsuario_Pin().setId_usuario(articles_usuarios.getJSONObject(0).getString("id")); } catch (Exception e) {  }
-                        try {Aux.getUsuario_Pin().setEmail(articles_usuarios.getJSONObject(0).getString("email")); } catch (Exception e) {  }
-                        try {Aux.getUsuario_Pin().setNombre(articles_usuarios.getJSONObject(0).getString("name"));      } catch (Exception e){       }
-                        try {Aux.getUsuario_Pin().setCarrera(articles_usuarios.getJSONObject(0).getString("profession"));  } catch (Exception e) {    }
-                        try {Aux.getUsuario_Pin().setTelefono(articles_usuarios.getJSONObject(0).getString("phone"));   } catch (Exception e) {  }
-                        Aux.getUsuario_Pin().setTelefono("+56994405326");
-                    }
-                    catch (Exception e){
-                        Toast.makeText(mContext, "Error al crear el Pin en Usuarios on GetMarker()", Toast.LENGTH_LONG).show();
-                    }
-
-                    //Obtener Ramos
-                    try {
-                        String ramos = articles.getJSONObject(i).getString("course");
-                        ramos = "{ \"ramos\":[" + ramos + "]}";
-                        try {
-                            JSONObject json_ramos = new JSONObject(ramos);
-                            JSONArray articles_ramos = json_ramos.getJSONArray("ramos");
-                            //Completar Pin
-                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("name"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("initials"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("branch"));                                } catch (Exception e) {                               }
-
-                            //Filtrar
-                            if (Aux.getRamo_Pin().getNombre() != null) {
-                                Colocar_Marker(Aux);
-                            }
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            Toast.makeText(mContext, "Error al crear el Pin en onPostExecute_GetRamos()", Toast.LENGTH_LONG).show();
-
-                        }
-                    }catch (Exception e){
-                        Toast.makeText(mContext, "Error al crear el Pin en Ramos on GetMarker()", Toast.LENGTH_LONG).show();
-                    }
+            Tabla_Pines.clear();
+            List<Pin> auxPines = AsyncMetodos.convertirJSON_Pin(result, mContext);
+            for (Pin auxPin: auxPines) {
+                if (auxPin.getRamo_Pin().getNombre() != null) {
+                    Colocar_Marker(auxPin);
                 }
-            } catch (Exception e) {
-                // TODO: handle exception
-                Toast.makeText(mContext,"Error al crear el Pin en onPostExecute_GetMarker()", Toast.LENGTH_LONG).show();
             }
-           // progressDialog.dismiss();
+
         }
 
         private void Colocar_Marker(Pin Aux){
-            //Inserta el Marker
             if (Aux.getLatitudeNumber() != -1 && Aux.getLongitudeNumber() != -1) {
                 LatLng lugar = new LatLng(Aux.getLatitudeNumber(), Aux.getLongitudeNumber());
                 MarkerOptions Aux_Marker = new MarkerOptions()
@@ -589,25 +454,22 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
     private class AsyncTask_PostMarker extends AsyncTask<String, Void, Boolean>{
 
-        private Usuario usuario;
         Pin Pin_Elegido = null;
         private ProgressDialog progressDialog;
 
-
-        public AsyncTask_PostMarker(Usuario usuario, Pin Aux) {
+        public AsyncTask_PostMarker(Pin Aux) {
             this.Pin_Elegido = Aux;
-            this.usuario = usuario;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Creando ...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Creando Clase", "Espere porfavor ...", true, false);
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
-            return postData_Pins(this.usuario, this.usuario.getToken(), Pin_Elegido);
+            return postData_Pins(Pin_Elegido);
         }
 
         @Override
@@ -615,12 +477,12 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
         }
 
-        private boolean postData_Pins(Usuario usuario, String token, Pin Aux_Pin) {
+        private boolean postData_Pins(Pin Aux_Pin) {
 
             try {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("pin[user_id]", usuario.getId_usuario());
-                rparams.put("user_token", token);
+                rparams.put("pin[user_id]", Usuario.getUsuarioActual().getId_usuario());
+                rparams.put("user_token", Usuario.getUsuarioActual().getToken());
                 rparams.put("pin[duration]", Aux_Pin.getDuracion());
                 rparams.put("pin[description]", Aux_Pin.getDescripcion());
                 rparams.put("pin[price]", Aux_Pin.getPrecio());
@@ -649,5 +511,26 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
         }
 
     }
+
+
+
+    //Getters and Setters
+    public void setMapa (GoogleMap Aux){
+        Mapas = Aux;
+    }
+    public void setContext(Context Aux){
+        mContext = Aux;
+    }
+    private MapFragment getMapFragment() {
+        FragmentManager fm = null;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fm = getFragmentManager();
+        } else {
+            fm = getChildFragmentManager();
+        }
+        return (MapFragment) fm.findFragmentById(R.id.mapView);
+    }
+
 
 }

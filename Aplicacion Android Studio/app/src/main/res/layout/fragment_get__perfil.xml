@@ -103,25 +103,21 @@
             <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="50dp">
+                android:layout_height="200dp">
 
                 <LinearLayout
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_height="fill_parent"
                     android:orientation="vertical">
-
                     <TextView
                         android:id="@+id/get_perfil_curriculum"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:textSize="@dimen/get_perfil_tamañoletra_respuesta"
                         android:layout_gravity="center"
                         android:text="@string/sin_informacion"/>
                 </LinearLayout>
             </ScrollView>
-
         </LinearLayout>
 
         <LinearLayout android:id="@+id/bottom_menu"
@@ -131,7 +127,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="-2dp"
+                android:paddingLeft="-10dp"
                 android:id="@+id/get_perfil_linea_curva"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/linea_curva"

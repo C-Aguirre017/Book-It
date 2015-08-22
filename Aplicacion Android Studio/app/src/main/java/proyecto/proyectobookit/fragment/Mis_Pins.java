@@ -27,17 +27,18 @@ public class Mis_Pins extends Fragment {
     ListView lista_Pines;
     ListViewAdapter_VerPins adapter;
 
-    private Usuario Mi_Usuario;
     private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mis_pins, container, false);
         setHasOptionsMenu(true);
+
+
         lista_Pines = (NestedListView) v.findViewById(R.id.mis_pins_lista);
         adapter = new ListViewAdapter_VerPins(mContext);
         lista_Pines.setAdapter(adapter);
-        Mi_Usuario = Usuario.getUsuarioActual();
+
         Actualizar();
         return v;
     }
@@ -76,11 +77,11 @@ public class Mis_Pins extends Fragment {
     }
 
     private void Actualizar() {
-        if(Mi_Usuario.getId_usuario() !=null){
+        if(Usuario.getUsuarioActual().getId_usuario() !=null){
             String Url = Configuracion.URLSERVIDOR + "/users/";
 
             try {
-                Url += URLEncoder.encode(Mi_Usuario.getId_usuario(), "UTF-8") +"/pins.json";
+                Url += URLEncoder.encode(Usuario.getUsuarioActual().getId_usuario(), "UTF-8") +"/pins.json";
                 adapter.ColocarPines(Url);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import proyecto.proyectobookit.activity.MetodosUtiles;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.base_datos.Usuario;
@@ -31,7 +30,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     Context mContext;
     LayoutInflater inflater;
     private List<Pin> ListaPines = null;
-    private MetodosUtiles M_Utiles = new MetodosUtiles();
     private Usuario Mi_Usuario;
 
     public ListViewAdapter_VerPins(Context context) {

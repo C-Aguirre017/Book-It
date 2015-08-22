@@ -9,10 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,23 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import proyecto.proyectobookit.activity.ModoLista_Principal;
+import proyecto.proyectobookit.activity.ListaMapa;
 import proyecto.proyectobookit.adapters.NavDrawer_ListAdapter;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.fragment.Acerca_De;
@@ -46,7 +37,6 @@ import proyecto.proyectobookit.fragment.Mapa;
 import proyecto.proyectobookit.fragment.Mi_Perfil;
 import proyecto.proyectobookit.fragment.Mis_Pins;
 import proyecto.proyectobookit.model_adapters.NavDrawerItem;
-import proyecto.proyectobookit.utils.RoundedTransformation;
 
 public class Central extends Activity {
 
@@ -148,7 +138,6 @@ public class Central extends Activity {
                 Mapa Aux = new Mapa();
                 Aux.setContext(this);
                 Aux.setMapa(Mapas);
-                Aux.setMi_Usuario(Mi_Usuario);
                 FragmentoELegido = Aux;
                 break;
             case 2:
@@ -175,9 +164,9 @@ public class Central extends Activity {
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {
                     startActivity(Intent.createChooser(emailIntent, "Elija un cliente de correo electrónico: "));
-                    Log.i("Finished sending email...", "");
+                    Log.i("Correo Enviado", "");
                 } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(getBaseContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "No hay una Aplicación de Correo Instalada", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 6:
@@ -266,9 +255,8 @@ public class Central extends Activity {
             return true;
         }
         else if(id== R.id.menucentral_viewasList){
-            Intent NuevaActividad_ModoLista = new Intent(Central.this,ModoLista_Principal.class);
-            NuevaActividad_ModoLista.putExtra("id_usuario", Mi_Usuario.getId_usuario());
-            startActivity(NuevaActividad_ModoLista);
+            Intent neaModoLista = new Intent(Central.this,ListaMapa.class);
+            startActivity(neaModoLista);
         }
         return super.onOptionsItemSelected(item);
     }

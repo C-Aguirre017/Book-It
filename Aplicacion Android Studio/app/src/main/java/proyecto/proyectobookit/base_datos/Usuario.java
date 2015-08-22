@@ -26,18 +26,18 @@ public class Usuario {
 
     // METODOS ESTATICOS
 
-    public static void cargarDatos(Usuario u, String datos) {
+    public static void cargarDatos(Usuario auxUsuario, String datos) {
         try {
-            Log.d("Informacion", datos);
+            Log.d("Informacion Usuario: ", datos);
             JSONObject jo = new JSONObject(datos);
-            u.setId_usuario(jo.getString("id"));
-            u.setEmail(jo.getString("email"));
-            u.setNombre(jo.getString("name"));
-            u.setCarrera(jo.getString("profession"));
-            u.setTelefono(jo.getString("phone"));
-            u.setBiografia(jo.getString("biography"));
-            //u.setUniversidad(jo.getString("university"));
-            //u.setRole(jo.getString("role"));
+
+            try {auxUsuario.setId_usuario(jo.getString("id"));} catch (Exception e) {}
+            try {auxUsuario.setEmail(jo.getString("email"));} catch (Exception e) {}
+            try {auxUsuario.setNombre(jo.getString("name"));} catch (Exception e){}
+            try {auxUsuario.setCarrera(jo.getString("profession"));} catch (Exception e) {}
+            try {auxUsuario.setTelefono(jo.getString("phone"));} catch (Exception e) {}
+            try {auxUsuario.setBiografia(jo.getString("biography"));} catch (Exception e) {}
+
         } catch (Exception e) {
             Log.d(e.toString(),"");
         }

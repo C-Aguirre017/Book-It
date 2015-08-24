@@ -11,6 +11,7 @@ public class Pin {
 
     private String id_pin, publicacion, duracion,  descripcion,  precio,  tipo_ayuda, campus, titulo, realizacion, hora;
     private double latitude, longitude;
+    private int cantSolicitudes;
 
     private Ramo Ramo_Pin = new Ramo("","","","");
     private Usuario Usuario_Pin = new Usuario();
@@ -22,12 +23,13 @@ public class Pin {
 
     public static void cargarDatos(String datos, Pin auxPin) {
         try {
+            Log.d("Informacion Pin: ", datos);
             JSONObject jo = new JSONObject(datos);
+
             try {auxPin.setId_pin(jo.getString("id")); } catch (Exception e) {}
             try {auxPin.getUsuario_Pin().setId_usuario(jo.getString("user_id")); } catch (Exception e) {}
-            String Date_Aux="";
-            try {Date_Aux= jo.getString("publication"); } catch (Exception e) {}
-            auxPin.setHora(Date_Aux.replace("T", " "));
+            try {auxPin.setPublicacion(jo.getString("publication")); } catch (Exception e) {}
+            auxPin.setHora(auxPin.getPublicacion().replace("T", " "));
             try {auxPin.setRealizacion(jo.getString("realization"));} catch (Exception e) {}
             try {auxPin.setDuracion(jo.getString("duration"));} catch (Exception e) {}
             try {auxPin.getRamo_Pin().setId_ramo(jo.getString("title"));}catch(Exception e){}
@@ -37,6 +39,7 @@ public class Pin {
             try {auxPin.setCampus(jo.getString("faculty"));} catch (Exception e) {}
             try {auxPin.setLatitude(Double.parseDouble(jo.getString("latitude")));} catch (Exception e) {}
             try {auxPin.setLongitude(Double.parseDouble(jo.getString("longitude"))); } catch (Exception e) {}
+            try {auxPin.setCantSolicitudes(Integer.parseInt(jo.getString("applications"))); } catch (Exception e) {}
 
         } catch (Exception e) {
             Log.d("Informacion", "Error al cargar datos de pines:" + datos);
@@ -155,5 +158,13 @@ public class Pin {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public int getCantSolicitudes() {
+        return cantSolicitudes;
+    }
+
+    public void setCantSolicitudes(int cantSolicitudes) {
+        this.cantSolicitudes = cantSolicitudes;
     }
 }

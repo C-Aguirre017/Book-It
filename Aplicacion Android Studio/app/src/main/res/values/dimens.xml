@@ -16,10 +16,12 @@
 <dimen name="Boton_Alto">30dp</dimen>
 <dimen name="Boton_Ancho">80dp</dimen>
 
-<dimen name="list_pin_title">17dp</dimen>
-<dimen name="list_pin_rating">15dip</dimen>
-<dimen name="list_pin_genre">13dip</dimen>
-<dimen name="list_pin_year">12dip</dimen>
+
+<dimen name="listPin_title">17dp</dimen>
+<dimen name="listPin_fecha">15dp</dimen>
+<dimen name="listPin_precio">15dp</dimen>
+<dimen name="listPin_solicitud">23dp</dimen>
+<dimen name="listPin_email">15dp</dimen>
 
 
 <!-- Get Perfil -->

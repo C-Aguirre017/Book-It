@@ -24,7 +24,6 @@ import proyecto.proyectobookit.base_datos.Usuario;
 public class Get_Perfil extends Fragment {
 
     private Usuario mi_perfil;
-
     private TextView Nombre,Carrera,Telefono,Biografia;
     private CircleImageView user_picture;
 

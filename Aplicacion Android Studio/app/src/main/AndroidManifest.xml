@@ -93,6 +93,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="proyecto.proyectobookit.Central" />
         </activity>
+        <activity
+            android:name=".activity.Solicitudes"
+            android:label="@string/title_activity_solicitudes"
+            android:parentActivityName=".Central" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="proyecto.proyectobookit.Central" />
+        </activity>
     </application>
 
 </manifest>

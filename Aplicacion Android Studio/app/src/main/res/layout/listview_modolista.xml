@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/list_pin_title"
+        android:textSize="@dimen/listPin_title"
         android:textStyle="bold" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:layout_below="@id/listview_modolista_NombreRamo"
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/list_pin_rating" />
+        android:textSize="@dimen/listPin_fecha" />
 
 
     <TextView
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:textColor="@color/list_pin_year"
-        android:textSize="@dimen/list_pin_year" />
+        android:textColor="@color/listPin_precio"
+        android:textSize="@dimen/listPin_precio" />
 
 
     <ImageView

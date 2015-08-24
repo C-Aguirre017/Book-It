@@ -7,19 +7,13 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
 
-    <color name="Fondo">#FFFFFF</color>
-    <color name="ColorNaranjo">#FFBB33</color>
-    <color name="ColorNaranjoFuerte">#FF8800</color>
-    <color name="ColorGris">#123a24d4</color>
-    <color name="Blancoo">#FFFFFF</color>
-
-    <color name="list_pin_genre">#666666</color>
-    <color name="list_pin_year">#888888</color>
-    <color name="list_pin_divider">#d9d9d9</color>
+    <!-- Listas -->
+    <color name="listPin_solicitud_background">#d89116</color>
+    <color name="listPin_solicitud_text">#FFFFFF</color>
+    <color name="listPin_precio">#888888</color>
     <color name="list_pin_row_start_color">#ffffff</color>
     <color name="list_pin_row_end_color">#ffffff</color>
     <color name="list_pin_row_hover_start_color">#ebeef0</color>
     <color name="list_pin_row_hover_end_color">#ebeef0</color>
-
 
 </resources>

@@ -37,6 +37,7 @@ public class Usuario {
             try {auxUsuario.setCarrera(jo.getString("profession"));} catch (Exception e) {}
             try {auxUsuario.setTelefono(jo.getString("phone"));} catch (Exception e) {}
             try {auxUsuario.setBiografia(jo.getString("biography"));} catch (Exception e) {}
+            try {auxUsuario.setFbUid(jo.getString("uid"));} catch (Exception e) {}
 
         } catch (Exception e) {
             Log.d(e.toString(),"");

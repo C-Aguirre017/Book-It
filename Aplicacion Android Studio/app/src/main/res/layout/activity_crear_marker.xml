@@ -16,7 +16,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-
             android:orientation="vertical">
 
             <TextView
@@ -34,22 +33,26 @@
                 <requestFocus />
             </EditText>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp" >
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_margin="5dp"
+                android:fillViewport="true"
+                android:layout_height="120dp">
 
-                <proyecto.proyectobookit.nav_drawner.NestedListView
-                    android:id="@+id/crearmarker_list"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_weight="1"
-                    android:cacheColorHint="#00000000" >
-                </proyecto.proyectobookit.nav_drawner.NestedListView>
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <proyecto.proyectobookit.nav_drawner.NestedListView
+                        android:id="@+id/crearmarker_list"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:cacheColorHint="#00000000" >
+                    </proyecto.proyectobookit.nav_drawner.NestedListView>
+                </LinearLayout>
+
+            </ScrollView>
 
             <TextView
                 android:id="@+id/crearmarker_labeldescripcion"

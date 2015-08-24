@@ -6,8 +6,8 @@
 
         <!-- Framelayout to display Fragments -->
         <FrameLayout
-            android:layout_width="match_parent"
             android:id="@+id/central_container"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
         </FrameLayout>
 

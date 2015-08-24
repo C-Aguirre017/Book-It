@@ -199,7 +199,7 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
     //Google Maps Methods
     @Override
     public boolean onMarkerClick(Marker marker) {
-        AlertDialogMetodos.crearAlertPin(Tabla_Pines.get(marker.getSnippet()),mContext);
+        AlertDialogMetodos.crearPinApplication(Tabla_Pines.get(marker.getSnippet()), mContext);
         return false;
     }
 
@@ -481,8 +481,9 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
             try {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("pin[user_id]", Usuario.getUsuarioActual().getId_usuario());
+                rparams.put("user_id", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("user_token", Usuario.getUsuarioActual().getToken());
+                rparams.put("pin[user_id]", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("pin[duration]", Aux_Pin.getDuracion());
                 rparams.put("pin[description]", Aux_Pin.getDescripcion());
                 rparams.put("pin[price]", Aux_Pin.getPrecio());

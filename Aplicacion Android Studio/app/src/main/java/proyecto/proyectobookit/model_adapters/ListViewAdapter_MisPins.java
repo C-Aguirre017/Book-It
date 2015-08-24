@@ -2,8 +2,10 @@ package proyecto.proyectobookit.model_adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,35 +13,33 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import proyecto.proyectobookit.R;
+import proyecto.proyectobookit.activity.Solicitudes;
 import proyecto.proyectobookit.base_datos.Pin;
-import proyecto.proyectobookit.base_datos.Usuario;
+import proyecto.proyectobookit.utils.AsyncMetodos;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
-public class ListViewAdapter_VerPins extends BaseAdapter {
+public class ListViewAdapter_MisPins extends BaseAdapter {
 
     // Declare Variables
     Context mContext;
     LayoutInflater inflater;
-    private List<Pin> ListaPines = null;
+    private List<Pin> listaPines = null;
 
-    public ListViewAdapter_VerPins(Context context) {
+    public ListViewAdapter_MisPins(Context context) {
         mContext = context;
-        this.ListaPines = new ArrayList<Pin>();
+        this.listaPines = new ArrayList<Pin>();
         inflater = LayoutInflater.from(mContext);
     }
 
-    public void ColocarPines(String Url){
+    public void actualizarPines(String Url){
         try {
-            ListaPines.clear();
+            listaPines.clear();
             if (Build.VERSION.SDK_INT >= 11) {
                 new AsyncTask_GetMarker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Url);
             } else {
@@ -51,21 +51,22 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
     }
 
     public class ViewHolder {
-        TextView  NombreRamo;
-        TextView Fecha;
-        TextView Pago;
-        ImageView Imagen;
-        Pin Aux_Pin = null;
+        TextView  nombre;
+        TextView fecha;
+        TextView precio;
+        TextView solicitudes;
+        ImageView foto;
+        Pin auxPin = null;
     }
 
     @Override
     public int getCount() {
-        return ListaPines.size();
+        return listaPines.size();
     }
 
     @Override
     public Pin getItem(int position) {
-        return ListaPines.get(position);
+        return listaPines.get(position);
     }
 
     @Override
@@ -78,31 +79,40 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         if (view == null) {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.listview_mispins, null);
-            holder.NombreRamo = (TextView) view.findViewById(R.id.listview_mis_pins_NombreRamo);
-            holder.Fecha = (TextView) view.findViewById(R.id.listview_mis_pins_FechayHora);
-            holder.Pago = (TextView) view.findViewById(R.id.listview_mis_pins_Pago);
-            holder.Imagen = (ImageView) view.findViewById(R.id.listview_mis_pins_icono);
+            holder.nombre = (TextView) view.findViewById(R.id.listview_mis_pins_nombre);
+            holder.fecha = (TextView) view.findViewById(R.id.listview_mis_pins_fecha);
+            holder.precio = (TextView) view.findViewById(R.id.listview_mis_pins_precio);
+            holder.foto = (ImageView) view.findViewById(R.id.listview_mis_pins_icono);
+            holder.solicitudes = (TextView) view.findViewById(R.id.listview_mis_pins_cantsolicitudes);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
         //Colocar el valor
-        holder.Aux_Pin =ListaPines.get(position);
+        holder.auxPin =listaPines.get(position);
 
-        if(holder.Aux_Pin !=null) {
-            holder.NombreRamo.setText(holder.Aux_Pin.getRamo_Pin().getSigla() + " " + holder.Aux_Pin.getRamo_Pin().getNombre());
-            holder.Fecha.setText(holder.Aux_Pin.getPublicacion());
-            holder.Pago.setText(holder.Aux_Pin.getPrecio());
+        if(holder.auxPin !=null) {
 
-            BuscarIcono(holder.Imagen,holder.Aux_Pin);
+            holder.nombre.setText(holder.auxPin.getRamo_Pin().getSigla()  + " " + holder.auxPin.getRamo_Pin().getNombre());
+            holder.fecha.setText(holder.auxPin.getHora());
+            holder.solicitudes.setText("" + holder.auxPin.getCantSolicitudes());
+            holder.precio.setText("$" + holder.auxPin.getPrecio());
+
+            buscarIcono(holder.foto, holder.auxPin);
+
             // Listen for ListView Item Click
             view.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View arg0) {
-                    // Send single item click data to SingleItemView Class
-
+                    Intent i = new Intent(mContext, Solicitudes.class);
+                    i.putExtra("pin_id",holder.auxPin.getId_pin());
+                    try {
+                        mContext.startActivity(i);
+                    } catch (Exception ex) {
+                        Toast.makeText(mContext, "Ocurrio un Error \n" + ex.toString(), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -110,7 +120,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         return view;
     }
 
-    private void BuscarIcono(ImageView Imagen, Pin Aux) {
+    private void buscarIcono(ImageView Imagen, Pin Aux) {
         String sigla = Aux.getRamo_Pin().getSigla();
         if(Imagen!= null && !sigla.equals("")){
             if (esInicioSigla(sigla, new String[]{"ACT"})) {
@@ -166,22 +176,6 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         return false;
     }
 
-    // Filter Class
-    public void filter(String charText,String Url) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        //Resetear Valores
-        ListaPines.clear();
-
-        if (charText.length() == 0) {
-
-        }
-        else
-        {
-
-        }
-
-    }
-
     //AsyncTasks Get
     private class AsyncTask_GetMarker extends AsyncTask<String, Void, String> {
 
@@ -190,7 +184,7 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información...", "Espere porfavor", true, false);
+            progressDialog = ProgressDialog.show(mContext, "Obteniendo Información", "Espere porfavor ...", true, false);
         }
 
         @Override
@@ -201,62 +195,16 @@ public class ListViewAdapter_VerPins extends BaseAdapter {
 
         @Override
         protected void onPostExecute(String result) {
-            result = "{ \"pins\":" + result +   "}" ;
-            try {
-                JSONObject json = new JSONObject(result);
-                JSONArray articles = json.getJSONArray("pins");
 
-                for (int i = 0; i < articles.length(); i++) {
-                    //Crear Pin
-                    Pin Aux = new Pin();
-                    //Encontramos los valores
-                    try {Aux.setId_pin(articles.getJSONObject(i).getString("id")); } catch (Exception e) {}
-                    try {Aux.getUsuario_Pin().setId_usuario(articles.getJSONObject(i).getString("user_id")); } catch (Exception e) {}
-                    String Date_Aux="";
-                    try {Date_Aux= articles.getJSONObject(i).getString("publication"); } catch (Exception e) {}
-                    Aux.setPublicacion(Date_Aux.replace("T"," "));
-                    try {Aux.setRealizacion(articles.getJSONObject(i).getString("realization"));} catch (Exception e) {}
-                    try {Aux.setDuracion(articles.getJSONObject(i).getString("duration"));} catch (Exception e) {}
-                    //Cambiar nombre a futuro de titulo
-                    try {Aux.getRamo_Pin().setId_ramo(articles.getJSONObject(i).getString("title"));}catch(Exception e){}
-                    try {Aux.setDescripcion(articles.getJSONObject(i).getString("description"));} catch (Exception e) {}
-                    try {Aux.setPrecio(articles.getJSONObject(i).getString("price"));} catch (Exception e) {}
-                    try {Aux.setTipo_ayuda(articles.getJSONObject(i).getString("help_type"));} catch (Exception e) {}
-                    try {Aux.setCampus(articles.getJSONObject(i).getString("faculty"));} catch (Exception e) {}
-                    try {Aux.setLatitude(Double.parseDouble(articles.getJSONObject(i).getString("latitude")));} catch (Exception e) {}
-                    try {Aux.setLongitude(Double.parseDouble(articles.getJSONObject(i).getString("longitude"))); } catch (Exception e) {}
-
-                    //Obtener Ramos
-                    try {
-                        String ramos = articles.getJSONObject(i).getString("course");
-                        ramos = "{ \"ramos\":[" + ramos + "]}";
-                        try {
-                            JSONObject json_ramos = new JSONObject(ramos);
-                            JSONArray articles_ramos = json_ramos.getJSONArray("ramos");
-                            //Completar Pin
-                            try {Aux.getRamo_Pin().setNombre(articles_ramos.getJSONObject(0).getString("name"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setSigla(articles_ramos.getJSONObject(0).getString("initials"));                                } catch (Exception e) {                                }
-                            try {Aux.getRamo_Pin().setUnidad_Academica(articles_ramos.getJSONObject(0).getString("branch"));                                } catch (Exception e) {                               }
-
-                            ListaPines.add(Aux);
-                        } catch (Exception e) {
-                            // TODO: handle exception
-
-                        }
-                    }catch (Exception e){
-                    }
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
             progressDialog.dismiss();
-            notifyDataSetChanged();
+            List<Pin> auxLista = AsyncMetodos.convertirJSON_Pin(result, mContext);
+            for (Pin auxPin: auxLista) {
+                listaPines.add(auxPin);
+                notifyDataSetChanged();
+            }
         }
 
-
-
     }
-
 
 
     /*

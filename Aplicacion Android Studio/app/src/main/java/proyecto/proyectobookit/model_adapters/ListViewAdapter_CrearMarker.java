@@ -158,9 +158,9 @@ public class ListViewAdapter_CrearMarker extends BaseAdapter {
                         id_ramo = articles.getJSONObject(i).getString("id");
                         if (!id_ramo.equals("") && !NombreRamo.equals("") && !Sigla.equals("")) {
                             ListaPalabras.add(new Ramo(NombreRamo, Sigla, unidad_academica, id_ramo));
+                            notifyDataSetChanged();
                         }
                     }
-                    notifyDataSetChanged();
                 } catch (Exception e) {
                     Log.d("Informacion", "Excepcion al ver ramos: " + e.getMessage());
                 }

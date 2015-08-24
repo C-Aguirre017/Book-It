@@ -82,7 +82,7 @@ public class ListViewAdapter_ListaMapa extends BaseAdapter {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.listview_modolista_pin, null);
+            view = inflater.inflate(R.layout.listview_modolista, null);
             holder.NombreRamo = (TextView) view.findViewById(R.id.listview_modolista_NombreRamo);
             holder.Fecha = (TextView) view.findViewById(R.id.listview_modolista_FechayHora);
             holder.Pago = (TextView) view.findViewById(R.id.listview_modolista_Pago);
@@ -105,7 +105,7 @@ public class ListViewAdapter_ListaMapa extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    AlertDialogMetodos.crearAlertPin(holder.Aux_Pin,mContext);
+                    AlertDialogMetodos.crearPinApplication(holder.Aux_Pin, mContext);
                 }
             });
         }
@@ -188,13 +188,13 @@ public class ListViewAdapter_ListaMapa extends BaseAdapter {
 
         @Override
         protected void onPostExecute(String result) {
+            progressDialog.dismiss();
             List<Pin> auxLista = AsyncMetodos.convertirJSON_Pin(result, mContext);
             for (Pin auxPin: auxLista) {
                 ListaPines.add(auxPin);
                 Mapa.Tabla_Pines.put(auxPin.getId_pin(),auxPin);
+                notifyDataSetChanged();
             }
-            progressDialog.dismiss();
-            notifyDataSetChanged();
         }
 
     }

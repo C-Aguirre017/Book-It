@@ -24,7 +24,7 @@ import proyecto.proyectobookit.base_datos.Usuario;
 public class Get_Perfil extends Fragment {
 
     private Usuario mi_perfil;
-    private TextView Nombre,Carrera,Telefono,Biografia;
+    private TextView Nombre,Carrera,Telefono,Biografia,Universidad;
     private CircleImageView user_picture;
 
     public Get_Perfil() {
@@ -41,6 +41,7 @@ public class Get_Perfil extends Fragment {
         Carrera = (TextView) v.findViewById(R.id.get_perfil_carrera);
         Telefono = (TextView) v.findViewById(R.id.get_perfil_telefono);
         Biografia = (TextView) v.findViewById(R.id.get_perfil_curriculum);
+        Universidad = (TextView) v.findViewById(R.id.get_perfil_universidad);
         user_picture = (CircleImageView) v.findViewById(R.id.get_perfil_profile_image);
 
         setFbImage(mi_perfil.getFbUid(),user_picture);
@@ -103,6 +104,12 @@ public class Get_Perfil extends Fragment {
         if(mi_perfil.getTelefono() !=null){
             if(!mi_perfil.getTelefono().equals("null")){
                 Telefono.setText(mi_perfil.getTelefono());
+            }
+        }
+
+        if(mi_perfil.getUniversidad().getNombre() !=null){
+            if(!mi_perfil.getUniversidad().getNombre().equals("null")){
+                Universidad.setText(mi_perfil.getUniversidad().getNombre());
             }
         }
     }

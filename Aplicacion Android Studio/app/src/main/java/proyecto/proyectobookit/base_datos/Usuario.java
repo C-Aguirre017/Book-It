@@ -1,6 +1,7 @@
 package proyecto.proyectobookit.base_datos;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -17,12 +18,14 @@ import java.net.InetSocketAddress;
 public class Usuario {
 
     private static Usuario usuarioActual = null;
+    private Universidad universidad = new Universidad();
 
-    private String nombre, email, carrera, role, token, telefono, biografia,universidad;
+    private String nombre, email, carrera, role, token, telefono, biografia;
     private String id_usuario;
     private String fbUid;
     private Session fbSession;
     private GraphUser gUser;
+
 
     // METODOS ESTATICOS
 
@@ -39,9 +42,21 @@ public class Usuario {
             try {auxUsuario.setBiografia(jo.getString("biography"));} catch (Exception e) {}
             try {auxUsuario.setFbUid(jo.getString("uid"));} catch (Exception e) {}
 
+            //University
+            try {
+                String auxUniversity = jo.getString("university");
+                auxUniversity = "{ \"university\":[" + auxUniversity+ "]}";
+                JSONObject json_universidad = new JSONObject(auxUniversity);
+                JSONArray articles_university = json_universidad.getJSONArray("university");
+
+                Universidad.cargarDatos(auxUsuario.getUniversidad(), articles_university.getJSONObject(0).toString());
+            }
+            catch (Exception e){}
+
         } catch (Exception e) {
             Log.d(e.toString(),"");
         }
+        String Termino = "Si";
     }
 
     // GETERS SETERS
@@ -143,12 +158,8 @@ public class Usuario {
         this.biografia = biografia;
     }
 
-    public String getUniversidad() {
+    public Universidad getUniversidad() {
         return universidad;
-    }
-
-    public void setUniversidad(String universidad) {
-        this.universidad = universidad;
     }
 
 }

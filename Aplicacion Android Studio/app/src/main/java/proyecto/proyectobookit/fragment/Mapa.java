@@ -481,7 +481,6 @@ public class Mapa extends Fragment implements GoogleMap.OnMapClickListener, Goog
 
             try {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("user_id", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("user_token", Usuario.getUsuarioActual().getToken());
                 rparams.put("pin[user_id]", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("pin[duration]", Aux_Pin.getDuracion());

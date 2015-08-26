@@ -324,7 +324,6 @@ public class AlertDialogMetodos {
 
             try {
                 Hashtable<String, String> rparams = new Hashtable<String, String>();
-                rparams.put("user_id", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("user_token", Usuario.getUsuarioActual().getToken());
                 rparams.put("application[user_id]", Usuario.getUsuarioActual().getId_usuario());
                 rparams.put("application[pin_id]", Aux_Pin.getId_pin());

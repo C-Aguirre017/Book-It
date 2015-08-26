@@ -1,33 +1,21 @@
 package proyecto.proyectobookit.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -35,7 +23,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import proyecto.proyectobookit.Central;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_CrearMarker;
 import proyecto.proyectobookit.nav_drawner.NestedListView;
@@ -112,9 +99,9 @@ public class CrearMarker extends Activity {
     public void Aceptar(View v) {
 
         //Colocar Date Picker
-        DiaSeleccionado.set(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getCurrentHour(),timePicker.getCurrentMinute());
+        DiaSeleccionado.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
 
-        if (VerificarEscrito()) {
+        if (verificarEscrito()) {
             String descripcion = "", precio = "", campus = "", titulo = "", id_ramo = "", hora = "";
             EditText get_descripcion = (EditText) findViewById(R.id.crearmarker_descripcion);
             EditText get_precio = (EditText) findViewById(R.id.crearmarker_precio);
@@ -149,7 +136,7 @@ public class CrearMarker extends Activity {
                 AlertDialog alert = builder.create();
                 alert.show();
             } else {
-                CrearAlertDialog("Porfavor seleccione un curso de la lista", "Error de Curso");
+                crearAlertDialog("Porfavor seleccione un curso de la lista", "Error de Curso");
             }
         }
     }
@@ -168,13 +155,13 @@ public class CrearMarker extends Activity {
         this.finish();
     }
 
-    private boolean VerificarEscrito() {
+    private boolean verificarEscrito() {
 
         //Ramo
         EditText Aux_Ramo = (EditText) findViewById(R.id.crearmarker_search);
         if(Aux_Ramo!=null) {
             if (Aux_Ramo.getText().toString().length() == 0) {
-                CrearAlertDialog("La opcion curso se encuentra vacia", "Faltan Datos");
+                crearAlertDialog("La opcion curso se encuentra vacia", "Faltan Datos");
                 return false;
             }
         } else {
@@ -185,7 +172,7 @@ public class CrearMarker extends Activity {
         EditText Aux_Precio = (EditText) findViewById(R.id.crearmarker_precio);
         if(Aux_Precio!=null) {
             if (Aux_Precio.getText().toString().length() == 0) {
-                CrearAlertDialog("La opcion precio se encuentra vacia", "Faltan Datos");
+                crearAlertDialog("La opcion precio se encuentra vacia", "Faltan Datos");
                 return false;
             }
         } else {
@@ -194,22 +181,27 @@ public class CrearMarker extends Activity {
 
 
         //Dia Antes que ahora
-        Date Actual = new Date();
         final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH),day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR);
 
-        Actual.setHours(hour); Actual.setMinutes(minute);Actual.setYear(year);Actual.setMonth(month);Actual.setDate(day);
-        if(DiaSeleccionado.before(Actual)){
-            CrearAlertDialog("La fecha escogida no es valida", "Datos Incorrectos");
-            return false;}
+        if(DiaSeleccionado.getTime().getYear()<=year)
+            if(DiaSeleccionado.getTime().getMonth()<=month)
+                if(DiaSeleccionado.getTime().getDate()< day) {
+                        crearAlertDialog("El dia escogido no es valido", "Datos Incorrectos");
+                        return false;
+                }
+                else if(DiaSeleccionado.getTime().getDate() == day) {
+                    if (DiaSeleccionado.getTime().getHours() < (hour+14)) {
+                        crearAlertDialog("La hora escogida no es valida. Se necesitan de Mínimo 2 hrs de diferencia", "Datos Incorrectos");
+                        return false;
+                    }
+                }
+
         return true;
     }
 
-    private void CrearAlertDialog(String Mensaje, String Titulo){
+    private void crearAlertDialog(String Mensaje, String Titulo){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(Titulo)

@@ -29,7 +29,7 @@ public class Editar_Perfil extends Activity {
     private EditText Carrera,Biografia,Telefono;
     private Spinner Universidad_Spinner;
 
-    private Context mContext;
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,14 +163,15 @@ public class Editar_Perfil extends Activity {
 
                 }
                 progressDialog.dismiss();
+                salir();
             }
-
 
             private String Actualizar_Usuario(String neoNombre, String neoCarrera, String neoUniv, String neoBiografia,String neoTelefono){
 
                 try {
                     Hashtable<String, String> rparams = new Hashtable<String, String>();
                     rparams.put("user_id",Usuario.getUsuarioActual().getId_usuario());
+                    rparams.put("user_university",neoUniv);
                     rparams.put("user_token",Usuario.getUsuarioActual().getToken());
                     rparams.put("user[name]",neoNombre);
                     rparams.put("user[profession]",neoCarrera);
@@ -184,8 +185,11 @@ public class Editar_Perfil extends Activity {
                     return e.toString();
                 }
             }
+        }).execute(Nombre.getText().toString(), Carrera.getText().toString(), Universidad_Spinner.getSelectedItem().toString(), Biografia.getText().toString(), Telefono.getText().toString());
+    }
 
-        }).execute(Nombre.getText().toString(),Carrera.getText().toString(),Universidad_Spinner.getSelectedItem().toString(),Biografia.getText().toString(),Telefono.getText().toString());
+    private void salir(){
+        this.finish();
     }
 
 }

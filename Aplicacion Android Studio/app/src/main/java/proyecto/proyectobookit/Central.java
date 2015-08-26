@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import proyecto.proyectobookit.activity.CrearMarker;
 import proyecto.proyectobookit.activity.ListaMapa;
 import proyecto.proyectobookit.nav_drawner.NavDrawer_ListAdapter;
 import proyecto.proyectobookit.base_datos.Usuario;
@@ -260,4 +261,9 @@ public class Central extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void crearMarker(View v){
+        Toast.makeText(this,"Manten presionado en el mapa el lugar donde te gustaria que se te realice la clase",Toast.LENGTH_LONG).show();
+    }
+
 }

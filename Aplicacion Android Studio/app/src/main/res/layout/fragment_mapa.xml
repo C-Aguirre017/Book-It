@@ -7,5 +7,17 @@
         android:id="@+id/mapView"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="right|bottom"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
+            android:background="@drawable/plus_button_option1"
+            android:onClick="crearMarker"/>
+    </fragment>
+
 </LinearLayout>

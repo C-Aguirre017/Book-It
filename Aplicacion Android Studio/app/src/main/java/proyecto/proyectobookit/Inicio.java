@@ -1,6 +1,5 @@
 package proyecto.proyectobookit;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,10 +19,10 @@ import com.facebook.widget.LoginButton;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
+import proyecto.proyectobookit.activity.App_Intro;
 import proyecto.proyectobookit.base_datos.Usuario;
 import proyecto.proyectobookit.utils.Configuracion;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
@@ -183,6 +182,7 @@ public class Inicio extends FragmentActivity {
 
     private void seguirCentro() {
         Intent app = new Intent(Inicio.this, Central.class);
+        //Intent app = new Intent(Inicio.this, App_Intro.class);
         startActivity(app);
         finish();
     }

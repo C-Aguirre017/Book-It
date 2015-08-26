@@ -7,6 +7,9 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
 
+    <!--Backgroung App-->
+    <color name="background_color_app">#38ffcc00</color>
+
     <!-- Listas -->
     <color name="listPin_solicitud_background">#d89116</color>
     <color name="listPin_solicitud_text">#FFFFFF</color>

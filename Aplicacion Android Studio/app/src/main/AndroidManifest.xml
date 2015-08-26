@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="proyecto.proyectobookit" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="proyecto.proyectobookit">
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="21"
+        tools:overrideLibrary="com.github.paolorotolo.appintro"/>
 
     <permission
         android:name="proyecto.proyectobookit.permission.MAPS_RECEIVE"
@@ -96,10 +98,14 @@
         <activity
             android:name=".activity.Solicitudes"
             android:label="@string/title_activity_solicitudes"
-            android:parentActivityName=".Central" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="proyecto.proyectobookit.Central" />
+        </activity>
+        <activity
+            android:name=".activity.App_Intro"
+            android:label="@string/title_activity_app_intro" >
         </activity>
     </application>
 

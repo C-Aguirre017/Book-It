@@ -1,5 +1,6 @@
 package proyecto.proyectobookit.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -10,17 +11,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -28,6 +35,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import proyecto.proyectobookit.Central;
 import proyecto.proyectobookit.R;
 import proyecto.proyectobookit.model_adapters.ListViewAdapter_CrearMarker;
 import proyecto.proyectobookit.nav_drawner.NestedListView;
@@ -37,21 +45,25 @@ import proyecto.proyectobookit.utils.AlertDialogMetodos;
 public class CrearMarker extends Activity {
 
     // Declare Variables
-    ListView lista_ramos;
+    static TextView hora_label, dia_label;
+    Calendar DiaSeleccionado = new GregorianCalendar();
     ListViewAdapter_CrearMarker adapter;
+    ListView lista_ramos;
     EditText editsearch;
-    public static TextView hora_label;
-    public static TextView dia_label;
+    DatePicker datePicker;
+    TimePicker timePicker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_marker);
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         lista_ramos = (NestedListView) findViewById(R.id.crearmarker_list);
         editsearch = (EditText) findViewById(R.id.crearmarker_search);
+        datePicker = (DatePicker) findViewById(R.id.crear_marker_datePicker);
+        timePicker = (TimePicker) findViewById(R.id.crear_marker_timePicker);
 
         adapter = new ListViewAdapter_CrearMarker(this,editsearch);
         lista_ramos.setAdapter(adapter);
@@ -77,40 +89,6 @@ public class CrearMarker extends Activity {
 
             }
         });
-
-
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        hora_label = (TextView)findViewById(R.id.crearmarker_hora);
-        hora_label.setText("" + hour + ":" + minute);
-        hora_label.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePickerDialog_hora(v);
-            }
-        });
-
-        dia_label = (TextView)findViewById(R.id.crearmarker_diaelegido);
-        dia_label.setText("" + year + "/" + month + "/" + day);
-        dia_label.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog_dia(v);
-            }
-        });
-
-        DiaSeleccionado.set(year,month,day,hour,minute);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @Override
@@ -132,6 +110,9 @@ public class CrearMarker extends Activity {
     }
 
     public void Aceptar(View v) {
+
+        //Colocar Date Picker
+        DiaSeleccionado.set(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getCurrentHour(),timePicker.getCurrentMinute());
 
         if (VerificarEscrito()) {
             String descripcion = "", precio = "", campus = "", titulo = "", id_ramo = "", hora = "";
@@ -240,56 +221,4 @@ public class CrearMarker extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    private static Calendar DiaSeleccionado = new GregorianCalendar();
-
-    public void showTimePickerDialog_hora(View v) {
-        DialogFragment dia_fragment = new TimePickerFragment();
-        dia_fragment.show(getFragmentManager(), "timePicker");
-    }
-
-    public void showDatePickerDialog_dia(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getFragmentManager(), "datePicker");
-    }
-
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-               int hour = DiaSeleccionado.get(Calendar.HOUR_OF_DAY);
-               int minute = DiaSeleccionado.get(Calendar.MINUTE);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Do something with the time chosen by the user
-
-            hora_label.setText("" + hourOfDay + ":" + minute);
-            DiaSeleccionado.set(DiaSeleccionado.get(Calendar.YEAR), DiaSeleccionado.get(Calendar.MONTH),DiaSeleccionado.get(Calendar.DAY_OF_MONTH),hourOfDay,minute);
-        }
-    }
-
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this,DiaSeleccionado.get(Calendar.YEAR), DiaSeleccionado.get(Calendar.MONTH),DiaSeleccionado.get(Calendar.DAY_OF_MONTH));
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            int mes_aux = month +1;
-            dia_label.setText("" + year + "/" + mes_aux + "/" + day);
-            DiaSeleccionado.set(year,month,day,DiaSeleccionado.get(Calendar.HOUR_OF_DAY),DiaSeleccionado.get(Calendar.MINUTE));
-        }
-    }
-
 }

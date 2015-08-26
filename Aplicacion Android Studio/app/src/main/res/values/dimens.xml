@@ -28,5 +28,6 @@
 
 <dimen name="get_perfil_tamañoletra_enunciado">23dp</dimen>
 <dimen name="get_perfil_tamañoletra_respuesta">21dp</dimen>
+    <dimen name="crearmarker_separacionEnunciados">25dp</dimen>
 
 </resources>

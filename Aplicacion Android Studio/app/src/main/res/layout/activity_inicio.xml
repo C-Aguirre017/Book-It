@@ -3,9 +3,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#9ef5bf00"
+    android:background="@color/background_color_app"
     tools:context=".Inicio"
     android:weightSum="1">
+
+    <!--#9ef5bf00-->
 
     <FrameLayout
         android:layout_width="fill_parent"

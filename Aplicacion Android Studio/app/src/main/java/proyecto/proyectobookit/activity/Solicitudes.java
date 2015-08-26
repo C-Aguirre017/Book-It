@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +20,8 @@ public class Solicitudes extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitudes);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //Agarrar Extra
         if (savedInstanceState == null) {
@@ -56,6 +59,10 @@ public class Solicitudes extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id ==  android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 

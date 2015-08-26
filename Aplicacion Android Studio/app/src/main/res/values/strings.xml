@@ -191,5 +191,7 @@
     </string>
     <string name="sin_informacion">Sin información</string>
     <string name="title_activity_solicitudes">Solicitudes</string>
+    <string name="title_activity_app_intro">AppIntro</string>
+    <string name="title_activity_app__intro">Introducción</string>
 
 </resources>

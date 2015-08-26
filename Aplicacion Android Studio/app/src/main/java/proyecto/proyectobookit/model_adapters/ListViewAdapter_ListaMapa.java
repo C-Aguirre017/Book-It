@@ -21,6 +21,7 @@ import proyecto.proyectobookit.base_datos.Pin;
 import proyecto.proyectobookit.fragment.Mapa;
 import proyecto.proyectobookit.utils.AlertDialogMetodos;
 import proyecto.proyectobookit.utils.AsyncMetodos;
+import proyecto.proyectobookit.utils.Configuracion;
 import proyecto.proyectobookit.utils.ConsultaHTTP;
 
 public class ListViewAdapter_ListaMapa extends BaseAdapter {
@@ -116,43 +117,43 @@ public class ListViewAdapter_ListaMapa extends BaseAdapter {
     private void BuscarIcono(ImageView Imagen, Pin Aux) {
         String sigla = Aux.getRamo_Pin().getSigla();
         if(Imagen!= null && !sigla.equals("")){
-            if (esInicioSigla(sigla, new String[]{"ACT"})) {
+            if (esInicioSigla(sigla, Configuracion.SIGLA_ACTUACION)) {
                 Imagen.setImageResource(R.drawable.ic_actuacion);
-            } else if (esInicioSigla(sigla, new String[]{"AGL"})) { // Agronomia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_AGRONOMIA)) { // Agronomia
                 Imagen.setImageResource(R.drawable.ic_agronomia);
-            } else if (esInicioSigla(sigla, new String[]{"AQH"})) { // Arquitectura
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_ARQUITECTURA)) { // Arquitectura
                 Imagen.setImageResource(R.drawable.ic_arquitectura);
-            } else if (esInicioSigla(sigla, new String[]{"ARQ", "ARO"})) { // Arte
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_ARTE)) { // Arte
                 Imagen.setImageResource(R.drawable.ic_arte);
-            } else if (esInicioSigla(sigla, new String[]{"BIO"})) { // Biologia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_BIOLOGIA)) { // Biologia
                 Imagen.setImageResource(R.drawable.ic_biologia);
-            } else if (esInicioSigla(sigla, new String[]{"DPT"})) { // Deportes
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_DPT)) { // Deportes
                 Imagen.setImageResource(R.drawable.ic_deporte);
-            } else if (esInicioSigla(sigla, new String[]{"DEC"})) { // Derecho
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_DERECHO)) { // Derecho
                 Imagen.setImageResource(R.drawable.ic_derecho);
-            } else if (esInicioSigla(sigla, new String[]{"DEE"})) { // Economia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_ECONOMIA)) { // Economia
                 Imagen.setImageResource(R.drawable.ic_economia);
-            } else if (esInicioSigla(sigla, new String[]{"EDU"})) { // Educacion
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_EDUCACION)) { // Educacion
                 Imagen.setImageResource(R.drawable.ic_educacion);
-            } else if (esInicioSigla(sigla, new String[]{"ENA"})) { // Enfermeria
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_ENFERMERIA)) { // Enfermeria
                 Imagen.setImageResource(R.drawable.ic_enfermeria);
-            } else if (esInicioSigla(sigla, new String[]{"FIS"})) { // Fisica
+            } else if (esInicioSigla(sigla,Configuracion.SIGLA_FISICA)) { // Fisica
                 Imagen.setImageResource(R.drawable.ic_fisica);
-            } else if (esInicioSigla(sigla, new String[]{"GEO"})) { // Geografia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_GEOGRAFIA)) { // Geografia
                 Imagen.setImageResource(R.drawable.ic_geografia);
-            }else if (esInicioSigla(sigla, new String[]{"MAT"})) { // Matematicas
+            }else if (esInicioSigla(sigla, Configuracion.SIGLA_MATEMATICAS)) { // Matematicas
                 Imagen.setImageResource(R.drawable.ic_matematica);
-            } else if (esInicioSigla(sigla, new String[]{"MUC"})) { // Musica
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_MUSICA)) { // Musica
                 Imagen.setImageResource(R.drawable.ic_musica);
-            } else if (esInicioSigla(sigla, new String[]{"ODO"})) { // Odontologia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_ODONTOLOGIA)) { // Odontologia
                 Imagen.setImageResource(R.drawable.ic_odontologia);
-            } else if (esInicioSigla(sigla, new String[]{"QI"})) { // Quimica
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_QUIMICA)) { // Quimica
                 Imagen.setImageResource(R.drawable.ic_quimica);
-            } else if (esInicioSigla(sigla, new String[]{"CCP"})) { // Medicina
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_MEDICINA)) { // Medicina
                 Imagen.setImageResource(R.drawable.ic_salud);
-            } else if (esInicioSigla(sigla, new String[]{"FIL"})) { // Teologia
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_TEOLOGIA)) { // Teologia
                 Imagen.setImageResource(R.drawable.ic_teologia);
-            } else if (esInicioSigla(sigla, new String[]{"IC", "IE", "IM"})) { // Ingenieria
+            } else if (esInicioSigla(sigla, Configuracion.SIGLA_INGENIERIA)) { // Ingenieria
                 Imagen.setImageResource(R.drawable.ic_ingenieria);
             }  else {
                 Imagen.setImageResource(R.drawable.ic_logo_chico);

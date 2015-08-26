@@ -2,114 +2,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/background_color_app"
     tools:context="com.example.aplicacionbookit.CrearMarker"
     android:weightSum="1">
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_margin="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/crearmarker_labelsearch"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Curso: " />
+                android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:gravity="center"
+                android:text="Curso " />
 
             <EditText
                 android:id="@+id/crearmarker_search"
+                android:layout_marginTop="6dp"
                 android:layout_width="match_parent"
-                android:paddingTop="5dp"
-                android:layout_height="50dp" >
+                android:layout_height="wrap_content">
                 <requestFocus />
             </EditText>
 
             <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_margin="5dp"
-                android:fillViewport="true"
-                android:layout_height="120dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                android:id="@+id/crear_marker_childScrollview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                     <proyecto.proyectobookit.nav_drawner.NestedListView
                         android:id="@+id/crearmarker_list"
-                        android:layout_width="0dip"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
                         android:layout_weight="1"
                         android:cacheColorHint="#00000000" >
                     </proyecto.proyectobookit.nav_drawner.NestedListView>
-                </LinearLayout>
-
             </ScrollView>
 
             <TextView
                 android:id="@+id/crearmarker_labeldescripcion"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/crearmarker_separacionEnunciados"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Descripcion de la Clase: " />
+                android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:gravity="center"
+                android:text="Descripcion de la Clase" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/crearmarker_descripcion"
                 android:layout_marginTop="5dp"
-                android:id="@+id/crearmarker_descripcion"  >
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
             </EditText>
 
             <TextView
-                android:id="@+id/crearmarker_labeldiaelegido"
-                android:layout_width="wrap_content"
+                android:id="@+id/crearmarker_labelDiaElegido"
+                android:layout_marginTop="@dimen/crearmarker_separacionEnunciados"
                 android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:text="Fecha y Hora:" />
-
-
-            <LinearLayout
                 android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:gravity="center"
+                android:text="Fecha" />
+
+            <DatePicker
+                android:id="@+id/crear_marker_datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:spinnersShown="false"/>
+
+            <TextView
+                android:id="@+id/crearmarker_labelHoraElegido"
+                android:layout_marginTop="@dimen/crearmarker_separacionEnunciados"
                 android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:gravity="center"
+                android:text="Hora" />
+
+            <TimePicker
+                android:id="@+id/crear_marker_timePicker"
                 android:layout_marginTop="5dp"
-
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/crearmarker_diaelegido"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20dp"
-                    android:text="prueba" />
-
-                <TextView
-                    android:id="@+id/crearmarker_hora"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="17dp"
-                    android:textSize="20dp"
-                    android:text="prueba" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:timePickerMode="spinner"
+                android:focusable="true"/>
 
 
             <TextView
                 android:id="@+id/crearmarker_labelprecio"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/crearmarker_separacionEnunciados"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:text="Precio dispuesto a Pagar: " />
+                android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:textSize="@dimen/get_perfil_tamañoletra_enunciado"
+                android:gravity="center"
+                android:text="Precio dispuesto a Pagar " />
 
             <EditText
                 android:layout_width="match_parent"
@@ -121,16 +121,16 @@
                 android:id="@+id/crearmarker_precio"  >
             </EditText>
 
-
             <Button
                 android:id="@+id/crearmarker_aceptar"
-                android:layout_width="100dp"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="5dp"
-                android:onClick="Aceptar"
+                android:layout_marginTop="@dimen/crearmarker_separacionEnunciados"
+                android:layout_marginBottom="35dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:background="@drawable/property_rounded_button"
-                android:text="Aceptar"
-                android:layout_gravity="right"/>
+                android:onClick="Aceptar"
+                android:gravity="center"
+                android:text="Aceptar" />
 
         </LinearLayout>
     </ScrollView>
